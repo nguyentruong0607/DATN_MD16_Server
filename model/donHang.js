@@ -1,7 +1,7 @@
 const { head } = require("../routes");
 var db = require("./db");
 
-var gioHangSchema = new db.mongoose.Schema(
+var donHangSchema = new db.mongoose.Schema(
   {
     soLuong: {
       type: Number,
@@ -13,14 +13,14 @@ var gioHangSchema = new db.mongoose.Schema(
     },
     idKH: {
       type: db.mongoose.Schema.Types.ObjectId,
-      ref: "khachHang",
+      ref: "KhachHang",
       required: true,
     },
   },
   {
-    collection: "GioHang",
+    collection: "DonHang",
   }
 );
 
-let gioHangModel = db.mongoose.model("GioHang", gioHangSchema);
-module.exports = { gioHangModel };
+let donHangModel = db.mongoose.model("DonHang", donHangSchema);
+module.exports = { donHangModel };

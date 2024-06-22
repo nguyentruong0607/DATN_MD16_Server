@@ -10,8 +10,11 @@ var apiHangSXRouter = require("./routes/api/hangSX.api");
 var apiSanPhamRouter = require("./routes/api/sanPham.api");
 var apiSanPhamYTRouter = require("./routes/api/sanPhamYT.api");
 var apiAccountRouter = require("./routes/api/account.api");
-var apiGioHangRouter = require("./routes/api/gioHang.api");
+var apiDonHangRouter = require("./routes/api/donHang.api");
 var apiDanhGiaRouter = require("./routes/api/danhGia.api");
+var apiKhachHangRouter = require("./routes/api/khachHang.api");
+var apiKhuyenMaiRouter = require("./routes/api/khuyenMai.api");
+var apiThongBaoRouter = require("./routes/api/thongBao.api");
 
 //web
 var loginRouter = require("./routes/login");
@@ -41,8 +44,11 @@ app.use("/hangsx", apiHangSXRouter);
 app.use("/sanPham", apiSanPhamRouter);
 app.use("/sanPhamYT", apiSanPhamYTRouter);
 app.use("/account", apiAccountRouter);
-app.use("/gioHang", apiGioHangRouter);
+app.use("/donHang", apiDonHangRouter);
 app.use("/danhGia", apiDanhGiaRouter);
+app.use("/khachHang", apiKhachHangRouter);
+app.use("/khuyenMai", apiKhuyenMaiRouter);
+app.use("/thongBao", apiThongBaoRouter);
 
 //web
 app.use("/", loginRouter);

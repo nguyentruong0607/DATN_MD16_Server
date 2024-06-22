@@ -2,34 +2,46 @@ const { danhGiaModel } = require("../../model/danhGia");
 
 // thêm danh gia
 exports.createDanhGia = async (req, res, next) => {
-  try {
-    const { noiDung, thoiGian, diemDanhGia, idKH, idSP } = req.body;
+  let noiDung = req.body.noiDung;
+  let thoiGian = req.body.thoiGian;
+  let diemDanhGia = req.body.diemDanhGia;
+  let idKH = req.body.idKH;
+  let idSP = req.body.idSP;
 
-    const newDG = new DanhGia({ noiDung, thoiGian, diemDanhGia, idKH, idSP });
-    const savedDG = await newDG.save();
-    return res
+  try {
+    let addFields = {
+      noiDung: noiDung,
+      thoiGian: thoiGian,
+      diemDanhGia: diemDanhGia,
+      idKH: idKH,
+      idSP: idSP,
+    };
+
+    let addItems = await danhGiaModel.create(addFields);
+
+    res
       .status(201)
-      .json({ success: true, message: "Đã thêm danh gia!" });
+      .json({ message: "Thêm đánh giá thành công", newItem: addItems });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Lỗi server" });
   }
 };
 
 // lấy tất cả các dữ liệu
 exports.listDanhGia = async (req, res, next) => {
   try {
-    const danhGia = await danhGiaModel.find();
+    const danhGia = await danhGiaModel.find().populate("idKH").populate("idSP");
     if (danhGia.length > 0) {
       res.json({
         status: 200,
-        msg: "Lấy dữ liệu danh gia thành công",
+        msg: "Lấy dữ liệu đánh giá thành công",
         data: danhGia,
       });
     } else {
       res.json({
         status: 204,
-        msg: "Không có dữ liệu danh gia",
+        msg: "Không có dữ liệu đánh giá",
         data: [],
       });
     }

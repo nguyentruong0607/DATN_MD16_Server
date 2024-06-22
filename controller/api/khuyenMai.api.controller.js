@@ -2,17 +2,25 @@ const { khuyenMaiModel } = require("../../model/khuyenMai");
 
 // thêm khuyen mai
 exports.createKhuyenMai = async (req, res, next) => {
-  try {
-    const { giamGia, thoiGian, trangThai } = req.body;
+  let giamGia = req.body.giamGia;
+  let thoiGian = req.body.thoiGian;
+  let trangThai = req.body.trangThai;
 
-    const newKM = new KhuyenMai({ giamGia, thoiGian, trangThai });
-    const savedKM = await newKM.save();
-    return res
+  try {
+    let addFields = {
+      giamGia: giamGia,
+      thoiGian: thoiGian,
+      trangThai: trangThai,
+    };
+
+    let addItems = await khuyenMaiModel.create(addFields);
+
+    res
       .status(201)
-      .json({ success: true, message: "Đã thêm khuyen mai!" });
+      .json({ message: "Thêm khuyến mại thành công", newItem: addItems });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Lỗi server" });
   }
 };
 
