@@ -6,10 +6,19 @@ var thongBaoSchema = new db.mongoose.Schema(
       type: String,
       required: true,
     },
+    thoiGian: {
+      type: String,
+      required: true,
+    },
+    idKH: {
+      type: db.mongoose.Schema.Types.ObjectId,
+      ref: "KhachHang",
+      required: true,
+    },
   },
   {
-    collection: "thongBao",
+    collection: "ThongBao",
   }
 );
-let thongBaoModel = db.mongoose.model("thongBaoModel", thongBaoSchema);
+let thongBaoModel = db.mongoose.model("ThongBao", thongBaoSchema);
 module.exports = { thongBaoModel };

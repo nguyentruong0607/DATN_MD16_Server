@@ -16,8 +16,8 @@ var khuyenMaiSchema = new db.mongoose.Schema(
     },
   },
   {
-    collection: "khuyenMai",
+    collection: "KhuyenMai",
   }
 );
-let khuyenMaiModel = db.mongoose.model("khuyenMaiModel", khuyenMaiSchema);
+let khuyenMaiModel = db.mongoose.model("KhuyenMai", khuyenMaiSchema);
 module.exports = { khuyenMaiModel };

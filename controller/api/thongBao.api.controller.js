@@ -2,24 +2,32 @@ const { thongBaoModel } = require("../../model/thongBao");
 
 // Thêm thong bao
 exports.createThongBao = async (req, res, next) => {
-  try {
-    const { noiDung } = req.body;
+  let noiDung = req.body.noiDung;
+  let thoiGian = req.body.thoiGian;
+  let idKH = req.body.idKH;
 
-    const newTB = new ThongBao({ noiDung });
-    const savedTB = await newTB.save();
-    return res
+  try {
+    let addFields = {
+      noiDung: noiDung,
+      thoiGian: thoiGian,
+      idKH: idKH,
+    };
+
+    let addItems = await thongBaoModel.create(addFields);
+
+    res
       .status(201)
-      .json({ success: true, message: "Đã thêm thông báo thành công!" });
+      .json({ message: "Thêm thông báo thành công", newItem: addItems });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Lỗi server" });
   }
 };
 
 // lấy tất cả các dữ liệu
 exports.listThongBao = async (req, res, next) => {
   try {
-    const thongBao = await thongBaoModel.find();
+    const thongBao = await thongBaoModel.find().populate("idKH");
     if (thongBao.length > 0) {
       res.json({
         status: 200,
