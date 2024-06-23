@@ -1,4 +1,4 @@
-const {hangsxModel} = require('../../model/hangSX');
+const hangsxModel = require('../../model/hangSX');
 
 // thêm hang sx
 exports.createHangSX = async (req, res, next) => {

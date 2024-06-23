@@ -1,16 +1,16 @@
-var {accountModel} = require('../model/account')
+var account = require('../model/account')
 exports.login = async(req, res, next)=>{
     let msg = '';
     if (req.method == 'POST') {
         try {
-            var objU = await accountModel.findOne({ taiKhoan: req.body.taiKhoan });
+            var objU = await account.findOne({ taiKhoan: req.body.taiKhoan });
             if (objU != null) {
                 // tồn tại username ==> kiểm tra passwd
                 if (objU.matKhau == req.body.matKhau) {
                     // đúng thông tin tài khoản ==> lưu vào session
                     if (objU.tenQuyen.toString() === 'Admin' ) {
-                       req.session.accountModel = objU
-                       // return res.redirect("/home");
+                       req.session.account = objU
+                        return res.redirect("/");
                     } else {
                         msg = 'không phải admin'
                     }

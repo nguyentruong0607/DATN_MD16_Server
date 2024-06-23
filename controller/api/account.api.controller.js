@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { accountModel } = require('../../model/account');
+const accountModel  = require('../../model/account');
 const saltRounds = 10; // Define saltRounds for bcrypt
 
 // Create account
@@ -9,10 +9,10 @@ exports.createAccount = async (req, res, next) => {
     try {
         // Create a model instance and assign data
         let objA = new accountModel();
-        const hashedPassword = await bcrypt.hash(req.body.matKhau, saltRounds); 
+        //const hashedPassword = await bcrypt.hash(req.body.matKhau, saltRounds); 
         objA.taiKhoan = req.body.taiKhoan;
         objA.hoTen = req.body.hoTen;
-        objA.matKhau = hashedPassword;
+        objA.matKhau = req.body.matKhau;
         objA.sdt = req.body.sdt;
         objA.tenQuyen = req.body.tenQuyen;
 
@@ -66,7 +66,7 @@ exports.SignUp = async (req, res) => {
         }
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(matKhau, saltRounds);
+        //const hashedPassword = await bcrypt.hash(matKhau, saltRounds);
 
         // Create new account
         const newAccount = new accountModel({
@@ -74,7 +74,7 @@ exports.SignUp = async (req, res) => {
             taiKhoan: taiKhoan,
             hoTen:hoTen,
             sdt:sdt,
-            matKhau: hashedPassword
+            matKhau: matKhau
         });
 
         await newAccount.save();
@@ -98,8 +98,8 @@ exports.signIn = async (req, res) => {
         }
 
         // Compare the provided password with the hashed one
-        const match = await bcrypt.compare(matKhau, existingAccount.matKhau);
-        if (!match) {
+       // const match = await bcrypt.compare(matKhau, existingAccount.matKhau);
+        if (!matKhau) {
             return res.status(200).json({ success: false, message: 'Mật khẩu không chính xác!' });
         }
 

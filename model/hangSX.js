@@ -1,6 +1,5 @@
-var db=require('./db');
-
-var hangsxSchema= new db.mongoose.Schema(
+const mongoose = require('mongoose');
+var hangsxSchema= new mongoose.Schema(
     {
         tenHang:{
             type:String,
@@ -11,5 +10,5 @@ var hangsxSchema= new db.mongoose.Schema(
         collection:'HangSX'
     }
 );
-let hangsxModel=db.mongoose.model("hangsxModel",hangsxSchema);
-module.exports={hangsxModel};
+let hangsxModel=mongoose.model("hangsxModel",hangsxSchema);
+module.exports=hangsxModel;

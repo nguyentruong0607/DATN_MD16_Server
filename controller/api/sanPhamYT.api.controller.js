@@ -1,4 +1,4 @@
-const {sanPhamYTModel} = require('../../model/sanPhamYT');
+const sanPhamYTModel = require('../../model/sanPhamYT');
 
 // thêm hang sx
 exports.createsanPhamYT= async (req, res, next) => {

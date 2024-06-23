@@ -1,24 +1,14 @@
-var db = require("./db");
-
-var thongBaoSchema = new db.mongoose.Schema(
+const mongoose = require('mongoose');
+var thongBaoSchema = new mongoose.Schema(
   {
     noiDung: {
       type: String,
       required: true,
     },
-    thoiGian: {
-      type: String,
-      required: true,
-    },
-    idKH: {
-      type: db.mongoose.Schema.Types.ObjectId,
-      ref: "Account",
-      required: true,
-    },
   },
   {
-    collection: "ThongBao",
+    collection: "thongBao",
   }
 );
-let thongBaoModel = db.mongoose.model("ThongBao", thongBaoSchema);
-module.exports = { thongBaoModel };
+let thongBaoModel = mongoose.model("thongBaoModel", thongBaoSchema);
+module.exports =  thongBaoModel ;

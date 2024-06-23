@@ -4,8 +4,8 @@ var loginCtrl  = require('../controller/logIn.controller');
 
 
 // Vào trang home theo địa chỉ '/'
-router.get('/login',loginCtrl.login)
-router.post('/login' ,loginCtrl.login);
+router.get('/',loginCtrl.login)
+router.post('/' ,loginCtrl.login);
 
 
 router.get('/logout' , loginCtrl.Logout)

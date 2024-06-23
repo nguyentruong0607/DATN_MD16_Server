@@ -1,6 +1,5 @@
-var db = require("./db");
-
-var khuyenMaiSchema = new db.mongoose.Schema(
+const mongoose = require('mongoose');
+var khuyenMaiSchema = new mongoose.Schema(
   {
     giamGia: {
       type: Number,
@@ -16,8 +15,8 @@ var khuyenMaiSchema = new db.mongoose.Schema(
     },
   },
   {
-    collection: "KhuyenMai",
+    collection: "khuyenMai",
   }
 );
-let khuyenMaiModel = db.mongoose.model("KhuyenMai", khuyenMaiSchema);
-module.exports = { khuyenMaiModel };
+let khuyenMaiModel = mongoose.model("khuyenMaiModel", khuyenMaiSchema);
+module.exports =  khuyenMaiModel ;
