@@ -17,7 +17,7 @@ var danhGiaSchema = new db.mongoose.Schema(
     },
     idKH: {
       type: db.mongoose.Schema.Types.ObjectId,
-      ref: "khachHang",
+      ref: "Account",
       required: true,
     },
     idSP: {

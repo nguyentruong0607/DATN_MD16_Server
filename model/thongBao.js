@@ -12,7 +12,7 @@ var thongBaoSchema = new db.mongoose.Schema(
     },
     idKH: {
       type: db.mongoose.Schema.Types.ObjectId,
-      ref: "KhachHang",
+      ref: "Account",
       required: true,
     },
   },
