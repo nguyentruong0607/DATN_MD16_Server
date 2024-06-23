@@ -1,4 +1,4 @@
-const { khuyenMaiModel } = require("../../model/khuyenMai");
+const  khuyenMaiModel  = require("../../model/khuyenMai");
 
 // thêm khuyen mai
 exports.createKhuyenMai = async (req, res, next) => {

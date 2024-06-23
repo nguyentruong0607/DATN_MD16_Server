@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://127.0.0.1:27017/DATN_MD16").catch((error) => {
-  console.log(error);
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb+srv://root:12345@cluster0.iko3pjs.mongodb.net/', {
+    });
+    console.log('Kết nối thành công đến MongoDB');
+  } catch (error) {
+    console.error('Lỗi kết nối đến MongoDB:', error);
+  }
+};
 
-module.exports = { mongoose }
+module.exports = connectDB;

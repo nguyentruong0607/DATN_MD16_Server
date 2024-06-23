@@ -1,0 +1,72 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+/* CSS để căn chỉnh kích thước của logo */
+.header {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    justify-content: flex-start;
+    background-color: white;
+    height: 50px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Đổ bóng cho header */
+    z-index: 999; /* Đảm bảo header nổi lên trên các phần khác của trang */
+    width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng của trang */
+  }
+  .logo {
+    width: 50px; /* Điều chỉnh kích thước của logo tại đây */
+    height: auto; /* Giữ cho tỷ lệ khung hình của logo */
+    margin-right: 5px; /* Tạo một khoảng cách nhỏ giữa logo và văn bản */
+  }
+  .logo-text {
+    color: #00AFEF;
+    font-size: 20px; 
+    font-weight: bold;
+  }
+
+ /* CSS cho sidebar */
+ .sidebar {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Đổ bóng cho sidebar */
+  }
+  
+  /* CSS cho menu */
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar ul li {
+    height: 45px;
+    padding: 0px 20px;
+    text-align: left; /* Căn trái text */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Đường gạch ngang */
+    display: flex; /* Sử dụng flexbox để căn chỉnh icon và text */
+    align-items: center; /* Căn icon và text vào giữa theo chiều dọc */
+  }
+  
+  .sidebar ul li a {
+    color: black;
+    text-decoration: none;
+    display: flex; /* Sử dụng flexbox để căn chỉnh icon và text */
+    align-items: center; /* Căn icon và text vào giữa theo chiều dọc */
+  }
+  
+  .sidebar ul li a:hover span {
+    color: #00AFEF; /* Thay đổi màu của text khi hover */
+  }
+  
+  /* CSS cho icon */
+  .sidebar ul li a i {
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+  }
+  .content {
+    padding: 10px;
+    overflow-y: auto; /* Kích hoạt cuộn dọc khi nội dung vượt qua kích thước */
+    max-height: calc(100vh - 50px); /* Chiều cao tối đa của phần nội dung, 50px là chiều cao của header */
+}
+
+  

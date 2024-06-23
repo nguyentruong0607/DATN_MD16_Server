@@ -1,4 +1,4 @@
-const { danhGiaModel } = require("../../model/danhGia");
+const  danhGiaModel  = require("../../model/danhGia");
 
 // thêm danh gia
 exports.createDanhGia = async (req, res, next) => {

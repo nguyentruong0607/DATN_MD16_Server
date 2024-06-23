@@ -1,7 +1,6 @@
-const { head } = require("../routes");
-var db = require("./db");
+const mongoose = require('mongoose');
 
-var donHangSchema = new db.mongoose.Schema(
+var donHangSchema = new mongoose.Schema(
   {
     soLuong: {
       type: Number,
@@ -12,7 +11,7 @@ var donHangSchema = new db.mongoose.Schema(
       required: true,
     },
     idKH: {
-      type: db.mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Account",
       required: true,
     },
@@ -22,5 +21,5 @@ var donHangSchema = new db.mongoose.Schema(
   }
 );
 
-let donHangModel = db.mongoose.model("DonHang", donHangSchema);
-module.exports = { donHangModel };
+let donHangModel = mongoose.model("DonHang", donHangSchema);
+module.exports =  donHangModel ;

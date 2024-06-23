@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const { model } = require('mongoose');
 var hangSXApi = require('../../controller/api/account.api.controller');
 // lấy ds hangsx
 router.get('/', hangSXApi.listAccount)   ; 

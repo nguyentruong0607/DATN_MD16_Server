@@ -1,7 +1,5 @@
-const { head } = require("../routes");
-var db = require("./db");
-
-var danhGiaSchema = new db.mongoose.Schema(
+const mongoose = require('mongoose');
+var danhGiaSchema = new mongoose.Schema(
   {
     noiDung: {
       type: String,
@@ -16,12 +14,12 @@ var danhGiaSchema = new db.mongoose.Schema(
       required: true,
     },
     idKH: {
-      type: db.mongoose.Schema.Types.ObjectId,
-      ref: "Account",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "khachHang",
       required: true,
     },
     idSP: {
-      type: db.mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "SanPham",
       required: true,
     },
@@ -31,5 +29,5 @@ var danhGiaSchema = new db.mongoose.Schema(
   }
 );
 
-let danhGiaModel = db.mongoose.model("DanhGia", danhGiaSchema);
-module.exports = { danhGiaModel };
+let danhGiaModel = mongoose.model("DanhGia", danhGiaSchema);
+module.exports =  danhGiaModel ;

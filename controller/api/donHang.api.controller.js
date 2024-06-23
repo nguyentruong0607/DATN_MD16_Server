@@ -1,4 +1,4 @@
-const { donHangModel } = require("../../model/donHang");
+const  donHangModel  = require("../../model/donHang");
 
 // thêm don hang
 exports.createDonHang = async (req, res, next) => {
