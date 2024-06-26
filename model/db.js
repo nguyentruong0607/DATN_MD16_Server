@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://root:12345@cluster0.iko3pjs.mongodb.net/', {
+    await mongoose.connect('mongodb+srv://root:1234@cluster0.iko3pjs.mongodb.net/', {
     });
     console.log('Kết nối thành công đến MongoDB');
   } catch (error) {

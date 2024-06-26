@@ -11,7 +11,7 @@ exports.getAll = async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-    res.render('hangsx/list', { listHangSX: list, msg: msg })
+    res.render('hangsx/list', { listHangSX: list, msg: msg, title:'Quản lý hãng'})
 }
 //Thêm
 //Thêm

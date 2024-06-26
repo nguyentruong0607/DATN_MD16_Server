@@ -45,7 +45,7 @@
             <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
             <th scope="col" class="col-md-1 sm-1">Ảnh</th>
             <th scope="col" class="col-md-4 sm-4">Tên </th>
-            <th scope="col" class="col-md-1.5 sm-1.5">Hệ điều hành</th>
+            <th scope="col" class="col-md-1.5 sm-1.5">Số lượng</th>
             <th scope="col" class="col-md-3.5 sm-3.5">Hành động</th>
           </tr>
         </thead>
@@ -57,7 +57,13 @@
               </th>
               <td><img src="<%= product.hinhAnh %>" alt="Ảnh sản phẩm" width="70"></td>
               <td> <%= product.tenDienThoai %> </td>
-              <td> <%= product.heDieuHanh %></td>
+              <td>
+                <% let totalVariants = 0; %>
+                <% product.mauSchema.forEach(variant => { %>
+                  <% totalVariants += variant.soLuong; %>
+                <% }); %>
+                <%= totalVariants %>
+              </td>
               <td>
                 <a href="/sanPham/chi-tiet/<%= product._id %>" class="btn btn-primary icon-btn ms-2 me-2">Chi tiết</a>
                 <a href="/sanPham/edit/<%= product._id %>" class="btn btn-info icon-btn me-2">Sửa</a>
