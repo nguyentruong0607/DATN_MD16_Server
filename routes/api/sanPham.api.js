@@ -6,9 +6,12 @@ var sanPhamApi = require('../../controller/api/sanPham.api.controller');
 router.get('/', sanPhamApi.listsanPham)   ; 
 // xem chi tiết 1 sanPham
 router.get('/:id', sanPhamApi.getsanPhamById); 
-router.post('/', sanPhamApi.createsanPham); 
-router.put('/:id', sanPhamApi.updatesanPham); 
-router.delete("/:id",sanPhamApi.deletesanPham);
+router.post('/add', sanPhamApi.createsanPham); 
+router.post('/search',sanPhamApi.searchSanPham);
+router.put('/edit/:id', sanPhamApi.updatesanPham); 
+router.delete("/delete/:id",sanPhamApi.deletesanPham);
+
+
 
 
 module.exports=router;

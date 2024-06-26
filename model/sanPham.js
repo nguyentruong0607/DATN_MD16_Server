@@ -2,12 +2,9 @@ const mongoose = require('mongoose');
 
 // Mau Schema
 var mauSchema = new mongoose.Schema({
-    mau: String
-});
-
-// DungLuong Schema
-var dungLuongSchema = new mongoose.Schema({
-    dungLuong: String
+    mau: String,
+    soLuong:Number,
+    giaTien:Number
 });
 
 
@@ -28,25 +25,13 @@ var dienThoaiSchema = new mongoose.Schema({
     moTaThem: { type: String },
     hinhAnh: { type: String, required: true },
     doPhanGiai: { type: String, required: true },
+    mauSchema:[mauSchema],
     idHangSX: { type: mongoose.Schema.Types.ObjectId, ref: 'hangsxModel', required: true }
 }, {
     collection: 'DienThoai'
 });
 var DienThoai = mongoose.model('DienThoai', dienThoaiSchema);
 
-// DienThoaiCT Schema
-var dienThoaiCTSchema = new mongoose.Schema({
-    idDienThoai: { type: mongoose.Schema.Types.ObjectId, ref: 'DienThoai', required: true },
-    Mau: { type: mauSchema },
-    DungLuong: { type: dungLuongSchema },
-    soLuong: String,
-    giaTien: String
-});
-var DienThoaiCT = mongoose.model('DienThoaiCT', dienThoaiCTSchema);
 
-module.exports = {
-    Mau: mongoose.model('Mau', mauSchema),
-    DungLuong: mongoose.model('DungLuong', dungLuongSchema),
-    DienThoai,
-    DienThoaiCT
-};
+
+module.exports = {DienThoai,dienThoaiSchema};

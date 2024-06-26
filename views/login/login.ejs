@@ -14,10 +14,11 @@
     <div class="container d-flex justify-content-center align-items-center login-container">
       <div class="card " >
         <div class="card-body ">
-          <div class="text-center">
-            <img class="img-fluid rounded " src="/images/logo.png"  alt="Ảnh lỗi" style="width: 230px; height: 230px; ">
+          <div class="text-center" style="margin: 20px;">
+            <h2>FPolyPhone Admin</h2>
           </div>
           
+
           
           <% if(msg!=null) { %>
             <h4 class="text-center" style="color: red;"><%= msg %></h4>
@@ -32,8 +33,8 @@
               <input type="password" id="passwd" name="matKhau" class="form-control" required>
             </div>
        
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary w-50" >Đăng nhập</button>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary w-100" >Đăng nhập</button>
             </div>
           </form>
          
@@ -67,18 +68,14 @@
   height: 100%;
 }
 
-.card {
-  width: 40%;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+
 
 h1 {
   margin-bottom: 20px;
 }
 
 .btn{
-  margin-top: 50px;
+  margin-top: 30px;
 }
 </style>
 </body>
