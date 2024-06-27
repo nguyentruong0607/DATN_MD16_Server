@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 var khuyenMaiSchema = new mongoose.Schema(
   {
+    ten: {
+      type: String,
+      required: true,
+    },
     giamGia: {
       type: Number,
       required: true,
@@ -19,4 +23,4 @@ var khuyenMaiSchema = new mongoose.Schema(
   }
 );
 let khuyenMaiModel = mongoose.model("khuyenMaiModel", khuyenMaiSchema);
-module.exports =  khuyenMaiModel ;
+module.exports = khuyenMaiModel;

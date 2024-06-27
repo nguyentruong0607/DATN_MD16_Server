@@ -4,10 +4,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var session = require("express-session");
 
-var dotenv=require('dotenv');
+var dotenv = require("dotenv");
 
 dotenv.config();
-var connectDB=require('./model/db');
+var connectDB = require("./model/db");
 connectDB();
 // API
 var apiHangSXRouter = require("./routes/api/hangSX.api");
@@ -21,10 +21,11 @@ var apiThongBaoRouter = require("./routes/api/thongBao.api");
 
 //web
 var loginRouter = require("./routes/login");
-var homeRouter= require('./routes/home');
-var hangSXRouter=require('./routes/hangsx');
-var sanPhamRouter=require('./routes/sanPham');
+var homeRouter = require("./routes/home");
+var hangSXRouter = require("./routes/hangsx");
+var sanPhamRouter = require("./routes/sanPham");
 var usersRouter = require("./routes/users");
+var khuyenMaiRouter = require("./routes/khuyenMai");
 
 var app = express();
 // view engine setup
@@ -54,11 +55,11 @@ app.use("/api/danhGia", apiDanhGiaRouter);
 app.use("/api/khuyenMai", apiKhuyenMaiRouter);
 app.use("/api/thongBao", apiThongBaoRouter);
 
-
 //web
-app.use('/',homeRouter);
-app.use('/login',loginRouter);
-app.use('/hangsx',hangSXRouter);
-app.use('/sanPham',sanPhamRouter);
-app.use('/user',usersRouter);
+app.use("/", homeRouter);
+app.use("/login", loginRouter);
+app.use("/hangsx", hangSXRouter);
+app.use("/sanPham", sanPhamRouter);
+app.use("/user", usersRouter);
+app.use("/khuyenMai", khuyenMaiRouter);
 module.exports = app;

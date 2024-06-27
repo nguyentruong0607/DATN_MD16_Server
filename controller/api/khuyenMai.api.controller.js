@@ -1,13 +1,15 @@
-const  khuyenMaiModel  = require("../../model/khuyenMai");
+const khuyenMaiModel = require("../../model/khuyenMai");
 
 // thêm khuyen mai
 exports.createKhuyenMai = async (req, res, next) => {
   let giamGia = req.body.giamGia;
+  let ten = req.body.ten;
   let thoiGian = req.body.thoiGian;
   let trangThai = req.body.trangThai;
 
   try {
     let addFields = {
+      ten: ten,
       giamGia: giamGia,
       thoiGian: thoiGian,
       trangThai: trangThai,
