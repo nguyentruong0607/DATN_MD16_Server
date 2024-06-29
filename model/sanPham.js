@@ -11,22 +11,22 @@ var mauSchema = new mongoose.Schema({
 
 // DienThoai Schema
 var dienThoaiSchema = new mongoose.Schema({
-    tenDienThoai: { type: String, required: true },
+    tenDienThoai: { type: String },
     camera: { type: String },
-    cameraTruoc: { type: String, required: true },
-    kichThuoc: { type: String, required: true },
-    cPU: { type: String, required: true },
-    ram: { type: String, required: true },
-    sim: { type: String, required: true },
+    cameraTruoc: { type: String },
+    kichThuoc: { type: String },
+    cPU: { type: String },
+    ram: { type: String },
+    sim: { type: String },
     pin: { type: String },
-    heDieuHanh: { type: String, required: true },
-    namSanXuat: { type: String, required: true },
+    heDieuHanh: { type: String },
+    namSanXuat: { type: String },
     congNgheManHinh: { type: String },
     moTaThem: { type: String },
-    hinhAnh: { type: String, required: true },
-    doPhanGiai: { type: String, required: true },
+    hinhAnh: { type: String },
+    doPhanGiai: { type: String },
     mauSchema:[mauSchema],
-    idHangSX: { type: mongoose.Schema.Types.ObjectId, ref: 'hangsxModel', required: true }
+    idHangSX: { type: mongoose.Schema.Types.ObjectId, ref: 'hangsxModel' }
 }, {
     collection: 'DienThoai'
 });
