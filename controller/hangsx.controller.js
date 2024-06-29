@@ -1,5 +1,5 @@
 const hangSX=require('../model/hangSX');
-const nameFolder = 'HangSx';
+
 //Hiển thị
 exports.getAll = async (req, res, next) => {
 
@@ -13,7 +13,7 @@ exports.getAll = async (req, res, next) => {
     }
     res.render('hangsx/list', { listHangSX: list, msg: msg, title:'Quản lý hãng'})
 }
-//Thêm
+
 //Thêm
 exports.addHangsx = async (req, res, next) => {
     let msg = '';
@@ -65,14 +65,17 @@ exports.updateHangSX = async (req, res, next) => {
 //Xóa
 exports.deleteHangSX = async (req, res, next) => {
     let id_c = req.params.id;
-        try {
-            await hangSX.findByIdAndDelete(id_c);
-            msg = "xóa thành công";
-            return res.redirect('/');
-        } catch (error) {
-            msg = error.message;
-        }
+    let msg = '';
+    try {
+        await hangSX.findByIdAndDelete(id_c);
+        msg = "Xóa thành công";
+        return res.redirect('/hangsx');
+    } catch (error) {
+        msg = error.message;
+        res.render('hangsx/list', { msg: msg });
+    }
 };
+//tìm kiếm
 exports.search = async (req, res, next) => {
     const queryValue = req.query.query;
     const user = req.session.account;

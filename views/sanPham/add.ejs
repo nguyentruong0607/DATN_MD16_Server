@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='../stylesheets/style_header.css' />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../stylesheets/sidebar.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <%- include('../inc/sidebar') %>
+        <div class="main">
+            <%- include('../inc/header') %>
+            <div class="container my-2">
+                <form id="addProductForm" method="POST" action="/sanPham/add" enctype="multipart/form-data">
+                    <div class="row mt-3">
+                        <div class="col col-md-2">
+                            <label for="idHangSX" class="form-label">Hãng sản xuất <span class="text-danger">(*)</span></label>
+                            <select class="form-select" id="idHangSX" name="idHangSX" >
+                                <% listHangSx.forEach((hangSx) => { %>
+                                    <option value="<%= hangSx._id %>"><%= hangSx.tenHang %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col col-md-5">
+                            <label for="tenDienThoai" class="form-label">Tên sản phẩm <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="tenDienThoai" name="tenDienThoai" >
+                        </div>
+                        <div class="col col-md-5">
+                            <label for="hinhAnh" class="form-label">Ảnh sản phẩm <span class="text-danger">(*)</span></label>
+                            <input type="file" class="form-control" id="hinhAnh" name="hinhAnh" >
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col col-md-4">
+                            <label for="camera" class="form-label">Camera</label>
+                            <input type="text" class="form-control" id="camera" name="camera">
+                        </div>
+                        <div class="col col-md-4">
+                            <label for="cameraTruoc" class="form-label">Camera Trước <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="cameraTruoc" name="cameraTruoc" >
+                        </div>
+                        <div class="col col-md-4">
+                            <label for="kichThuoc" class="form-label">Kích thước <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="kichThuoc" name="kichThuoc" >
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col col-md-2">
+                            <label for="cPU" class="form-label">CPU <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="cPU" name="cPU" >
+                        </div>
+                        <div class="col col-md-2">
+                            <label for="ram" class="form-label">RAM <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="ram" name="ram" >
+                        </div>
+                        <div class="col col-md-2">
+                            <label for="sim" class="form-label">SIM <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="sim" name="sim" >
+                        </div>
+                        <div class="col col-md-2">
+                            <label for="pin" class="form-label">Pin</label>
+                            <input type="text" class="form-control" id="pin" name="pin">
+                        </div>
+                        <div class="col col-md-2">
+                            <label for="heDieuHanh" class="form-label">Hệ điều hành <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="heDieuHanh" name="heDieuHanh" >
+                        </div>
+                        <div class="col col-md-2">
+                            <label for="namSanXuat" class="form-label">Năm sản xuất <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="namSanXuat" name="namSanXuat" >
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col col-md-4">
+                            <label for="congNgheManHinh" class="form-label">Công nghệ màn hình</label>
+                            <input type="text" class="form-control" id="congNgheManHinh" name="congNgheManHinh">
+                        </div>
+                        <div class="col col-md-4">
+                            <label for="doPhanGiai" class="form-label">Độ phân giải <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="doPhanGiai" name="doPhanGiai" >
+                        </div>
+                        <div class="col col-md-4">
+                            <label for="moTaThem" class="form-label">Mô tả thêm</label>
+                            <textarea class="form-control" id="moTaThem" name="moTaThem" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col col-md-6">
+                            <label for="mauSchema" class="form-label">Màu sắc & Giá</label>
+                            <div id="mauSchema">
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="mau" placeholder="Màu sắc">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" class="form-control" name="soLuong" placeholder="Số lượng" min="1">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" class="form-control" name="giaTien" placeholder="Giá tiền" min="0" step="any">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 text-end">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <%- include('../inc/footer') %>
+        </div>
+    </div>
+    <script>
+        document.getElementById('addProductForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('/api/sanPham/add', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                window.location.href = '/sanPham';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            }
+        });
+
+        
+    </script>
+</body>
+
+</html>

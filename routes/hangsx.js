@@ -9,6 +9,6 @@ router.post('/add' ,checkLogin.request_login,hangSXCtrl.addHangsx);
 
 router.get('/update/:id',checkLogin.request_login,hangSXCtrl.updateHangSX);
 router.post('/update/:id',checkLogin.request_login,hangSXCtrl.updateHangSX);
-router.get('/delete/:id' , hangSXCtrl.deleteHangSX);
+router.post('/delete/:id' , checkLogin.request_login,hangSXCtrl.deleteHangSX);
 // Xuất router
 module.exports = router;
