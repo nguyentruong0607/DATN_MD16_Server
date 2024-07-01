@@ -10,7 +10,106 @@
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="../stylesheets/sidebar.css">
+  <style>
+    .tb1 {
+      width: 100%;
+      font-size: 100%;
+      padding: 5px;
+    }
+    .tb2 {
+      width: 100%;
+      font-size: 100%;
+      padding: 5px;
+    }
+    th {
+      border: 1px solid rgb(229, 218, 218);
+      border-bottom: 2px solid;
+      text-align: center;
+    }
+    .th2 {
+      border: none;
+      text-align: center;
+    }
+    .th2 img {
+      width: 30px;
+      height: 30px;
+    }
+    td {
+      border: 1px solid rgb(229, 218, 218);
+      text-align: center;
+      align-items: center;
+    }
+    .stt {
+      width: 3%;
+      text-align: center;
+    }
+    .id {
+      width: 15%;
+    }
+    .anh {
+      width: 10%;
+      height: 30px;
+    }
+    .ten {
+      width: 20%;
+    }
+    .hanhDong {
+      width: 10%;
+    }
+    .img1 {
+      width: auto;
+      height: auto;
+      margin: auto;
+      max-width: 100%;
+      max-height: 50px;
+      padding: 1%;
+    }
+    tr {
+      margin-top: 10px;
+    }
+    .hang:hover {
+      background-color: rgb(243, 241, 241);
+      text-decoration: underline;
+    }
+    #searchForm {
+      margin: 20px auto;
+    }
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .modal-body input {
+      width: 100%;
+      height: 50px;
+    }
+    .preview {
+      padding: 30px;
+    }
+    .add {
+      float: right;
+      width: 10%;
+      margin: 10px 15px;
+      text-align: center;
+      font-size: 100%;
+      min-width: 70px;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .top #searchForm {
+      width: 100%;
+      margin: auto;
+    }
+    .top #form2 {
+      width: 100%;
+      margin: auto;
+    }
+  </style>
 </head>
+
 
 <body>
   <div class="wrapper">
@@ -18,26 +117,72 @@
     <div class="main ">
       <%- include('../inc/header') %>
     <div class="content col-md-10 sm-10"style="overflow: auto; height: 80vh">
-      <!-- <form id="searchForm" action="/sanPham/search" method="GET">
-        <div class="row g-3">
+      <div class="top">
+        <form id="searchForm" action="/khuyenMai/search" method="GET">
+          <div class="row g-3">
             <div class="col">
-                <input required="true" type="text" id="textQuery" name="query"
-                    class="form-control" placeholder="Nhập tên dien thoai...">
+              <input
+                required="true"
+                type="text"
+                id="textQuery"
+                name="query"
+                class="form-control"
+                placeholder="Nhập tên khuyến mãi..."
+              />
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Tìm</button>
+              <button type="submit" class="btn btn-primary">Tìm</button>
             </div>
             <div class="col-auto">
-                <button id="clear" class="btn btn-secondary">Làm mới</button>
+              <button id="clear" class="btn btn-secondary">Làm mới</button>
             </div>
             <div class="col-auto">
-                <a href="/sanPham" id="clear" class="btn btn-secondary">Tất cả</a>
+              <a href="/khuyenMai" id="clear" class="btn btn-success"
+                >Tất cả</a
+              >
             </div>
-            <div class="col-auto">
-              <button type="button" id="addProductButton" class="btn btn-success">Thêm</button>
-            </div>
-        </div>
-    </form> -->
+          </div>
+        </form>
+        <div class="col-auto">
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddKM">Thêm</button>
+          <div class="modal fade" id="modalAddKM" tabindex="-1" aria-labelledby="modalAddKMLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                  <div class="form2 modal-content">
+                      <form id="form2" method="post" action="/khuyenMai/add">
+                          <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="modalAddKMLabel">Thêm Khuyến Mãi</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <label for="ten" class="form-label">Tên Khuyến Mãi <span class="text-danger">(*)</span></label>
+                              <input id="ten" required="true" type="text" class="form-control" placeholder="Tên" name="ten">
+                          </div>
+                          <div class="modal-body">
+                              <label for="ngayBatDau" class="form-label">Ngày bắt đầu <span class="text-danger">(*)</span></label>
+                              <input id="ngayBatDau" required="true" type="date" class="form-control" placeholder="Ngày bắt đầu" name="ngayBatDau">
+                          </div>
+                          <div class="modal-body">
+                              <label for="ngayKetThuc" class="form-label">Ngày kết thúc<span class="text-danger">(*)</span></label>
+                              <input id="ngayKetThuc" required="true" type="date" class="form-control" placeholder="Ngày kết thúc" name="ngayKetThuc">
+                          </div>
+                          <div class="modal-body">
+                              <label for="soLuong" class="form-label">Số lượng <span class="text-danger">(*)</span></label>
+                              <input id="soLuong" required="true" type="number" class="form-control" placeholder="Số lượng" name="soLuong">
+                          </div>
+                          <div class="modal-body">
+                              <label for="giaKhoiDiem" class="form-label">Giá khởi điểm (Mức giá tối thiểu của đơn hàng để áp dụng mã khuyến mại) <span class="text-danger">(*)</span></label>
+                              <input id="giaKhoiDiem" required="true" type="number" class="form-control" placeholder="Giá khởi điểm" name="giaKhoiDiem">
+                          </div>
+                          <div class="modal-footer">
+                              <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</a>
+                              <button type="submit" class="btn btn-primary">Lưu</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
       
       <table class="table table-bordered table-hover mt-3">
         <thead>
@@ -92,46 +237,25 @@
     
   </div>
 
-      <script>
-        // Function to format currency
-        function formatCurrency(amount) {
-          return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
+  <script>
+    function kiemTraVaLuu() {
+        // Lấy giá trị của các trường input
+        var ten = document.getElementById('ten').value;
+        var ngayBatDau = document.getElementById('ngayBatDau').value;
+        var ngayKetThuc = document.getElementById('ngayKetThuc').value;
+        var soLuong = document.getElementById('soLuong').value;
+        var giaKhoiDiem = document.getElementById('giaKhoiDiem').value;
+
+        // Kiểm tra các trường đã được nhập
+        if (!ten || !ngayBatDau || !ngayKetThuc || !soLuong || !giaKhoiDiem) {
+            alert("Vui lòng nhập đầy đủ thông tin.");
+            return;
         }
 
-        // Call formatCurrency function for each total amount in the table
-        document.addEventListener("DOMContentLoaded", function () {
-          const totalCells = document.querySelectorAll(".total-cell");
-          totalCells.forEach(cell => {
-            const amount = parseFloat(cell.textContent.trim());
-            cell.textContent = formatCurrency(amount);
-          });
-        });
-        document.getElementById('addProductButton').addEventListener('click', function() {
-            window.location.href = '/sanPham/add';
-        });
-      </script>
-      <!-- // Toggle status -->
-      <script>
-        document.querySelectorAll('.btn-toggle-status').forEach(button => {
-          button.addEventListener('click', function(e) {
-            const productId = this.getAttribute('data-id');
-            const productStatus = this.getAttribute('data-status');
-      
-            fetch(`/api/sanPham/toggle-status/${productId}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              // Không cần body nếu bạn chỉ toggle trạng thái
-            })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-              // Cập nhật UI hoặc reload page để phản ánh thay đổi
-              location.reload();
-            })
-            .catch(error => console.error('Error:', error));
-          });
-        });
-      </script>
+        // Nếu tất cả các trường đều đã được nhập, gửi biểu mẫu
+        // document.getElementById('form').submit();
+    }
+</script>
 </body>
 
 </html>

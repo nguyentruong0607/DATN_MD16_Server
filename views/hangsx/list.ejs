@@ -1,178 +1,382 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='../stylesheets/style_header.css' />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../stylesheets/style_header.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://kit.fontawesome.com/ae360af17e.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="../stylesheets/sidebar.css">
+    <link rel="stylesheet" href="../stylesheets/sidebar.css" />
     <style>
-        .tb1 { width: 100%; font-size: 100%; padding: 5px; }
-        .tb2 { width: 100%; font-size: 100%; padding: 5px; }
-        th { border: 1px solid rgb(229, 218, 218); border-bottom: 2px solid; text-align: center; }
-        .th2 { border: none; text-align: center; }
-        .th2 img { width: 30px; height: 30px; }
-        td { border: 1px solid rgb(229, 218, 218); text-align: center; align-items: center; }
-        .stt { width: 3%; text-align: center; }
-        .id { width: 15%; }
-        .anh { width: 10%; height: 30px; }
-        .ten { width: 20%; }
-        .hanhDong { width: 10%; }
-        .img1 { width: auto; height: auto; margin: auto; max-width: 100%; max-height: 50px; padding: 1%; }
-        tr { margin-top: 10px; }
-        .hang:hover { background-color: rgb(243, 241, 241); text-decoration: underline; }
-        #searchForm { margin: 20px auto; }
-        .modal-body { display: flex; flex-direction: column; width: 100%; }
-        .modal-body input { width: 100%; height: 50px; margin: 20px auto; }
-        .preview { padding: 30px; }
-        .add { float: right; width: 10%; margin: 10px 15px; text-align: center; font-size: 100%; min-width: 70px; }
-        .top { display: flex; align-items: center; }
-        .top #searchForm { width: 100%; margin: auto; }
-        .top #form2 { width: 100%; margin: auto; }
+      .tb1 {
+        width: 100%;
+        font-size: 100%;
+        padding: 5px;
+      }
+      .tb2 {
+        width: 100%;
+        font-size: 100%;
+        padding: 5px;
+      }
+      th {
+        border: 1px solid rgb(229, 218, 218);
+        border-bottom: 2px solid;
+        text-align: center;
+      }
+      .th2 {
+        border: none;
+        text-align: center;
+      }
+      .th2 img {
+        width: 30px;
+        height: 30px;
+      }
+      td {
+        border: 1px solid rgb(229, 218, 218);
+        text-align: center;
+        align-items: center;
+      }
+      .stt {
+        width: 3%;
+        text-align: center;
+      }
+      .id {
+        width: 15%;
+      }
+      .anh {
+        width: 10%;
+        height: 30px;
+      }
+      .ten {
+        width: 20%;
+      }
+      .hanhDong {
+        width: 10%;
+      }
+      .img1 {
+        width: auto;
+        height: auto;
+        margin: auto;
+        max-width: 100%;
+        max-height: 50px;
+        padding: 1%;
+      }
+      tr {
+        margin-top: 10px;
+      }
+      .hang:hover {
+        background-color: rgb(243, 241, 241);
+        text-decoration: underline;
+      }
+      #searchForm {
+        margin: 20px auto;
+      }
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .modal-body input {
+        width: 100%;
+        height: 50px;
+        margin: 20px auto;
+      }
+      .preview {
+        padding: 30px;
+      }
+      .add {
+        float: right;
+        width: 10%;
+        margin: 10px 15px;
+        text-align: center;
+        font-size: 100%;
+        min-width: 70px;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+      }
+      .top #searchForm {
+        width: 100%;
+        margin: auto;
+      }
+      .top #form2 {
+        width: 100%;
+        margin: auto;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="wrapper">
-        <%- include('../inc/sidebar') %>
-        <div class="main">
-            <%- include('../inc/header') %>
-            <div class="content col-md-10 sm-10" style="overflow: auto; height: 80vh">
-                <div class="top">
-                    <form id="searchForm" action="/hangsx/search" method="GET">
-                        <div class="row g-3">
-                            <div class="col">
-                                <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên hãng...">
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Tìm</button>
-                            </div>
-                            <div class="col-auto">
-                                <button id="clear" class="btn btn-secondary">Làm mới</button>
-                            </div>
-                            <div class="col-auto">
-                                <a href="/hangsx" id="clear" class="btn btn-success">Tất cả</a>
-                            </div>
-                        </div>
-                    </form>
-                    <div>
-                        <button type="button" class="add btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Thêm
-                        </button>
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-xl">
-                                <div class="form2 modal-content">
-                                    <form id="form2" method="post" action="/hangsx/add" >
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm Hãng</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <input required="true" type="text" class="form-control" placeholder="Tên" name="tenHang">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</a>
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      <%- include('../inc/sidebar') %>
+      <div class="main">
+        <%- include('../inc/header') %>
+        <div
+          class="content col-md-10 sm-10"
+          style="overflow: auto; height: 80vh"
+        >
+          <div class="top">
+            <form id="searchForm" action="/hangsx/search" method="GET">
+              <div class="row g-3">
+                <div class="col">
+                  <input
+                    required="true"
+                    type="text"
+                    id="textQuery"
+                    name="query"
+                    class="form-control"
+                    placeholder="Nhập tên hãng..."
+                  />
                 </div>
-                <table class="tb1 table table-bordered table-hover mt-3">
-                    <tr>
-                        <th class="stt">STT</th>
-                        <th class="id">ID</th>
-                        <th class="ten">Tên</th>
-                        <th class="hanhDong">Hành Động</th>
-                    </tr>
-                    <% listHangSX.forEach((Hangsx, index) => { %>
-                        <tr class="hang">
-                            <td><%= index + 1 %></td>
-                            <td><%= Hangsx._id %></td>
-                            <td><%= Hangsx.tenHang %></td>
-                            <td>
-                                <table class="tb2">
-                                    <th class="th2">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
-                                            Cập nhật
-                                        </button>
-                                        <form action="/hangsx/update/<%= Hangsx._id %>" method="post" >
-                                            <div class="modal fade" id="exampleModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered modal-xl ">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="exampleModalLabel"><%= Hangsx.tenHang %></h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <input required="true" value="<%= Hangsx.tenHang %>" type="text" class="form-control" placeholder="Tên" name="tenHang">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </th>
-                                    <th class="th2">
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= index %>">
-                                            Xóa
-                                        </button>
-                                        <div class="modal fade" id="deleteModal<%= index %>" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-md">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="deleteModalLabel">Xóa Hãng Sản Xuất</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <form action="/hangsx/delete/<%= Hangsx._id %>" method="post">
-                                                        <div class="modal-body">
-                                                            Bạn chắc chắn muốn xóa hãng <strong><%= Hangsx.tenHang %></strong>?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                                                            <button type="submit" class="btn btn-primary">Có</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </th>
-                                </table>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </table>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-end">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="/hangsx">1</a></li>
-                        <li class="page-item"><a class="page-link" href="/hangsx">2</a></li>
-                        <li class="page-item"><a class="page-link" href="/hangsx">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary">Tìm</button>
+                </div>
+                <div class="col-auto">
+                  <button id="clear" class="btn btn-secondary">Làm mới</button>
+                </div>
+                <div class="col-auto">
+                  <a href="/hangsx" id="clear" class="btn btn-success"
+                    >Tất cả</a
+                  >
+                </div>
+              </div>
+            </form>
+            <div>
+              <button
+                type="button"
+                class="add btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                Thêm
+              </button>
+              <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                  <div class="form2 modal-content">
+                    <form id="form2" method="post" action="/hangsx/add">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                          Thêm Hãng
+                        </h1>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <input
+                          required="true"
+                          type="text"
+                          class="form-control"
+                          placeholder="Tên"
+                          name="tenHang"
+                        />
+                      </div>
+                      <div class="modal-footer">
+                        <a
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                          >Hủy</a
+                        >
+                        <button type="submit" class="btn btn-primary">
+                          Lưu
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-            <%- include('../inc/footer') %>
+          </div>
+          <table class="tb1 table table-bordered table-hover mt-3">
+            <tr>
+              <th class="stt">STT</th>
+              <th class="id">ID</th>
+              <th class="ten">Tên</th>
+              <th class="hanhDong">Hành Động</th>
+            </tr>
+            <% listHangSX.forEach((Hangsx, index) => { %>
+            <tr class="hang">
+              <td><%= index + 1 %></td>
+              <td><%= Hangsx._id %></td>
+              <td><%= Hangsx.tenHang %></td>
+              <td>
+                <table class="tb2">
+                  <th class="th2">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal<%= index %>"
+                    >
+                      Cập nhật
+                    </button>
+                    <form
+                      action="/hangsx/update/<%= Hangsx._id %>"
+                      method="post"
+                    >
+                      <div
+                        class="modal fade"
+                        id="exampleModal<%= index %>"
+                        tabindex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div
+                          class="modal-dialog modal-dialog-centered modal-xl"
+                        >
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1
+                                class="modal-title fs-5"
+                                id="exampleModalLabel"
+                              >
+                                <%= Hangsx.tenHang %>
+                              </h1>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <div class="col">
+                                  <input
+                                    required="true"
+                                    value="<%= Hangsx.tenHang %>"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Tên"
+                                    name="tenHang"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                              >
+                                Hủy
+                              </button>
+                              <button type="submit" class="btn btn-primary">
+                                Lưu thay đổi
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </th>
+                  <th class="th2">
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteModal<%= index %>"
+                    >
+                      Xóa
+                    </button>
+                    <div
+                      class="modal fade"
+                      id="deleteModal<%= index %>"
+                      tabindex="-1"
+                      aria-labelledby="deleteModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-md">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deleteModalLabel">
+                              Xóa Hãng Sản Xuất
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <form
+                            action="/hangsx/delete/<%= Hangsx._id %>"
+                            method="post"
+                          >
+                            <div class="modal-body">
+                              Bạn chắc chắn muốn xóa hãng
+                              <strong><%= Hangsx.tenHang %></strong>?
+                            </div>
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                              >
+                                Không
+                              </button>
+                              <button type="submit" class="btn btn-primary">
+                                Có
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </th>
+                </table>
+              </td>
+            </tr>
+            <% }) %>
+          </table>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/hangsx">1</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/hangsx">2</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/hangsx">3</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
+        <%- include('../inc/footer') %>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>

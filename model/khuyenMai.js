@@ -5,12 +5,24 @@ var khuyenMaiSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    giamGia: {
+    ngayBatDau: {
+      type: String,
+      required: true,
+    },
+    ngayKetThuc: {
+      type: String,
+      required: true,
+    },
+    soLuong: {
       type: Number,
       required: true,
     },
-    thoiGian: {
-      type: String,
+    giaKhoiDiem: {
+      type: Number,
+      required: true,
+    },
+    soLanApDung: {
+      type: Number,
       required: true,
     },
     trangThai: {
