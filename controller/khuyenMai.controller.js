@@ -52,18 +52,15 @@ exports.createKhuyenMai = async (req, res, next) => {
 };
 
 exports.updateKM = async (req, res, next) => {
+  let msg = "";
   try {
-    let msg = "";
-    const _id = req.params._id;
-    const {
-      ngayBatDau,
-      ngayKetThuc,
-      ten,
-      giaKhoiDiem,
-      soLuong,
-      soLanApDung,
-      trangThai,
-    } = req.body;
+    const _id = req.params.id;
+    const { ngayBatDau, ngayKetThuc, ten, giaKhoiDiem, soLuong } = req.body;
+
+    const khuyenMai = await khuyenMaiModel.findById(_id);
+    if (!khuyenMai) {
+      return res.status(404).json({ message: "Khuyến mại không tồn tại" });
+    }
 
     const updatedFields = {
       ngayBatDau: ngayBatDau,
@@ -71,8 +68,8 @@ exports.updateKM = async (req, res, next) => {
       ten: ten,
       giaKhoiDiem: giaKhoiDiem,
       soLuong: soLuong,
-      soLanApDung: soLanApDung,
-      trangThai: trangThai,
+      soLanApDung: khuyenMai.soLanApDung,
+      trangThai: khuyenMai.trangThai,
     };
 
     const updatedItem = await khuyenMaiModel.findOneAndUpdate(
@@ -96,7 +93,7 @@ exports.deleteKM = async (req, res, next) => {
   let id_c = req.params.id;
   let msg = "";
   try {
-    await hangSX.findByIdAndDelete(id_c);
+    await khuyenMaiModel.findByIdAndDelete(id_c);
     msg = "Xóa thành công";
     return res.redirect("/khuyenMai");
   } catch (error) {
