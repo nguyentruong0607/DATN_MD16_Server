@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Mau Schema
-var mauSchema = new mongoose.Schema({
+const mauSchema = new mongoose.Schema({
     mau: String,
     soLuong:Number,
     giaTien:Number
@@ -10,27 +10,31 @@ var mauSchema = new mongoose.Schema({
 
 
 // DienThoai Schema
-var dienThoaiSchema = new mongoose.Schema({
-    tenDienThoai: { type: String },
-    camera: { type: String },
-    cameraTruoc: { type: String },
-    kichThuoc: { type: String },
-    cPU: { type: String },
-    ram: { type: String },
-    sim: { type: String },
-    pin: { type: String },
-    heDieuHanh: { type: String },
-    namSanXuat: { type: String },
-    congNgheManHinh: { type: String },
-    moTaThem: { type: String },
-    hinhAnh: { type: String },
-    doPhanGiai: { type: String },
+const dienThoaiSchema = new mongoose.Schema({
+    tenDienThoai: String,
+    camera: String,
+    cameraTruoc: String,
+    kichThuoc: String,
+    cPU: String,
+    ram: String,
+    sim: String,
+    pin: String,
+    heDieuHanh: String,
+    namSanXuat: String,
+    congNgheManHinh: String,
+    moTaThem: String,
+    hinhAnh: String,
+    doPhanGiai: String,
+    giaGoc:String,
+    giamGia:String,
+    trangThai:Boolean,
+    
     mauSchema:[mauSchema],
     idHangSX: { type: mongoose.Schema.Types.ObjectId, ref: 'hangsxModel' }
 }, {
-    collection: 'DienThoai'
+    collection: 'DienThoai_table'
 });
-var DienThoai = mongoose.model('DienThoai', dienThoaiSchema);
+const DienThoai = mongoose.model('DienThoai', dienThoaiSchema);
 
 
 

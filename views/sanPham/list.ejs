@@ -46,6 +46,7 @@
             <th scope="col" class="col-md-1 sm-1">Ảnh</th>
             <th scope="col" class="col-md-4 sm-4">Tên </th>
             <th scope="col" class="col-md-1.5 sm-1.5">Số lượng</th>
+            <th scope="col" class="col-md-1.5 sm-1.5">Trạng thái</th>
             <th scope="col" class="col-md-3.5 sm-3.5">Hành động</th>
           </tr>
         </thead>
@@ -64,10 +65,17 @@
                 <% }); %>
                 <%= totalVariants %>
               </td>
+              <td><% if(product.trangThai){ %>
+                Hiển thị
+                <% }else{ %>
+                    Ẩn
+                    <% } %></td>
               <td>
                 <a href="/sanPham/chi-tiet/<%= product._id %>" class="btn btn-primary icon-btn ms-2 me-2">Chi tiết</a>
                 <a href="/sanPham/edit/<%= product._id %>" class="btn btn-info icon-btn me-2">Sửa</a>
-                
+                <button class="btn btn-toggle-status <%= product.trangThai ? 'btn-danger':'btn-success'  %>" data-id="<%= product._id %>" data-status="<%= product.trangThai %>">
+                  <%= product.trangThai ? 'Ẩn':'Hiện thị' %>
+                </button>
               </td>
             </tr>
             <% }); %>
@@ -121,7 +129,7 @@
             const productId = this.getAttribute('data-id');
             const productStatus = this.getAttribute('data-status');
       
-            fetch(`/api/sanPham/toggle-status/${productId}`, {
+            fetch(`/api/sanPham/status/${productId}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
               // Không cần body nếu bạn chỉ toggle trạng thái

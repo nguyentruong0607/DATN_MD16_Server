@@ -119,31 +119,6 @@
             <%- include('../inc/footer') %>
         </div>
     </div>
-    <script>
-        document.getElementById('addProductForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-
-            try {
-                const response = await fetch('/api/sanPham/add', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                window.location.href = '/sanPham';
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra, vui lòng thử lại.');
-            }
-        });
-
-        
-    </script>
 </body>
 
 </html>

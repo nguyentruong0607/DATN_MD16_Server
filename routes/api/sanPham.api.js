@@ -10,8 +10,10 @@ router.post('/add', sanPhamApi.createsanPham);
 router.post('/search',sanPhamApi.searchSanPham);
 router.put('/edit/:id', sanPhamApi.updatesanPham); 
 router.delete("/delete/:id",sanPhamApi.deletesanPham);
+router.patch('/status/:id',sanPhamApi.toggleProductStatus);
 
 
-
-
+//màu
+router.post('/add-mau/:id',sanPhamApi.addColor);
+router.put('/edit-color/:productId/:mauId',sanPhamApi.updateColor);
 module.exports=router;
