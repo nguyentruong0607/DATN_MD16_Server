@@ -3,7 +3,7 @@ var router = express.Router();
 var sanPhamCtrl  = require('../controller/sanPham.controller');
 var checkLogin=require('../middleware/check_login');
 var multer=require('multer');
-var spUpload=multer({dest:'./tmp'});
+var spUpload=multer({dest: './tmp'});
 
 router.get('/',checkLogin.request_login,sanPhamCtrl.getAllSP);
 router.get('/chi-tiet/:id',checkLogin.request_login,sanPhamCtrl.chiTiet);

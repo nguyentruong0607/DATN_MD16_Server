@@ -8,7 +8,7 @@ router.get('/', hangSXApi.listHangsx)   ;
 router.get('/:id', hangSXApi.getHangsxById); 
 router.post('/', hangSXApi.createHangSX); 
 router.put('/:id', hangSXApi.updateHangsx); 
-router.delete('/id:',hangSXApi.deleteHangSX);
+router.delete('/:id',hangSXApi.deleteHangSX);
 
 
 module.exports=router;
