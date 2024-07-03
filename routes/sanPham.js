@@ -11,5 +11,7 @@ router.get('/add',sanPhamCtrl.add);
 
 router.post('/add',spUpload.single('hinhAnh'),sanPhamCtrl.add);
 router.get('/search',sanPhamCtrl.search);
+// router.get('/edit/:id',sanPhamCtrl.edit);
+router.post('/delete/:id',sanPhamCtrl.deleteProduct);
 // Xuất router
 module.exports = router;

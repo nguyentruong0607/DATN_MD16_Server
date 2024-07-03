@@ -76,6 +76,28 @@
                 <button class="btn btn-toggle-status <%= product.trangThai ? 'btn-danger':'btn-success'  %>" data-id="<%= product._id %>" data-status="<%= product.trangThai %>">
                   <%= product.trangThai ? 'Ẩn':'Hiện thị' %>
                 </button>
+                
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= index %>" >  Xóa</button>
+                  <div class="modal fade" id="deleteModal<%= index %>"tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" >
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="deleteModalLabel">Xóa sản phẩm </h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button></div>
+                        <form action="/sanPham/delete/<%= product._id %>" method="post">
+                          <div class="modal-body">
+                            Bạn chắc chắn muốn xóa sản phẩm
+                            <strong><%= product.tenDienThoai %></strong>?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                            <button type="submit" class="btn btn-primary">Có</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                
               </td>
             </tr>
             <% }); %>
@@ -144,6 +166,9 @@
           });
         });
       </script>
+   
+    
+
 </body>
 
 </html>

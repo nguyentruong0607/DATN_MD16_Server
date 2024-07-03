@@ -6,8 +6,9 @@ exports.createDiaChi = async (req, res, next) => {
     try {
         // tạo mdel để gán dữ liệu
         let objU = new diaChiModel();
-        objU.tenDiaChi = req.body.tenDiaChi;
-
+        objU.ten = req.body.ten;
+        objU.sdt=req.body.sdt;
+        objU.diaChi=req.body.diaChi;
         // ghi vào csdl
         let new_u = await objU.save();
        
@@ -54,14 +55,11 @@ exports.getDiaChiById = async (req, res, next) => {
 exports.updateDiaChi = async (req, res, next) => {
     try {
         let id = req.params.id ;
-        // nếu có thay đổi dữ liệu thì mới validate
-        // vd: Validate tenHang khi có nhập
-        if(req.body.tenDiaChi || req.body.tenDiaChi.length >0){
-            if(req.body.tenDiaChi.length>200 || req.body.tenDiaChi.length<=3)
-              throw new Error("Ten địa Chỉ không hợp lệ");
-        }
+        
         let objU = {};
-        objU.tenDiaChi = req.body.tenDiaChi;
+        objU.ten = req.body.ten;
+        objU.sdt=req.body.sdt;
+        objU.diaChi=req.body.diaChi;
         // ghi vào csdl
         let kq = await diaChiModel.findByIdAndUpdate(id,objU);
        

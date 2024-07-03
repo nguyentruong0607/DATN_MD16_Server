@@ -7,18 +7,18 @@ const path = require('path');
 exports.getAllSP = async (req, res, next) => {
     try {
         const list = await dienThoai.DienThoai.find();
-        res.render('sanPham/list', { listSP: list, msg: 'Lấy dữ liệu thành công !' ,title:'Quản lý sản phẩm'});
+        res.render('sanPham/list', { listSP: list, msg: 'Lấy dữ liệu thành công !', title: 'Quản lý sản phẩm' });
     } catch (error) {
         console.error('Error in getAllSP:', error);
         res.status(500).json({ message: 'Lỗi khi lấy dữ liệu sản phẩm' });
     }
 };
 // chi tiết sản phẩm
-exports.chiTiet=async(req, res, next)=>{
+exports.chiTiet = async (req, res, next) => {
     try {
-        const user=req.session.account;
-        const dienthoai=await dienThoai.DienThoai.findById(req.params.id);
-        res.render('sanPham/chiTiet',{title:'Chi tiết sản phẩm',dienthoai:dienthoai,user:user});
+        const user = req.session.account;
+        const dienthoai = await dienThoai.DienThoai.findById(req.params.id);
+        res.render('sanPham/chiTiet', { title: 'Chi tiết sản phẩm', dienthoai: dienthoai, user: user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -115,14 +115,30 @@ exports.search = async (req, res, next) => {
     try {
         if (queryValue.lenght === 0) {
             const listSanPham = await dienThoai.DienThoai.find();
-            res.render('sanPham/list',{title: "Quản lý sản phẩm",listSP: listSanPham , user :  user});
+            res.render('sanPham/list', { title: "Quản lý sản phẩm", listSP: listSanPham, user: user });
         }
         else {
             const listSanPham = await dienThoai.DienThoai.find({ tenDienThoai: { $regex: queryValue, $options: 'i' } });
-            res.render('sanPham/list',{title: "Quản lý sản phẩm",listSP: listSanPham , user :  user});
+            res.render('sanPham/list', { title: "Quản lý sản phẩm", listSP: listSanPham, user: user });
         }
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
+// Xóa sản phẩm
+exports.deleteProduct = async (req, res, next) => {
+    const productId = req.params.id;
+    if (req.method == 'POST') {
+        try {
+
+            await dienThoai.DienThoai.findByIdAndDelete(productId);
+            res.redirect('/sanPham')
+        } catch (error) {
+            console.error('Lỗi khi xóa sản phẩm:', error);
+            res.status(500).json({ message: 'Xóa sản phẩm thất bại' });
+        }
+    }
+};
+
