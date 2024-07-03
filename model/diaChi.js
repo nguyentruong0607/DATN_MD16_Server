@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 var diaChiSchema= new mongoose.Schema(
     {
-        tenDiaChi:{
+        ten:{
             type:String,
             required: true
+        },
+        sdt:{
+            type:String
+        },
+        diaChi:{
+            type:String
         }
+
+
     },
     {
         collection:'DiaChi'

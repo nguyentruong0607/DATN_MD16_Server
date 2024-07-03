@@ -15,5 +15,5 @@ router.patch('/status/:id',sanPhamApi.toggleProductStatus);
 
 //màu
 router.post('/add-mau/:id',sanPhamApi.addColor);
-router.put('/edit-color/:productId/:mauId',sanPhamApi.updateColor);
+router.put('/edit-mau/:productId/:mauId',sanPhamApi.updateColor);
 module.exports=router;
