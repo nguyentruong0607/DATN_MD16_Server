@@ -42,13 +42,10 @@
                     <form id="searchForm" action="/user/search" method="GET">
                         <div class="row g-3">
                             <div class="col">
-                                <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên hãng...">
+                                <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tài khoản...">
                             </div>
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary">Tìm</button>
-                            </div>
-                            <div class="col-auto">
-                                <button id="clear" class="btn btn-secondary">Làm mới</button>
                             </div>
                             <div class="col-auto">
                                 <a href="/user" id="clear" class="btn btn-success">Tất cả</a>
@@ -59,20 +56,22 @@
                 </div>
                 <table class="tb1 table table-bordered table-hover mt-3">
                     <tr>
-                        <th class="stt">STT</th>
-                        <th class="id">ID</th>
-                        <th class="ten">Tên</th>
-                        <th class="hanhDong">Hành Động</th>
+                        <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
+                        <th scope="col" class="col-md-0.5 sm-0.5">ID</th>
+                        <th scope="col" class="col-md-0.5 sm-0.5">Tài khoản</th>
+                        <th scope="col" class="col-md-0.5 sm-0.5">Số điện thoại</th>
+                        <th scope="col" class="col-md-0.5 sm-0.5">Hành Động</th>
                     </tr>
                     <% listUser.forEach((User, index) => { %>
                         <tr class="hang">
                             <td><%= index + 1 %></td>
                             <td><%= User._id %></td>
                             <td><%= User.taiKhoan %></td>
+                            <td><%= User.sdt %></td>
                             <td>
                                 <table class="tb2">
                                     <th class="th2">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
+                                        <button type="button"class="btn btn-info icon-btn me-2" style="color:#fff" data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
                                             Cập nhật
                                         </button>
                                         <form action="/user/update/<%= User._id %>" method="post" >
@@ -86,9 +85,19 @@
                                                         <div class="modal-body">
                                                             <div class="row">
                                                                 <div class="col">
-                                                                    <input required="true" value="<%= User.taiKhoan %>" type="text" class="form-control" placeholder="Tên" name="tenHang">
+                                                                    <input required="true" value="<%= User.taiKhoan %>" type="text" class="form-control" placeholder="Tài khoản" name="taiKhoan">
                                                                 </div>
+                                                                
                                                             </div>
+                                                            <div class="col">
+                                                                    <input required="true" value="<%= User.hoTen %>" type="text" class="form-control" placeholder="Họ và tên" name="hoTen">
+                                                            </div>
+                                                            <div class="col">
+                                                                <input required="true" value="<%= User.matKhau %>" type="text" class="form-control" placeholder="Mật khẩu" name="matKhau">
+                                                        </div>
+                                                        <div class="col">
+                                                            <input required="true" value="<%= User.sdt %>" type="text" class="form-control" placeholder="số điện thoại" name="sdt">
+                                                    </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>

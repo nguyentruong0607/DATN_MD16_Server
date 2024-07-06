@@ -1,7 +1,8 @@
 const dienThoai = require('../model/sanPham');
 const hangsxModel = require('../model/hangSX');
-const fs = require('fs');
+const fs=require('fs').promises
 const path = require('path');
+const { Console } = require('console');
 
 // Hiển thị danh sách sản phẩm
 exports.getAllSP = async (req, res, next) => {
@@ -80,7 +81,7 @@ exports.add = async (req, res, next) => {
                     namSanXuat,
                     congNgheManHinh,
                     moTaThem,
-                    hinhAnh,
+                    hinhAnh:req.file.originalname ,
                     doPhanGiai,
                     idHangSX,
                     giaGoc,
@@ -127,6 +128,27 @@ exports.search = async (req, res, next) => {
     }
 }
 
+
+exports.editSP = async (req, res) => {
+    try {
+        const user = req.session.Account;
+        const product = await dienThoai.DienThoai.findById(req.params.id);
+        const listHangSx = await hangsxModel.find();
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.render('sanPham/edit', {
+            title: "Chỉnh sửa sản phẩm",
+            product: product,
+            listHangSx: listHangSx,
+            user: user
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 // Xóa sản phẩm
 exports.deleteProduct = async (req, res, next) => {
     const productId = req.params.id;
@@ -142,3 +164,31 @@ exports.deleteProduct = async (req, res, next) => {
     }
 };
 
+
+
+exports.updateColor = async (req, res) => {
+    try {
+        const productId = req.params.productId; // ID của sản phẩm
+        const variantId = req.params.variantId; // ID của màu
+        const newData = req.body; // Dữ liệu mới của màu từ request body
+
+        // Tìm sản phẩm theo ID
+        const product = await DienThoai.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+        }
+
+        // Tìm và cập nhật màu trong mảng màu của sản phẩm
+        const mau = product.mauSchema.id(variantId);
+        if (!mau) {
+            return res.status(404).json({ message: "Màu không tồn tại" });
+        }
+
+        mau.set(newData); // Cập nhật dữ liệu mới của màu
+        await product.save();
+
+        res.json({ message: "Thông tin của màu đã được cập nhật" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

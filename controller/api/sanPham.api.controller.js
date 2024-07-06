@@ -1,6 +1,8 @@
 const { DienThoai } = require('../../model/sanPham');
 const HangSX = require('../../model/hangSX');
-// thêm hang sx
+const fs = require('fs').promises;
+const path = require('path');
+// thêm sản phẩm
 exports.createsanPham = async (req, res, next) => {
   let msg = '';
   try {
@@ -79,16 +81,31 @@ exports.searchSanPham= async(req,res,next)=>{
 //sửa sản phẩm
 exports.updatesanPham = async (req, res, next) => {
   try {
-    let id = req.params.id;
-    const { idHangSX, tenDienThoai, camera, cameraTruoc, kichThuoc, cPU, ram, sim, heDieuHanh, pin, namSanXuat, congNgheManHinh, moTaThem, hinhAnh, doPhanGiai, mau, soLuong, giaTien } = req.body;
+    console.log('Incoming request:', req.body);
 
-    // ktra xem sản phẩm có tồn tại hay không
+    let id = req.params.id;
+    const { idHangSX, tenDienThoai, camera, cameraTruoc, kichThuoc, cPU, ram, sim, heDieuHanh, pin, namSanXuat, congNgheManHinh, moTaThem, doPhanGiai, mau, soLuong, giaTien, giaGoc, giamGia, trangThai } = req.body;
+
+    console.log('Product ID:', id);
+
+    // Check if the product exists
     const existingProduct = await DienThoai.findById(id);
     if (!existingProduct) {
       return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
     }
 
-    // cập nhật thông tin sản phẩm
+    console.log('Existing product found:', existingProduct);
+
+    // Handle image upload
+    if (req.file && req.file.fieldname === 'hinhAnh') {
+      console.log('File upload detected:', req.file);
+      const file = req.file;
+     
+      await fs.rename(file.path, './public/uploads/'+`image_${file.originalname}`);
+      existingProduct.hinhAnh = `image_${file.originalname}`;
+    }
+
+    // Update product information
     existingProduct.idHangSX = idHangSX || existingProduct.idHangSX;
     existingProduct.tenDienThoai = tenDienThoai || existingProduct.tenDienThoai;
     existingProduct.camera = camera || existingProduct.camera;
@@ -102,18 +119,21 @@ exports.updatesanPham = async (req, res, next) => {
     existingProduct.namSanXuat = namSanXuat || existingProduct.namSanXuat;
     existingProduct.congNgheManHinh = congNgheManHinh || existingProduct.congNgheManHinh;
     existingProduct.moTaThem = moTaThem || existingProduct.moTaThem;
-    existingProduct.hinhAnh = hinhAnh || existingProduct.hinhAnh;
+    
     existingProduct.doPhanGiai = doPhanGiai || existingProduct.doPhanGiai;
     existingProduct.mau = mau || existingProduct.mau;
     existingProduct.soLuong = soLuong || existingProduct.soLuong;
     existingProduct.giaTien = giaTien || existingProduct.giaTien;
-    existingProduct.giaGoc=giaGoc || existingProduct.giaGoc;
-    existingProduct.giamGia=giamGia ||existingProduct.giamGia;
+    existingProduct.giaGoc = giaGoc || existingProduct.giaGoc;
+    existingProduct.giamGia = giamGia || existingProduct.giamGia;
     existingProduct.trangThai = trangThai || existingProduct.trangThai;
 
     const updatedProduct = await existingProduct.save();
+    console.log('Product updated successfully:', updatedProduct);
+
     res.json({ msg: "Sửa thành công", updatedProduct: updatedProduct });
   } catch (error) {
+    console.error('Error updating product:', error);
     res.status(500).json({ msg: error.message });
   }
 
