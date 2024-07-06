@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style_header.css' />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/sidebar.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <%- include('../inc/sidebar') %>
+            <div class="main ">
+                <%- include('../inc/header') %>
+                    <div class="container my-2">
+                       
+                        <!-- Sửa màu -->
+                        <% if (product.mauSchema && product.mauSchema.length) { %>
+                            <% for (var i=0; i < product.mauSchema.length; i++) { %>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#<%= i %>">
+                                    <%= product.mauSchema[i].mau %>
+                                </button>
+
+                                <!-- Modal màu-->
+                                <div class="modal fade" id="<%= i %>" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Sửa biến
+                                                    thể</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <form class="suaBienTheForm" data-variant-id="<%= product.mauSchema[i]._id %>" id="suaBienTheForm<%= product.mauSchema[i]._id %>" method="PUT"
+                                                action="/api/sanPham/edit-mau/<%= product._id %>/<%= product.mauSchema[i]._id %>"
+                                                enctype="multipart/form-data">
+                                                <div class="modal-body">
+
+                                                    <div class="col">
+                                                        <!-- Màu -->
+                                                        <label for="mau" class="form-label">Màu <span
+                                                                class="text-danger">(*)</span></label>
+                                                        <input type="text" class="form-control" id="mau" name="mau"
+                                                            value="<%= product.mauSchema[i].mau %>">
+                                                    </div>
+                                                    <div class="col">
+                                                        <!-- Số lượng -->
+                                                        <label for="soLuong" class="form-label">Số lượng <span
+                                                                class="text-danger">(*)</span></label>
+                                                        <input type="number" class="form-control" id="soLuong"
+                                                            name="soLuong" min="1"
+                                                            value="<%= product.mauSchema[i].soLuong %>">
+                                                    </div>
+                                                    <div class="col">
+                                                        <!-- Giá tiền -->
+                                                        <label for="giaTien" class="form-label">Giá tiền <span
+                                                                class="text-danger">(*)</span></label>
+                                                        <input type="number" class="form-control" id="giaTien"
+                                                            name="giaTien" min="0" step="any"
+                                                            value="<%= product.mauSchema[i].giaTien %>">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
+                                        <!-- hết sửa màu-->
+                                        <form id="editProductForm" method="POST" action="/api/sanPham/edit/<%= product._id %>" enctype="multipart/form-data">
+                                            <div class="row mt-3">
+                                                <div class="col col-md-2">
+                                                    <!-- Hãng -->
+                                                    <label for="idHangSX" class="form-label">Hãng Sản Xuất</label>
+                                                    <select class="form-select" id="idHangSX" name="idHangSX">
+                                                        <% listHangSx.forEach((hangSx, index)=> { %>
+                                                            <option value="<%= hangSx._id %>"
+                                                                <%=product.idHangSX.equals(hangSx._id) ? 'selected' : ''%>>
+                                                                <%= hangSx.tenHang %>
+                                                            </option>
+                                                            <% }) %>
+                                                    </select>
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- Tên điện thoại -->
+                                                    <label for="tenDienThoai" class="form-label">Tên Điện Thoại</label>
+                                                    <input type="text" class="form-control" id="tenDienThoai" name="tenDienThoai" value="<%= product.tenDienThoai %>">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- Camera chính -->
+                                                    <label for="camera" class="form-label">Camera Chính</label>
+                                                    <input type="text" class="form-control" id="camera" name="camera" value="<%= product.camera %>">
+                                                </div>
+                                                <div class="col col-md-2">
+                                                    <!-- Camera trước -->
+                                                    <label for="cameraTruoc" class="form-label">Camera Trước</label>
+                                                    <input type="text" class="form-control" id="cameraTruoc" name="cameraTruoc" value="<%= product.cameraTruoc %>">
+                                                </div>
+                                                <div class="col col-md-2">
+                                                    <!-- SIM -->
+                                                    <label for="sim" class="form-label">SIM</label>
+                                                    <input type="text" class="form-control" id="sim" name="sim" value="<%= product.sim %>">
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col col-md-3">
+                                                    <!-- Kích thước -->
+                                                    <label for="kichThuoc" class="form-label">Kích Thước</label>
+                                                    <input type="text" class="form-control" id="kichThuoc" name="kichThuoc" value="<%= product.kichThuoc %>">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- CPU -->
+                                                    <label for="cPU" class="form-label">CPU</label>
+                                                    <input type="text" class="form-control" id="cPU" name="cPU" value="<%= product.cPU %>">
+                                                </div>
+                                                <div class="col col-md-2">
+                                                    <!-- RAM -->
+                                                    <label for="ram" class="form-label">RAM</label>
+                                                    <input type="text" class="form-control" id="ram" name="ram" value="<%= product.ram %>">
+                                                </div>
+                                                <div class="col col-md-2">
+                                                    <!-- Pin -->
+                                                    <label for="pin" class="form-label">Pin</label>
+                                                    <input type="text" class="form-control" id="pin" name="pin" value="<%= product.pin %>">
+                                                </div>
+                                                <div class="col col-md-2">
+                                                    <!-- Hệ điều hành -->
+                                                    <label for="heDieuHanh" class="form-label">Hệ Điều Hành</label>
+                                                    <input type="text" class="form-control" id="heDieuHanh" name="heDieuHanh" value="<%= product.heDieuHanh %>">
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col col-md-3">
+                                                    <!-- công nghệ màn hình -->
+                                                    <label for="congNgheManHinh" class="form-label">Công nghệ màn hình</label>
+                                                    <input type="text" class="form-control" id="congNgheManHinh" name="congNgheManHinh" value="<%= product.congNgheManHinh %>">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- độ phân giải -->
+                                                    <label for="doPhanGiai" class="form-label">Độ phân giải</label>
+                                                    <input type="text" class="form-control" id="doPhanGiai" name="doPhanGiai" value="<%= product.doPhanGiai %>">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- Hình ảnh -->
+                                                    <label for="giaGoc" class="form-label">Giá gốc</label>
+                                                    <input type="number" class="form-control" id="giaGoc" name="giaGoc" value="<%= product.giaGoc %>">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- Năm sản xuất -->
+                                                    <label for="giamGia" class="form-label">Giảm giá </label>
+                                                    <input type="text" class="form-control" id="giamGia" name="giamGia" value="<%= product.giamGia %>">
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col col-md-3">
+                                                    <!-- Hình ảnh -->
+                                                    <label for="hinhAnh" class="form-label">Hình Ảnh</label>
+                                                    <input type="file" class="form-control" id="hinhAnh" name="hinhAnh">
+                                                </div>
+                                                <div class="col col-md-3">
+                                                    <!-- Năm sản xuất -->
+                                                    <label for="namSanXuat" class="form-label">Năm Sản Xuất</label>
+                                                    <input type="text" class="form-control" id="namSanXuat" name="namSanXuat" value="<%= product.namSanXuat %>">
+                                                </div>
+                                                <div class="col col-md-6">
+                                                    <!-- Mô tả thêm -->
+                                                    <label for="moTaThem" class="form-label">Mô Tả Thêm</label>
+                                                    <textarea class="form-control" id="moTaThem" name="moTaThem" rows="2"><%= product.moTaThem %></textarea>
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                            <div class="row mt-3 text-end">
+                                                <div class="col">
+                                                    <button type="submit" class="btn btn-primary">Sửa Sản Phẩm</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        
+                    </div>
+                    <%- include('../inc/footer') %>
+            </div>
+    </div>
+    <!-- Sửa màu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editVariantForms = document.querySelectorAll('.suaBienTheForm');
+            editVariantForms.forEach(form => {
+                form.addEventListener('submit', async function (event) {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    const variantData = {};
+                    const variantId = form.dataset.variantId;
+                    for (const [key, value] of formData.entries()) {
+                        variantData[key] = value;
+                    }
+
+                    try {
+                        const response = await fetch(`/api/sanPham/edit-mau/<%= product._id %>/${variantId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(variantData)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        const data = await response.json();
+                        console.log('Success:', data);
+
+                        window.location.reload(); // Reload trang sau khi sửa biến thể thành công
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra, vui lòng thử lại.'); // Hiển thị thông báo lỗi
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <!-- Sửa sản phẩm -->
+    <script>
+        document.getElementById('editProductForm').addEventListener('submit', async function (event) {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+      
+          try {
+            const response = await fetch('/api/sanPham/edit/<%= product._id %>', {
+              method: 'PUT',
+              body: formData,
+            });
+      
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+      
+            const data = await response.json();
+            window.location.href = '/sanPham';
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra, vui lòng thử lại.');
+          }
+        });
+      </script>
+      
+    
+
+</body>
+
+</html>
