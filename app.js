@@ -19,7 +19,8 @@ var apiDanhGiaRouter = require("./routes/api/danhGia.api");
 var apiKhuyenMaiRouter = require("./routes/api/khuyenMai.api");
 var apiThongBaoRouter = require("./routes/api/thongBao.api");
 var apiDiaChiRouter = require("./routes/api/diaChi.api");
-var apiGioHangRouter= require("./routes/api/gioHang.api");
+var apiGioHangRouter = require("./routes/api/gioHang.api");
+var apiDonHangRouter = require("./routes/api/donHang.api");
 //web
 var loginRouter = require("./routes/login");
 var homeRouter = require("./routes/home");
@@ -27,6 +28,7 @@ var hangSXRouter = require("./routes/hangsx");
 var sanPhamRouter = require("./routes/sanPham");
 var usersRouter = require("./routes/users");
 var khuyenMaiRouter = require("./routes/khuyenMai");
+var donHangRouter = require("./routes/donHang");
 
 var app = express();
 // view engine setup
@@ -55,8 +57,8 @@ app.use("/api/donHang", apiDonHangRouter);
 app.use("/api/danhGia", apiDanhGiaRouter);
 app.use("/api/khuyenMai", apiKhuyenMaiRouter);
 app.use("/api/thongBao", apiThongBaoRouter);
-app.use("/api/diaChi",apiDiaChiRouter);
-app.use("/api/gioHang",apiGioHangRouter);
+app.use("/api/diaChi", apiDiaChiRouter);
+app.use("/api/gioHang", apiGioHangRouter);
 //web
 app.use("/", homeRouter);
 app.use("/login", loginRouter);
@@ -64,4 +66,5 @@ app.use("/hangsx", hangSXRouter);
 app.use("/sanPham", sanPhamRouter);
 app.use("/user", usersRouter);
 app.use("/khuyenMai", khuyenMaiRouter);
+app.use("/donHang", donHangRouter);
 module.exports = app;

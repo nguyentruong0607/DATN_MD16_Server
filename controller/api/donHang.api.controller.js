@@ -1,16 +1,34 @@
-const  donHangModel  = require("../../model/donHang");
+const donHangModel = require("../../model/donHang");
 
 // thêm don hang
 exports.createDonHang = async (req, res, next) => {
   let soLuong = req.body.soLuong;
   let tongTien = req.body.tongTien;
   let idKH = req.body.idKH;
+  let idSP = req.body.idSP;
+  let trangThaiThanhToan = req.body.trangThaiThanhToan;
+  let ghiChu = req.body.ghiChu;
+  let ngayDatHang = req.body.ngayDatHang;
+  let ngayNhanHang = req.body.ngayNhanHang;
+  let diaChiGiaoHang = req.body.diaChiGiaoHang;
+  let trangThaiDonHang = req.body.trangThaiDonHang;
+  let phuongThucThanhToan = req.body.phuongThucThanhToan;
+  let idKM = req.body.idKM;
 
   try {
     let addFields = {
       soLuong: soLuong,
       tongTien: tongTien,
       idKH: idKH,
+      idSP: idSP,
+      trangThaiThanhToan: trangThaiThanhToan,
+      ghiChu: ghiChu,
+      ngayDatHang: ngayDatHang,
+      ngayNhanHang: ngayNhanHang,
+      diaChiGiaoHang: diaChiGiaoHang,
+      trangThaiDonHang: trangThaiDonHang,
+      phuongThucThanhToan: phuongThucThanhToan,
+      idKM: idKM,
     };
 
     let addItems = await donHangModel.create(addFields);
@@ -27,7 +45,7 @@ exports.createDonHang = async (req, res, next) => {
 // lấy tất cả các dữ liệu
 exports.listDonHang = async (req, res, next) => {
   try {
-    const donHang = await donHangModel.find().populate("idKH");
+    const donHang = await donHangModel.find().populate("idKH").populate("idSP");
 
     if (donHang.length > 0) {
       res.json({
