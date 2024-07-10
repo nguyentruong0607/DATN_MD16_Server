@@ -1,7 +1,7 @@
 const { DienThoai } = require('../../model/sanPham');
 const HangSX = require('../../model/hangSX');
-const fs = require('fs').promises;
-const path = require('path');
+const  {uploadImage}  = require('../../middleware/upload.image.firebase');
+const nameFolder='SanPham'
 // thêm sản phẩm
 exports.createsanPham = async (req, res, next) => {
   let msg = '';
@@ -97,12 +97,14 @@ exports.updatesanPham = async (req, res, next) => {
     console.log('Existing product found:', existingProduct);
 
     // Handle image upload
-    if (req.file && req.file.fieldname === 'hinhAnh') {
-      console.log('File upload detected:', req.file);
-      const file = req.file;
-     
-      await fs.rename(file.path, './public/uploads/'+`image_${file.originalname}`);
-      existingProduct.hinhAnh = `image_${file.originalname}`;
+    let imageUrl = existingProduct.hinhAnh; // Use existing image URLs as default
+    const files = req.files;
+
+    if (files && files.length > 0) {
+      console.log('Files received for upload:', files);
+      const uploadPromises = files.map(file => uploadImage(file, nameFolder));
+      imageUrl = await Promise.all(uploadPromises);
+      console.log('New image URLs:', imageUrl);
     }
 
     // Update product information
@@ -119,7 +121,6 @@ exports.updatesanPham = async (req, res, next) => {
     existingProduct.namSanXuat = namSanXuat || existingProduct.namSanXuat;
     existingProduct.congNgheManHinh = congNgheManHinh || existingProduct.congNgheManHinh;
     existingProduct.moTaThem = moTaThem || existingProduct.moTaThem;
-    
     existingProduct.doPhanGiai = doPhanGiai || existingProduct.doPhanGiai;
     existingProduct.mau = mau || existingProduct.mau;
     existingProduct.soLuong = soLuong || existingProduct.soLuong;
@@ -127,6 +128,8 @@ exports.updatesanPham = async (req, res, next) => {
     existingProduct.giaGoc = giaGoc || existingProduct.giaGoc;
     existingProduct.giamGia = giamGia || existingProduct.giamGia;
     existingProduct.trangThai = trangThai || existingProduct.trangThai;
+    existingProduct.hinhAnh = imageUrl.join(', ') || existingProduct.hinhAnh;
+
 
     const updatedProduct = await existingProduct.save();
     console.log('Product updated successfully:', updatedProduct);
@@ -136,7 +139,6 @@ exports.updatesanPham = async (req, res, next) => {
     console.error('Error updating product:', error);
     res.status(500).json({ msg: error.message });
   }
-
 };
 
 
