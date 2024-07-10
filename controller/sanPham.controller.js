@@ -1,9 +1,7 @@
 const dienThoai = require("../model/sanPham");
 const hangsxModel = require("../model/hangSX");
-const fs = require("fs").promises;
-const path = require("path");
-const { Console } = require("console");
-
+const { uploadImage } = require('../middleware/upload.image.firebase');
+const nameFolder='SanPham'
 // Hiển thị danh sách sản phẩm
 exports.getAllSP = async (req, res, next) => {
   try {
@@ -35,23 +33,6 @@ exports.chiTiet = async (req, res, next) => {
 //thêm sản phẩm
 exports.add = async (req, res, next) => {
   if (req.method === "POST") {
-    if (req.file) {
-      const filePath = path.join(
-        __dirname,
-        "../public/uploads",
-        req.file.originalname
-      );
-      fs.rename(req.file.path, filePath, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("File uploaded to: " + filePath);
-        }
-      });
-    } else {
-      console.log("No file uploaded");
-    }
-
     const {
       idHangSX,
       tenDienThoai,
@@ -66,7 +47,6 @@ exports.add = async (req, res, next) => {
       namSanXuat,
       congNgheManHinh,
       moTaThem,
-      hinhAnh,
       doPhanGiai,
       mau,
       soLuong,
@@ -76,7 +56,23 @@ exports.add = async (req, res, next) => {
       trangThai,
     } = req.body;
 
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      console.error("No files uploaded");
+      return res.status(400).json({ message: 'Chưa có file upload' });
+    }
+
+    let imageUrlAnhSanPham;
     try {
+      for (const file of files) {
+        if (file.fieldname === 'hinhAnh') {
+          console.log(`Uploading file: ${file.originalname}`);
+          imageUrlAnhSanPham = await uploadImage(file, nameFolder);
+          console.log(`Uploaded file URL: ${imageUrlAnhSanPham}`);
+        }
+      }
+
       let existingProduct = await dienThoai.DienThoai.findOne({
         tenDienThoai,
         camera,
@@ -90,7 +86,6 @@ exports.add = async (req, res, next) => {
         namSanXuat,
         congNgheManHinh,
         moTaThem,
-        hinhAnh,
         doPhanGiai,
         idHangSX,
         giaGoc,
@@ -115,7 +110,7 @@ exports.add = async (req, res, next) => {
           namSanXuat,
           congNgheManHinh,
           moTaThem,
-          hinhAnh: req.file.originalname,
+          hinhAnh: imageUrlAnhSanPham,
           doPhanGiai,
           idHangSX,
           giaGoc,
@@ -127,7 +122,7 @@ exports.add = async (req, res, next) => {
       }
       res.redirect("/sanPham");
     } catch (error) {
-      console.error("Lỗi thêm sản phẩm:", error);
+      console.error("Error adding product:", error);
       res.status(500).json({ error: "Thêm sản phẩm thất bại" });
     }
   } else {
@@ -140,10 +135,13 @@ exports.add = async (req, res, next) => {
         user: user,
       });
     } catch (error) {
+      console.error("Error rendering add product page:", error);
       res.status(500).json({ message: error.message });
     }
   }
 };
+
+
 
 //tìm kiếm
 exports.search = async (req, res, next) => {
