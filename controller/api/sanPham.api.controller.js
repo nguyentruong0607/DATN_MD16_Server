@@ -66,6 +66,15 @@ exports.getsanPhamById = async (req, res, next) => {
   }
 
 };
+//lấy theo hãng
+exports.getSanPhamByIdHang = async (req, res) => {
+  try {
+      const sanPham = await DienThoai.find({ idHangSX: req.params.id});
+      res.json(sanPham);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
 //tìm kiếm sản phâm thoe tên gần giống
 exports.searchSanPham= async(req,res,next)=>{
   try {

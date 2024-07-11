@@ -9,6 +9,7 @@ const spUpload = multer({ storage: storage });
 router.get('/', sanPhamApi.listsanPham)   ; 
 // xem chi tiết 1 sanPham
 router.get('/:id', sanPhamApi.getsanPhamById); 
+router.get('/hang/:id',sanPhamApi.getSanPhamByIdHang); 
 router.post('/add', sanPhamApi.createsanPham); 
 router.post('/search',sanPhamApi.searchSanPham);
 router.put('/edit/:id',spUpload.any('hinhAnh') ,sanPhamApi.updatesanPham); 
