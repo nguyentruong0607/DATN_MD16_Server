@@ -1,6 +1,6 @@
 const { admin } = require('./firebase.config');
 
-const uploadImage = async (file,folderName) => {
+const uploadImage = async (file, folderName) => {
   return new Promise((resolve, reject) => {
     const bucket = admin.storage().bucket();
     const fileName = `${folderName}/${Date.now()}_${file.originalname}`;
@@ -9,7 +9,7 @@ const uploadImage = async (file,folderName) => {
       metadata: {
         contentType: file.mimetype,
       },
-      predefinedAcl: 'publicRead', 
+      predefinedAcl: 'publicRead',
     });
 
     blobStream.on('error', (error) => {
@@ -37,4 +37,4 @@ const deleteImage = async (imageUrl) => {
   }
 };
 
-module.exports = { uploadImage ,deleteImage};
+module.exports = { uploadImage, deleteImage };
