@@ -55,6 +55,32 @@ exports.listsanPham = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+// lấy sản phẩm mới nhất
+exports.listProductBestNew = async (req, res, next) => {
+  try {
+    const latestProducts = await DienThoai.find()
+      .sort({ _id: -1 }) // Sort by _id field in descending order
+      .limit(6); // Populate the idHangSX field
+
+    res.json(latestProducts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+//lấy sản phẩm hot nhất
+exports.listProductHottest = async (req, res, next) => {
+  try {
+    // Giả sử trường 'sales' chỉ ra độ phổ biến của sản phẩm
+    const hottestProducts = await DienThoai.find()
+      .sort({ sales: -1 }) // Sắp xếp theo trường sales giảm dần
+      .limit(6) // Giới hạn kết quả đến 6 sản phẩm hàng đầu
+      .populate('idHangSX'); // Điền thông tin của trường idHangSX
+
+    res.json(hottestProducts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 // LẤY THEO ID
 exports.getsanPhamById = async (req, res, next) => {
@@ -150,7 +176,51 @@ exports.updatesanPham = async (req, res, next) => {
   }
 };
 
+exports.getSanPhamByRom = async (req, res) => {
+  try {
+      const sanPham = await DienThoai.find({ ram: req.params.ram });
+      res.json(sanPham);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
+//filter 
+exports.filterSanPham = async (req, res) => {
+  try {
+      const { idHangSx, giaMin, giaMax, cpu, ram, kichThuoc} = req.query;
+      let filter = { trangThai: true };
 
+      if (idHangSx) {
+          filter.idHangSX = idHangSx;
+      }
+      // Xử lý khi chỉ có giá tối thiểu (min) được truyền
+      if (giaMin && !giaMax) {
+          filter.giaTien = { $gte: parseInt(giaMin) };
+      }
+
+      // Xử lý khi cả hai giá tối thiểu và tối đa được truyền
+      if (giaMin && giaMax) {
+          filter.giaTien = { $gte: parseInt(giaMin), $lte: parseInt(giaMax) };
+      }
+      if (cpu) {
+          // Sử dụng regex để tìm kiếm CPU tương đối
+          filter.cPU = { $regex: new RegExp(cpu, "i") };
+      }
+      
+      if (ram) {
+          filter.ram = { $regex: new RegExp(ram, "i") };
+      }
+      if (kichThuoc) {
+          filter.kichThuoc = kichThuoc;
+      }
+      
+
+      const sanPham = await DienThoai.find(filter);
+      res.json(sanPham);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
 // Delete by ID
 exports.deletesanPham = async (req, res, next) => {
   try {
