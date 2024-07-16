@@ -141,14 +141,11 @@
                     id="textQuery"
                     name="query"
                     class="form-control"
-                    placeholder="Nhập tên đơn hàng..."
+                    placeholder="Nhập tên khách hàng..."
                   />
                 </div>
                 <div class="col-auto">
                   <button type="submit" class="btn btn-primary">Tìm</button>
-                </div>
-                <div class="col-auto">
-                  <button id="clear" class="btn btn-secondary">Làm mới</button>
                 </div>
                 <div class="col-auto">
                   <a href="/donHang" id="clear" class="btn btn-success"
@@ -307,9 +304,33 @@
                     </div>
                     <div class="modal-footer">
                       <% if (dh.trangThaiDonHang === "Chờ xác nhận") { %>
-                      <button type="button" class="btn btn-primary">
-                        Xác nhận đơn hàng
-                      </button>
+                      <form
+                        action="/donhang/update/<%= dh._id %>"
+                        method="POST"
+                      >
+                        <input
+                          type="hidden"
+                          name="trangThaiDonHang"
+                          value="Đang xử lý"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          Xác nhận đơn hàng
+                        </button>
+                      </form>
+                      <% } else if (dh.trangThaiDonHang === "Đang xử lý") { %>
+                      <form
+                        action="/donhang/update/<%= dh._id %>"
+                        method="POST"
+                      >
+                        <input
+                          type="hidden"
+                          name="trangThaiDonHang"
+                          value="Đang giao hàng"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          Sẵn sàng giao hàng
+                        </button>
+                      </form>
                       <% } %>
                       <button
                         type="button"

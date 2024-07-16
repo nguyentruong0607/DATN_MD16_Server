@@ -6,7 +6,6 @@ var donHangSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "DienThoai",
-        required: true,
       },
     ],
     idKM: {
@@ -16,17 +15,14 @@ var donHangSchema = new mongoose.Schema(
 
     soLuong: {
       type: Number,
-      required: true,
       min: 1,
     },
     tongTien: {
       type: Number,
-      required: true,
       min: 0,
     },
     trangThaiThanhToan: {
       type: Boolean,
-      required: true,
       default: false,
     },
     ghiChu: {
@@ -36,7 +32,6 @@ var donHangSchema = new mongoose.Schema(
     idKH: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Account",
-      required: true,
     },
     ngayDatHang: {
       type: Date,
@@ -48,7 +43,6 @@ var donHangSchema = new mongoose.Schema(
     },
     diaChiGiaoHang: {
       type: String,
-      required: true,
     },
     trangThaiDonHang: {
       type: String,
@@ -64,7 +58,6 @@ var donHangSchema = new mongoose.Schema(
     phuongThucThanhToan: {
       type: String,
       enum: ["Tiền mặt", "Thẻ tín dụng", "Chuyển khoản"],
-      required: true,
       default: "Tiền mặt",
     },
   },

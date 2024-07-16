@@ -40,15 +40,12 @@ exports.createKhuyenMai = async (req, res, next) => {
     };
 
     let addItems = await khuyenMaiModel.create(addFields);
-
     msg = "Thêm thành công";
     res.redirect("/khuyenMai");
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
   }
-
-  res.render("khuyenMai/list", { msg: msg });
 };
 
 exports.updateKM = async (req, res, next) => {
@@ -84,8 +81,6 @@ exports.updateKM = async (req, res, next) => {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
-
-  res.render("khuyenMai/list", { msg: msg });
 };
 
 // Xóa
@@ -99,5 +94,32 @@ exports.deleteKM = async (req, res, next) => {
   } catch (error) {
     msg = error.message;
     res.render("khuyenMai/list", { msg: msg });
+  }
+};
+
+exports.search = async (req, res, next) => {
+  try {
+    const km = req.session.KhuyenMai;
+    let queryValue = req.query.query;
+    if (queryValue.lenght === 0) {
+      let listKM = [];
+      listKM = await khuyenMaiModel.find();
+      res.render("khuyenMai/list", {
+        title: "Khuyến mãi",
+        listKM: listKM,
+        km: km,
+      });
+    }
+    let listKM = [];
+    listKM = await khuyenMaiModel.find({
+      ten: { $regex: queryValue, $options: "i" },
+    });
+    res.render("khuyenMai/list", {
+      title: "Khuyến mãi'" + queryValue + "'",
+      listKM: listKM,
+      km: km,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
