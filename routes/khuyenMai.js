@@ -9,6 +9,7 @@ router.get("/", checkLogin.request_login, khuyenMaiCtrl.getAllKM);
 router.post("/add", checkLogin.request_login, khuyenMaiCtrl.createKhuyenMai);
 router.post("/update/:id", checkLogin.request_login, khuyenMaiCtrl.updateKM);
 router.get("/delete/:id", checkLogin.request_login, khuyenMaiCtrl.deleteKM);
+router.get("/search", checkLogin.request_login, khuyenMaiCtrl.search);
 
 // API
 router.post("/updateAPI/:id", khuyenMaiAPICtrl.updateKM);

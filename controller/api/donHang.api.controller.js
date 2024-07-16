@@ -74,3 +74,35 @@ exports.deleteDonHang = async (req, res, next) => {
     res.json({ status: 500, msg: err.message });
   }
 };
+
+// cập nhật trạng thái đơn hàng
+exports.updateDonHang = async (req, res, next) => {
+  try {
+    let trangThaiDonHang = req.body.trangThaiDonHang;
+    let trangThaiThanhToan = req.body.trangThaiThanhToan;
+
+    // Cập nhật trạng thái đơn hàng dựa trên ID của đơn hàng
+    let updatedDonHang = await donHangModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        trangThaiDonHang: trangThaiDonHang,
+        trangThaiThanhToan: trangThaiThanhToan,
+      },
+      { new: true }
+    );
+
+    // Kiểm tra nếu không tìm thấy đơn hàng
+    if (!updatedDonHang) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    res.json({
+      status: 200,
+      message: "Cập nhật trạng thái đơn hàng thành công",
+      updatedDonHang: updatedDonHang,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
