@@ -109,3 +109,68 @@ exports.signIn = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+// Cập nhật họ tên, số điện thoại và email của một account dựa trên ID
+exports.editAccountInfo = async (req, res) => {
+    try {
+        const { hoTen, sdt } = req.body;
+        const accountId = req.params.id;
+
+        const account = await accountModel.findById(accountId);
+
+        if (!account) {
+            return res.status(404).json({ message: 'Không tìm thấy tài khoản' });
+        }
+
+        // Cập nhật thông tin mới
+        if (hoTen) {
+            account.hoTen = hoTen;
+        }
+        if (sdt) {
+            account.sdt = sdt;
+        }
+        
+
+        // Lưu thông tin tài khoản sau khi đã cập nhật
+        await account.save();
+
+        res.json({ success: true, message: 'Cập nhật thông tin tài khoản thành công!' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+// Cập nhật mật khẩu của một tài khoản dựa trên ID
+exports.editMatKhau = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        // Kiểm tra kiểu dữ liệu của mật khẩu hiện tại và mật khẩu mới
+        if (typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
+            return res.status(200).json({ success: false, message: 'Mật khẩu phải là chuỗi ký tự' });
+        }
+
+        const accountId = req.params.id;
+        const account = await accountModel.findById(accountId);
+
+        if (!account) {
+            return res.status(200).json({ success: false, message: 'Không tìm thấy tài khoản' });
+        }
+
+        // Compare the provided password with the stored one
+        if (currentPassword !== account.matKhau) {
+            return res.status(200).json({ success: false, message: 'Mật khẩu hiện tại không chính xác!' });
+        }
+
+        // Kiểm tra chiều dài của mật khẩu mới
+        if (newPassword.length < 6 || newPassword.length > 20) {
+            return res.status(200).json({ success: false, message: 'Mật khẩu mới phải từ 6 đến 20 ký tự' });
+        }
+
+        // Cập nhật mật khẩu mới vào cơ sở dữ liệu
+        account.matKhau = newPassword;  // Storing plain text password
+        await account.save();
+
+        res.json({ success: true, message: 'Cập nhật mật khẩu thành công' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
