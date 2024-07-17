@@ -29,6 +29,7 @@ var sanPhamRouter = require("./routes/sanPham");
 var usersRouter = require("./routes/users");
 var khuyenMaiRouter = require("./routes/khuyenMai");
 var donHangRouter = require("./routes/donHang");
+var thongBaoRouter= require('./routes/thongbao');
 
 var app = express();
 // view engine setup
@@ -67,4 +68,5 @@ app.use("/sanPham", sanPhamRouter);
 app.use("/user", usersRouter);
 app.use("/khuyenMai", khuyenMaiRouter);
 app.use("/donHang", donHangRouter);
+app.use("/thong-bao",thongBaoRouter);
 module.exports = app;
