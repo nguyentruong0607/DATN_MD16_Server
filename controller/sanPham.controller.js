@@ -3,12 +3,33 @@ const hangsxModel = require("../model/hangSX");
 const { uploadImage } = require('../middleware/upload.image.firebase');
 const nameFolder='SanPham'
 // Hiển thị danh sách sản phẩm
+// exports.getAllSP = async (req, res, next) => {
+//   const trangThai = req.query.trangThai || '';
+//   try {
+//     const list = await dienThoai.DienThoai.find();
+//     res.render("sanPham/list", {
+//       listSP: list,
+//       msg: "Lấy dữ liệu thành công !",
+//       title: "Quản lý sản phẩm",
+//     });
+//   } catch (error) {
+//     console.error("Error in getAllSP:", error);
+//     res.status(500).json({ message: "Lỗi khi lấy dữ liệu sản phẩm" });
+//   }
+// };
+// Hiển thị danh sách sản phẩm
 exports.getAllSP = async (req, res, next) => {
+  const trangThai = req.query.trangThai || '';
   try {
-    const list = await dienThoai.DienThoai.find();
+    let filter = {};
+    if (trangThai !== '') {
+      filter.trangThai = trangThai === 'true';
+    }
+    const list = await dienThoai.DienThoai.find(filter);
     res.render("sanPham/list", {
       listSP: list,
-      msg: "Lấy dữ liệu thành công !",
+      trangThai: trangThai,
+      msg: "Lấy dữ liệu thành công!",
       title: "Quản lý sản phẩm",
     });
   } catch (error) {
@@ -16,6 +37,9 @@ exports.getAllSP = async (req, res, next) => {
     res.status(500).json({ message: "Lỗi khi lấy dữ liệu sản phẩm" });
   }
 };
+
+
+
 // chi tiết sản phẩm
 exports.chiTiet = async (req, res, next) => {
   try {
@@ -202,6 +226,35 @@ exports.deleteProduct = async (req, res, next) => {
     }
   }
 };
+
+//thêm màu
+exports.addColor = async (req, res) => {
+  try {
+    const { mau, soLuong, giaTien } = req.body;
+    const newMau = { mau, soLuong, giaTien };
+    const dienthoai = await dienThoai.DienThoai.findById(req.params.id);
+
+    if (!dienthoai) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+    }
+
+    // Check if the color already exists
+    const colorExists = dienthoai.mauSchema.some(variant => variant.mau === mau);
+    if (colorExists) {
+      return res.status(400).json({ message: "Màu này đã tồn tại" });
+    }
+
+    dienthoai.mauSchema.push(newMau);
+    await dienthoai.save();
+    res.json({ message: "Biến thể đã được thêm thành công" });
+  } catch (error) {
+    console.error("Error adding color:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 
 exports.updateColor = async (req, res) => {
   try {

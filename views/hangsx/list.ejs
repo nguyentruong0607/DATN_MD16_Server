@@ -48,31 +48,7 @@
         text-align: center;
         align-items: center;
       }
-      .stt {
-        width: 3%;
-        text-align: center;
-      }
-      .id {
-        width: 15%;
-      }
-      .anh {
-        width: 10%;
-        height: 30px;
-      }
-      .ten {
-        width: 20%;
-      }
-      .hanhDong {
-        width: 10%;
-      }
-      .img1 {
-        width: auto;
-        height: auto;
-        margin: auto;
-        max-width: 100%;
-        max-height: 50px;
-        padding: 1%;
-      }
+      
       tr {
         margin-top: 10px;
       }
@@ -130,29 +106,25 @@
           <div class="top">
             <form id="searchForm" action="/hangsx/search" method="GET">
               <div class="row g-3">
-                <div class="col">
-                  <input
-                    required="true"
-                    type="text"
-                    id="textQuery"
-                    name="query"
-                    class="form-control"
-                    placeholder="Nhập tên hãng..."
-                  />
-                </div>
-                <div class="col-auto">
-                  <button type="submit" class="btn btn-primary">Tìm</button>
-                </div>
-                <div class="col-auto">
-                  <button id="clear" class="btn btn-secondary">Làm mới</button>
-                </div>
-                <div class="col-auto">
-                  <a href="/hangsx" id="clear" class="btn btn-success"
-                    >Tất cả</a
-                  >
-                </div>
+                  <div class="col" style="width: 200px;">
+                      <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên hãng..." />
+                  </div>
+                  <div class="col-auto">
+                      <button type="submit" class="btn btn-primary">Tìm</button>
+                  </div>
               </div>
-            </form>
+          </form>
+          <form id="filterForm" action="/hangsx/trangThai" method="GET" style="width: 300px;">
+            <div class="row g-3" style="margin-left: 5px;">
+              <div class="col">
+                <select class="form-select" name="trangThai" id="trangThaiSelect">
+                  <option value="" <%= (trangThai === undefined || trangThai === '') ? 'selected' : '' %>>Tất cả</option>
+                  <option value="true" <%= trangThai === 'true' ? 'selected' : '' %>>Hiển thị</option>
+                  <option value="false" <%= trangThai === 'false' ? 'selected' : '' %>>Ẩn</option>
+                </select>
+              </div>
+            </div>
+          </form>
             <div>
               <button
                 type="button"
@@ -162,6 +134,7 @@
               >
                 Thêm
               </button>
+              
               <div
                 class="modal fade"
                 id="exampleModal"
@@ -214,6 +187,7 @@
               <th class="stt">STT</th>
               <th class="id">ID</th>
               <th class="ten">Tên</th>
+              <th >Trạng thái</th>
               <th class="hanhDong">Hành Động</th>
             </tr>
             <% listHangSX.forEach((Hangsx, index) => { %>
@@ -221,6 +195,14 @@
               <td><%= index + 1 %></td>
               <td><%= Hangsx._id %></td>
               <td><%= Hangsx.tenHang %></td>
+             
+              <td>
+                <% if(Hangsx.trangThai){ %>
+                    Hiển thị
+                    <% }else{ %>
+                        Ẩn
+                        <% } %>
+            </td>
               <td>
                 <table class="tb2">
                   <th class="th2">
@@ -232,6 +214,7 @@
                     >
                       Cập nhật
                     </button>
+                    <a href="/hangsx/listSPofHang/<%= Hangsx._id %> " class="btn btn-primary icon-btn ms-2 me-2"> xem sản phẩm </a>
                     <form
                       action="/hangsx/update/<%= Hangsx._id %>"
                       method="post"
@@ -273,6 +256,22 @@
                                     name="tenHang"
                                   />
                                 </div>
+                                <div class="col">
+                                  <label for="trangThai">Chọn trạng
+                                      thái:</label>
+                                  <select id="trangThai" name="trangThai"
+                                      class="form-select">
+                                      <% if (Hangsx.trangThai) { %>
+                                          <option value="True">Hiển thị</option>
+                                          <option value="False">Ẩn</option>
+                                          <% } else { %>
+                                              <option value="False">Ẩn
+                                              </option>
+                                              <option value="True">Hiện thị
+                                              </option>
+                                              <% } %>
+                                  </select>
+                              </div>
                               </div>
                             </div>
                             <div class="modal-footer">
@@ -292,60 +291,7 @@
                       </div>
                     </form>
                   </th>
-                  <th class="th2">
-                    <button
-                      type="button"
-                      class="btn btn-danger"
-                      data-bs-toggle="modal"
-                      data-bs-target="#deleteModal<%= index %>"
-                    >
-                      Xóa
-                    </button>
-                    <div
-                      class="modal fade"
-                      id="deleteModal<%= index %>"
-                      tabindex="-1"
-                      aria-labelledby="deleteModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered modal-md">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="deleteModalLabel">
-                              Xóa Hãng Sản Xuất
-                            </h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <form
-                            action="/hangsx/delete/<%= Hangsx._id %>"
-                            method="post"
-                          >
-                            <div class="modal-body">
-                              Bạn chắc chắn muốn xóa hãng
-                              <strong><%= Hangsx.tenHang %></strong>?
-                            </div>
-                            <div class="modal-footer">
-                              <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                              >
-                                Không
-                              </button>
-                              <button type="submit" class="btn btn-primary">
-                                Có
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </th>
+                  
                 </table>
               </td>
             </tr>
@@ -378,5 +324,11 @@
         <%- include('../inc/footer') %>
       </div>
     </div>
+    <script>
+      document.getElementById('trangThaiSelect').addEventListener('change', function() {
+        document.getElementById('filterForm').submit();
+      });
+    </script>
+
   </body>
 </html>

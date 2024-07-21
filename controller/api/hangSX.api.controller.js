@@ -7,7 +7,7 @@ exports.createHangSX = async (req, res, next) => {
         // tạo mdel để gán dữ liệu
         let objU = new hangsxModel();
         objU.tenHang = req.body.tenHang;
-      
+        objU.trangThai=true;
  
  
         // ghi vào csdl
@@ -64,6 +64,7 @@ exports.updateHangsx = async (req, res, next) => {
         }
         let objU = {};
         objU.tenHang = req.body.tenHang;
+        objU.trangThai=req.bofy.trangThai;
         // ghi vào csdl
         let kq = await hangsxModel.findByIdAndUpdate(id,objU);
        

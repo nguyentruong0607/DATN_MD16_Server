@@ -16,6 +16,8 @@ router.get('/edit/:id',sanPhamCtrl.editSP);
 router.post('/delete/:id',sanPhamCtrl.deleteProduct);
 
 //màu
+router.get('/add-mau/:id',sanPhamCtrl.addColor)
+router.post('/add-mau/:id',upload.none(),sanPhamCtrl.addColor);
 router.put('/edit-mau/:productId/:mauId',sanPhamCtrl.updateColor);
 // Xuất router
 module.exports = router;

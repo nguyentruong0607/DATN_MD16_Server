@@ -1,174 +1,155 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title><%= title %></title>
+  
   <link rel='stylesheet' href='../stylesheets/style_header.css' />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="../stylesheets/sidebar.css">
 </head>
-
 <body>
   <div class="wrapper">
     <%- include('../inc/sidebar') %>
     <div class="main ">
+      <title><%= title %></title>
       <%- include('../inc/header') %>
-    <div class="content col-md-10 sm-10"style="overflow: auto; height: 80vh">
-      <form id="searchForm" action="/sanPham/search" method="GET">
-        <div class="row g-3">
+      <div class="content col-md-10 sm-10" style="overflow: auto; height: 80vh">
+        <div class="top d-flex justify-content-between mb-3">
+          <form id="filterForm" action="/sanPham/" method="GET" style="width: 20%; margin-right: 20px;">
+            <div class="row g-3" >
+              <div class="col">
+                <select class="form-select" name="trangThai" id="trangThaiSelect">
+                  <option value="" <%= (trangThai === undefined || trangThai === '') ? 'selected' : '' %>>Tất cả</option>
+                  <option value="true" <%= trangThai === 'true' ? 'selected' : '' %>>Hiển thị</option>
+                  <option value="false" <%= trangThai === 'false' ? 'selected' : '' %>>Ẩn</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        <form id="searchForm" action="/sanPham/search" method="GET" style="width: 80%;">
+          <div class="row g-3">
             <div class="col">
-                <input required="true" type="text" id="textQuery" name="query"
-                    class="form-control" placeholder="Nhập tên điên thoại...">
+              <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên điên thoại...">
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Tìm</button>
-            </div>
-            <div class="col-auto">
-                <button id="clear" class="btn btn-secondary">Làm mới</button>
-            </div>
-            <div class="col-auto">
-                <a href="/sanPham" id="clear" class="btn btn-secondary">Tất cả</a>
+              <button type="submit" class="btn btn-primary">Tìm</button>
             </div>
             <div class="col-auto">
               <button type="button" id="addProductButton" class="btn btn-success">Thêm</button>
             </div>
+          </div>
+        </form>
+        
         </div>
-    </form>
-      
-      <table class="table table-bordered table-hover mt-3">
-        <thead>
-          <tr class="align-middle text-center">
-            <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
-            <th scope="col" class="col-md-1 sm-1">Ảnh</th>
-            <th scope="col" class="col-md-4 sm-4">Tên </th>
-            <th scope="col" class="col-md-1.5 sm-1.5">Số lượng</th>
-            <th scope="col" class="col-md-1.5 sm-1.5">Trạng thái</th>
-            <th scope="col" class="col-md-3.5 sm-3.5">Hành động</th>
-          </tr>
-        </thead>
-        <t class="table-group-divider">
-          <% listSP.forEach((product, index)=> { %>
+        <table class="table table-bordered table-hover mt-3">
+          <thead>
             <tr class="align-middle text-center">
-              <th scope="row">
-                <%= index + 1 %>
-              </th>
-              <td><img src="<%= product.hinhAnh %>" alt="Ảnh sản phẩm" width="70"></td>
-              <td> <%= product.tenDienThoai %> </td>
-              <td>
-                <% let totalVariants = 0; %>
-                <% product.mauSchema.forEach(variant => { %>
-                  <% totalVariants += variant.soLuong; %>
-                <% }); %>
-                <%= totalVariants %>
-              </td>
-              <td><% if(product.trangThai){ %>
-                Hiển thị
-                <% }else{ %>
-                    Ẩn
-                    <% } %></td>
-              <td>
-                <a href="/sanPham/chi-tiet/<%= product._id %>" class="btn btn-info icon-btn me-2" style="color: #fff;" >Chi tiết</a>
-                <a href="/sanPham/edit/<%= product._id %>" class="btn btn-info icon-btn me-2"style="color: #fff;" >Sửa</a>
-                <button class="btn btn-toggle-status <%= product.trangThai ? 'btn-danger':'btn-success'  %>" data-id="<%= product._id %>" data-status="<%= product.trangThai %>">
-                  <%= product.trangThai ? 'Ẩn':'Hiện thị' %>
-                </button>
-                
-                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= index %>" >  Xóa</button>
-                  <div class="modal fade" id="deleteModal<%= index %>"tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" >
-                    <div class="modal-dialog modal-dialog-centered modal-md">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="deleteModalLabel">Xóa sản phẩm </h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button></div>
-                        <form action="/sanPham/delete/<%= product._id %>" method="post">
-                          <div class="modal-body">
-                            Bạn chắc chắn muốn xóa sản phẩm
-                            <strong><%= product.tenDienThoai %></strong>?
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                            <button type="submit" class="btn btn-primary">Có</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                
-              </td>
+              <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
+              <th scope="col" class="col-md-1 sm-1">Ảnh</th>
+              <th scope="col" class="col-md-4 sm-4">Tên </th>
+              <th scope="col" class="col-md-1.5 sm-1.5">Số lượng</th>
+              <th scope="col" class="col-md-1.5 sm-1.5">Trạng thái</th>
+              <th scope="col" class="col-md-3.5 sm-3.5">Hành động</th>
             </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <% listSP.forEach((product, index)=> { %>
+              <tr class="align-middle text-center">
+                <th scope="row"><%= index + 1 %></th>
+                <td><img src="<%= product.hinhAnh %>" alt="Ảnh sản phẩm" width="70"></td>
+                <td><%= product.tenDienThoai %></td>
+                <td>
+                  <% let totalVariants = 0; %>
+                  <% product.mauSchema.forEach(variant => { %>
+                    <% totalVariants += variant.soLuong; %>
+                  <% }); %>
+                  <%= totalVariants %>
+                </td>
+                <td>
+                  <% if(product.trangThai){ %>
+                    Hiển thị
+                  <% }else{ %>
+                    Ẩn
+                  <% } %>
+                </td>
+                <td>
+                  <a href="/sanPham/chi-tiet/<%= product._id %>" class="btn btn-info icon-btn me-2" style="color: #fff;">Chi tiết</a>
+                  <a href="/sanPham/edit/<%= product._id %>" class="btn btn-info icon-btn me-2" style="color: #fff;">Sửa</a>
+                  <button class="btn btn-toggle-status <%= product.trangThai ? 'btn-danger':'btn-success'  %>" data-id="<%= product._id %>" data-status="<%= product.trangThai %>">
+                    <%= product.trangThai ? 'Ẩn':'Hiện thị' %>
+                  </button>
+                </td>
+              </tr>
             <% }); %>
-        </tbody>
-      </table>
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-end">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <%- include('../inc/footer') %> 
     </div>
-    <%- include('../inc/footer') %> 
-    </div>
-    
   </div>
 
-      <script>
-        // Function to format currency
-        function formatCurrency(amount) {
-          return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
-        }
+  <script>
+    // Function to format currency
+    function formatCurrency(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
+    }
 
-        // Call formatCurrency function for each total amount in the table
-        document.addEventListener("DOMContentLoaded", function () {
-          const totalCells = document.querySelectorAll(".total-cell");
-          totalCells.forEach(cell => {
-            const amount = parseFloat(cell.textContent.trim());
-            cell.textContent = formatCurrency(amount);
-          });
-        });
-        document.getElementById('addProductButton').addEventListener('click', function() {
-            window.location.href = '/sanPham/add';
-        });
-      </script>
-      <!-- // Toggle status -->
-      <script>
-        document.querySelectorAll('.btn-toggle-status').forEach(button => {
-          button.addEventListener('click', function(e) {
-            const productId = this.getAttribute('data-id');
-            const productStatus = this.getAttribute('data-status');
-      
-            fetch(`/api/sanPham/status/${productId}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              // Không cần body nếu bạn chỉ toggle trạng thái
-            })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-              // Cập nhật UI hoặc reload page để phản ánh thay đổi
-              location.reload();
-            })
-            .catch(error => console.error('Error:', error));
-          });
-        });
-      </script>
-   
-    
+    // Call formatCurrency function for each total amount in the table
+    document.addEventListener("DOMContentLoaded", function () {
+      const totalCells = document.querySelectorAll(".total-cell");
+      totalCells.forEach(cell => {
+        const amount = parseFloat(cell.textContent.trim());
+        cell.textContent = formatCurrency(amount);
+      });
+    });
+    document.getElementById('addProductButton').addEventListener('click', function() {
+      window.location.href = '/sanPham/add';
+    });
 
+    // Toggle status
+    document.querySelectorAll('.btn-toggle-status').forEach(button => {
+      button.addEventListener('click', function(e) {
+        const productId = this.getAttribute('data-id');
+        const productStatus = this.getAttribute('data-status');
+
+        fetch(`/api/sanPham/status/${productId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          // Không cần body nếu bạn chỉ toggle trạng thái
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // Cập nhật UI hoặc reload page để phản ánh thay đổi
+          location.reload();
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    });
+
+    document.getElementById('trangThaiSelect').addEventListener('change', function() {
+      document.getElementById('filterForm').submit();
+    });
+  </script>
 </body>
-
 </html>
