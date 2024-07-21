@@ -248,23 +248,36 @@ exports.toggleProductStatus = async (req, res) => {
 };
 
 //   Màu
+// exports.addColor = async (req, res) => {
+//   try {
+//       const productId = req.params.id; // ID của sản phẩm
+//       const colorData = req.body; // Dữ liệu của màu từ request body
+//       // Tìm sản phẩm theo ID
+//       const product = await DienThoai.findById(productId);
+//       if (!product) {
+//           return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+//       }
+
+//       // Thêm màu mới vào mảng màu của sản phẩm
+//       product.mauSchema.push(colorData);
+//       await product.save();
+
+//       res.status(201).json({ message: "màu mới đã được thêm vào sản phẩm" });
+//   } catch (error) {
+//       res.status(500).json({ message: error.message });
+//   }
+// };
 exports.addColor = async (req, res) => {
   try {
-      const productId = req.params.id; // ID của sản phẩm
-      const colorData = req.body; // Dữ liệu của màu từ request body
-      // Tìm sản phẩm theo ID
-      const product = await DienThoai.findById(productId);
-      if (!product) {
-          return res.status(404).json({ message: "Sản phẩm không tồn tại" });
-      }
+    const { mau, soLuong, giaTien } = req.body;
+    const newMau = { mau, soLuong, giaTien };
+    const dienthoai = await findProductById(req.params.id);
 
-      // Thêm màu mới vào mảng màu của sản phẩm
-      product.mauSchema.push(colorData);
-      await product.save();
-
-      res.status(201).json({ message: "màu mới đã được thêm vào sản phẩm" });
+    dienthoai.mauSchema.push(newMau);
+    await dienthoai.save();
+    res.json({ message: "Thêm màu thành công", dienthoai });
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 exports.updateColor = async (req, res) => {
