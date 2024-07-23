@@ -24,7 +24,6 @@ const dienThoaiSchema = new mongoose.Schema(
     moTaThem: String,
     hinhAnh: String,
     doPhanGiai: String,
-    giaGoc: String,
     giamGia: String,
     trangThai: Boolean,
 

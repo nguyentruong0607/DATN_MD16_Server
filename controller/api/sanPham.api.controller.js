@@ -8,7 +8,7 @@ exports.createsanPham = async (req, res, next) => {
   try {
     const { idHangSX, tenDienThoai, camera, cameraTruoc, kichThuoc,
       cPU, ram, sim, heDieuHanh, pin, namSanXuat, congNgheManHinh, moTaThem,
-      hinhAnh, doPhanGiai, mau, soLuong, giaTien,giaGoc,giamGia,trangThai } = req.body;
+      hinhAnh, doPhanGiai, mau, soLuong, giaTien,giamGia,trangThai } = req.body;
 
     // Tìm sản phẩm theo tên
     let existingProduct = await DienThoai.findOne({ tenDienThoai });
@@ -31,7 +31,7 @@ exports.createsanPham = async (req, res, next) => {
         tenDienThoai, camera, cameraTruoc, kichThuoc, cPU, ram,
         sim, pin, heDieuHanh, namSanXuat,
         congNgheManHinh, moTaThem, hinhAnh, doPhanGiai,
-        idHangSX,giaGoc,giamGia,trangThai:true,
+        idHangSX,giamGia,trangThai:true,
         mauSchema: [{ mau, soLuong, giaTien }]
       });
       const new_dienThoai = await newSanPham.save();
@@ -119,7 +119,7 @@ exports.updatesanPham = async (req, res, next) => {
     console.log('Incoming request:', req.body);
 
     let id = req.params.id;
-    const { idHangSX, tenDienThoai, camera, cameraTruoc, kichThuoc, cPU, ram, sim, heDieuHanh, pin, namSanXuat, congNgheManHinh, moTaThem, doPhanGiai, mau, soLuong, giaTien, giaGoc, giamGia, trangThai } = req.body;
+    const { idHangSX, tenDienThoai, camera, cameraTruoc, kichThuoc, cPU, ram, sim, heDieuHanh, pin, namSanXuat, congNgheManHinh, moTaThem, doPhanGiai, mau, soLuong, giaTien, giamGia, trangThai } = req.body;
 
     console.log('Product ID:', id);
 
@@ -160,7 +160,6 @@ exports.updatesanPham = async (req, res, next) => {
     existingProduct.mau = mau || existingProduct.mau;
     existingProduct.soLuong = soLuong || existingProduct.soLuong;
     existingProduct.giaTien = giaTien || existingProduct.giaTien;
-    existingProduct.giaGoc = giaGoc || existingProduct.giaGoc;
     existingProduct.giamGia = giamGia || existingProduct.giamGia;
     existingProduct.trangThai = trangThai || existingProduct.trangThai;
     existingProduct.hinhAnh = imageUrl.join(', ') || existingProduct.hinhAnh;
