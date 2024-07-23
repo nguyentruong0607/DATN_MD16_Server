@@ -183,6 +183,7 @@
             </div>
           </div>
           <table class="tb1 table table-bordered table-hover mt-3">
+
             <tr>
               <th class="stt">STT</th>
               <th class="id">ID</th>
@@ -190,6 +191,7 @@
               <th >Trạng thái</th>
               <th class="hanhDong">Hành Động</th>
             </tr>
+            <tbody class="table-group-divider">
             <% listHangSX.forEach((Hangsx, index) => { %>
             <tr class="hang">
               <td><%= index + 1 %></td>
@@ -296,6 +298,7 @@
               </td>
             </tr>
             <% }) %>
+            </tbody>
           </table>
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-end">

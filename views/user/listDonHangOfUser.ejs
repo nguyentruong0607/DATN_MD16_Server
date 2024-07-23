@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/stylesheets/style_header.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://kit.fontawesome.com/ae360af17e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/sidebar.css" />
+    <style>
+      .tb1 {
+        width: 100%;
+        font-size: 100%;
+        padding: 5px;
+      }
+      .tb2 {
+        width: 100%;
+        font-size: 100%;
+        padding: 5px;
+      }
+      th {
+        border: 1px solid rgb(229, 218, 218);
+        border-bottom: 2px solid;
+        text-align: center;
+      }
+      .th2 {
+        border: none;
+        text-align: center;
+      }
+      .th2 img {
+        width: 30px;
+        height: 30px;
+      }
+      td {
+        border: 1px solid rgb(229, 218, 218);
+        text-align: center;
+        align-items: center;
+      }
+      .stt {
+        width: 3%;
+        text-align: center;
+      }
+      .id {
+        width: 15%;
+      }
+      .anh {
+        width: 10%;
+        height: 30px;
+      }
+      .ten {
+        width: 20%;
+      }
+      .hanhDong {
+        width: 10%;
+      }
+      .img1 {
+        width: auto;
+        height: auto;
+        margin: auto;
+        max-width: 100%;
+        max-height: 50px;
+        padding: 1%;
+      }
+      tr {
+        margin-top: 10px;
+      }
+      .hang:hover {
+        background-color: rgb(243, 241, 241);
+        text-decoration: underline;
+      }
+      #searchForm {
+        margin: 20px auto;
+      }
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .modal-body input {
+        width: 100%;
+        height: 50px;
+      }
+      .preview {
+        padding: 30px;
+      }
+      .add {
+        float: right;
+        width: 10%;
+        margin: 10px 15px;
+        text-align: center;
+        font-size: 100%;
+        min-width: 70px;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .top #searchForm {
+        width: 100%;
+        margin: auto;
+      }
+      .top #form2 {
+        width: 100%;
+        margin: auto;
+      }
+      .text-danger {
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../inc/sidebar') %>
+      <div class="main">
+        <%- include('../inc/header') %>
+        <div  class="content col-md-10 sm-10" style="overflow: auto; height: 80vh">
+            <div>
+                <div style="float: left;">
+                    <h3 style="color: rgb(247, 7, 7);"> Tài khoản: 
+                      <% if (user.taiKhoan === "") { %>
+                        Chưa cập nhập
+                    <% } else { %>
+                      <%= user.taiKhoan %>
+                    <% } %>
+                    </h3>
+                </div>
+                <div style="float: right;width: 110px;height: 40px;background-color: aquamarine;text-align: center;border-radius: 10px;">
+                    <h3><a style="text-decoration: none;
+                        color: inherit;font-weight: bold;font-size: 20px;" href="/user">Đóng</a></h3>
+                </div>
+            </div>
+
+          <table class="table table-bordered table-hover mt-3">
+            <thead>
+              <tr class="align-middle text-center">
+                <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
+                <th scope="col" class="col-md-0.5 sm-0.5">ID</th>
+                <th scope="col" class="col-md-2 sm-2">Khách hàng</th>
+                <th scope="col" class="col-md-1.5 sm-1.5">Sản phẩm</th>
+                <th scope="col" class="col-md-3.5 sm-3.5">Thời gian</th>
+                <th scope="col" class="col-md-3.5 sm-3.5">Trạng thái</th>
+                <th scope="col" class="col-md-2 sm-2">Tổng tiền</th>
+                <th scope="col" class="col-md-2 sm-2">Hành động</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <% listDH.forEach((dh, index) => { %>
+                <tr class="align-middle text-center">
+                  <th scope="row"><%= index + 1 %></th>
+                  <td><%= dh.id  %></td>
+                  <td><%= dh.idKH.hoTen %></td>
+                  <td>
+                    <% dh.idSP.forEach(sp => { %>
+                    <div><%= sp.tenDienThoai %></div>
+                    <% }) %>
+                  </td>
+                  <td>
+                    <%= new Date(dh.ngayDatHang).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+                  </td>
+                  <td><%= dh.trangThaiDonHang %></td>
+                  <td class="text-danger">
+                    <%= dh.tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
+                  </td>
+                  <td>
+                    <div class="align-items-center">
+                      <button type="button" class="btn btn-primary ms-2 me-2" data-bs-toggle="modal" data-bs-target="#modalChiTietDH-<%= dh._id %>">
+                        Chi Tiết
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <div
+                class="modal fade"
+                id="modalChiTietDH-<%= dh._id %>"
+                tabindex="-1"
+                aria-labelledby="modalChiTietDHLabel-<%= dh._id %>"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5
+                        class="modal-title"
+                        id="modalChiTietDHLabel-<%= dh._id %>"
+                      >
+                        Chi Tiết Đơn Hàng
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <strong>Khách hàng:</strong>
+                          <%= dh.idKH.hoTen %>
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Số lượng:</strong>
+                          <%= dh.soLuong %> chiếc
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Trạng thái thanh toán:</strong> <% if
+                          (dh.trangThaiThanhToan === false) { %> Chưa thanh toán
+                          <% } else { %> Đã thanh toán <% } %>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <strong>Địa chỉ nhận hàng:</strong> <%=
+                          dh.diaChiGiaoHang %>
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Ngày đặt hàng:</strong> <%= new
+                          Date(dh.ngayDatHang).toLocaleString('vi-VN', { hour:
+                          '2-digit', minute: '2-digit', day: '2-digit', month:
+                          '2-digit', year: 'numeric' }) %>
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Ngày nhận hàng:</strong> <%= new
+                          Date(dh.ngayNhanHang).toLocaleString('vi-VN', { hour:
+                          '2-digit', minute: '2-digit', day: '2-digit', month:
+                          '2-digit', year: 'numeric' }) %>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <strong>Ghi chú:</strong> <%= dh.ghiChu %>
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Trạng thái đơn hàng:</strong>
+                          <%= dh.trangThaiDonHang %>
+                        </div>
+                        <div class="col-md-4">
+                          <strong>Phương thức thanh toán:</strong>
+                          <%= dh.phuongThucThanhToan %>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-4">
+                          <strong>Tổng tiền:</strong>
+                          <span class="text-danger"
+                            ><%= dh.tongTien.toLocaleString('vi-VN', { style:
+                            'currency', currency: 'VND' }) %></span
+                          >
+                        </div>
+                      </div>
+                      <h5 class="mt-4">Thông tin sản phẩm</h5>
+                      <div class="row">
+                        <% dh.idSP.forEach(sp => { %>
+                        <div class="col-md-4 mb-3">
+                          <div class="card">
+                            <img
+                              src="<%= sp.hinhAnh %>"
+                              class="card-img-top img-thumbnail"
+                              alt="<%= sp.tenDienThoai %>"
+                              width="100"
+                            />
+                            <div class="card-body">
+                              <h5 class="card-title"><%= sp.tenDienThoai %></h5>
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <% if (dh.trangThaiDonHang === "Chờ xác nhận") { %>
+                      <button type="button" class="btn btn-primary">
+                        Xác nhận đơn hàng
+                      </button>
+                      <% } %>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Đóng
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <% }); %>
+              </tbody>
+              
+          </table>
+
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <%- include('../inc/footer') %>
+      </div>
+    </div>
+
+    <script></script>
+  </body>
+</html>

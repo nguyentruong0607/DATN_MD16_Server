@@ -15,7 +15,7 @@ exports.createAccount = async (req, res, next) => {
         objA.matKhau = req.body.matKhau;
         objA.sdt = req.body.sdt;
         objA.tenQuyen = req.body.tenQuyen;
-
+        objA.trangThai=req.body.trangThai;
         // Save to database
         let new_u = await objA.save();
 
@@ -74,7 +74,8 @@ exports.SignUp = async (req, res) => {
             taiKhoan: taiKhoan,
             hoTen:hoTen,
             sdt:sdt,
-            matKhau: matKhau
+            matKhau: matKhau,
+            trangThai:"true"
         });
 
         await newAccount.save();

@@ -52,6 +52,7 @@
             <th scope="col" >Trạng thái</th>
           </tr>
         </thead>
+        <tbody class="table-group-divider">
         <t class="table-group-divider">
           <% sanPham.forEach((product, index)=> { %>
             <tr class="align-middle text-center">
@@ -75,6 +76,7 @@
               
             </tr>
             <% }); %>
+          </tbody>
       </table>
     </div>
     <%- include('../inc/footer') %> 
