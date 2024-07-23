@@ -75,7 +75,6 @@ exports.add = async (req, res, next) => {
       mau,
       soLuong,
       giaTien,
-      giaGoc,
       giamGia,
       trangThai,
     } = req.body;
@@ -112,7 +111,6 @@ exports.add = async (req, res, next) => {
         moTaThem,
         doPhanGiai,
         idHangSX,
-        giaGoc,
         giamGia,
         trangThai: true,
       });
@@ -137,7 +135,6 @@ exports.add = async (req, res, next) => {
           hinhAnh: imageUrlAnhSanPham,
           doPhanGiai,
           idHangSX,
-          giaGoc,
           giamGia,
           trangThai: true,
           mauSchema: [{ mau, soLuong, giaTien }],
