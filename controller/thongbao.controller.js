@@ -1,15 +1,18 @@
 require('dotenv').config();
 const axios = require('axios');
-exports.home = (req,res,next)=>{
+const { google } = require('google-auth-library');
+
+exports.home = (req, res, next) => {
     const user = req.session.Account;
-    res.render('thongbao/home_thongbao',{title: "Gửi thông báo" , user :  user,message:""});
-}
+    res.render('thongbao/home_thongbao', { title: "Gửi thông báo", user: user, message: "" });
+};
+
 exports.sendNotification = async (req, res) => {
     try {
         const { tieu_de, noi_dung } = req.body;
         // Gửi thông báo qua API
         await sendFirebaseNotification(tieu_de, noi_dung, '/topics/FpolyPhone');
-        const message ='Thông báo đã được gửi thành công';
+        const message = 'Thông báo đã được gửi thành công';
         // Trả về phản hồi JSON chứa thông điệp thành công
         res.status(200).json({ success: true, message: message });
     } catch (error) {
@@ -18,22 +21,36 @@ exports.sendNotification = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error sending notification' });
     }
 };
+
 async function sendFirebaseNotification(tieuDe, noiDung, to) {
-    const fcmUrl = 'https://fcm.googleapis.com/v1/projects/fpolyphone-10302/messages:send';
-    const fcmKey = process.env.FCM_KEY;
+    const fcmUrl = 'https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send';
+
+    const client = new google.auth.JWT({
+        email: process.env.CLIENT_EMAIL,
+        key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
+        scopes: ['https://www.googleapis.com/auth/firebase.messaging']
+    });
+
+    const accessToken = await client.authorize();
 
     const notificationData = {
-        data: {
-            tieu_de: tieuDe,
-            noi_dung: noiDung
-        },
-        to: to
+        message: {
+            topic: to,
+            notification: {
+                title: tieuDe,
+                body: noiDung
+            },
+            data: {
+                story_id: "story_12345"
+            }
+        }
     };
+
     try {
         const response = await axios.post(fcmUrl, notificationData, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `key=${fcmKey}`
+                'Authorization': `Bearer ${accessToken.access_token}`
             }
         });
 

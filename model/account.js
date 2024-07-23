@@ -23,6 +23,10 @@ var accountSchema = new mongoose.Schema(
       enum: ["User", "Admin"],
       default: "User",
     },
+    trangThai:{
+      type:Boolean,
+      default:"true"
+    }
   },
   {
     collection: "Account",
