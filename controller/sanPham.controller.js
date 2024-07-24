@@ -20,17 +20,31 @@ const nameFolder='SanPham'
 // Hiển thị danh sách sản phẩm
 exports.getAllSP = async (req, res, next) => {
   const trangThai = req.query.trangThai || '';
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 6;
+  const skip = (page - 1) * perPage;
+  
   try {
     let filter = {};
     if (trangThai !== '') {
       filter.trangThai = trangThai === 'true';
     }
-    const list = await dienThoai.DienThoai.find(filter);
+    
+    const totalItems = await dienThoai.DienThoai.countDocuments(filter);
+    const list = await dienThoai.DienThoai.find(filter).skip(skip).limit(perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
+    
     res.render("sanPham/list", {
       listSP: list,
       trangThai: trangThai,
       msg: "Lấy dữ liệu thành công!",
       title: "Quản lý sản phẩm",
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
     });
   } catch (error) {
     console.error("Error in getAllSP:", error);

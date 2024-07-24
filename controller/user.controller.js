@@ -3,23 +3,42 @@ const DonHang= require('../model/donHang');
 //Hiển thị
 exports.getAll = async (req, res, next) => {
     let msg = '';
-    let list = [];
     const trangThai = req.query.trangThai || '';
-
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
+    
     try {
-        if (trangThai === '') {
-            list = await User.find();
-        } else {
-            const status = trangThai === 'true';
-            list = await User.find({ trangThai: status });
+        let filter = {};
+        if (trangThai !== '') {
+            filter.trangThai = trangThai === 'true';
         }
+        
+        const totalItems = await User.countDocuments(filter);
+        const list = await User.find(filter).skip(skip).limit(perPage);
+        const totalPages = Math.ceil(totalItems / perPage);
+
         msg = 'Lấy dữ liệu thành công!';
+        
+        res.render('user/list', {
+            listUser: list,
+            msg: msg,
+            title: 'Quản lý người dùng',
+            trangThai: trangThai,
+            currentPage: page,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+        });
     } catch (error) {
         console.log(error);
         msg = 'Lỗi lấy dữ liệu!';
+        res.render('user/list', { listUser: [], msg: msg, title: 'Quản lý người dùng', trangThai });
     }
-    res.render('user/list', { listUser: list, msg: msg, title: 'Quản lý người dùng', trangThai });
 };
+
 
 exports.update = async (req, res, next)=>{
     let user = {};

@@ -13,7 +13,7 @@ exports.createsanPhamYT= async (req, res, next) => {
             return res.status(200).json({ success: false,message:"Đã xóa sản phẩm yêu thích!" });
         } else {
             // Nếu chưa tồn tại, thêm mới
-            const newYT = new SanPhamYT({ id_sanPham, id_user });
+            const newYT = new sanPhamYTModel({ id_sanPham, id_user });
             const savedYT = await newYT.save();
             return res.status(201).json({ success: true,message:"Đã thêm sản phẩm yêu thích!" });
         }
