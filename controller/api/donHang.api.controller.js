@@ -1,4 +1,5 @@
 const donHangModel = require("../../model/donHang");
+const khuyenMaiModel = require("../../model/khuyenMai");
 
 // thêm don hang
 exports.createDonHang = async (req, res, next) => {
@@ -14,6 +15,18 @@ exports.createDonHang = async (req, res, next) => {
   let trangThaiDonHang = req.body.trangThaiDonHang;
   let phuongThucThanhToan = req.body.phuongThucThanhToan;
   let idKM = req.body.idKM;
+
+  if (idKM) {
+    const khuyenMai = await khuyenMaiModel.findOne({ _id: idKM });
+    const updatedKhuyenMai = await khuyenMaiModel.findOneAndUpdate(
+      { _id: khuyenMai._id },
+      {
+        soLuong: khuyenMai.soLuong - 1,
+        soLanApDung: khuyenMai.soLanApDung + 1,
+      },
+      { new: true }
+    );
+  }
 
   try {
     let addFields = {

@@ -10,6 +10,16 @@ router.post("/add", checkLogin.request_login, khuyenMaiCtrl.createKhuyenMai);
 router.post("/update/:id", checkLogin.request_login, khuyenMaiCtrl.updateKM);
 router.get("/delete/:id", checkLogin.request_login, khuyenMaiCtrl.deleteKM);
 router.get("/search", checkLogin.request_login, khuyenMaiCtrl.search);
+router.get(
+  "/selectTrangThai",
+  checkLogin.request_login,
+  khuyenMaiCtrl.selectTrangThai
+);
+router.post(
+  "/updateTrangThai/:id",
+  checkLogin.request_login,
+  khuyenMaiCtrl.updateTrangThai
+);
 
 // API
 router.post("/updateAPI/:id", khuyenMaiAPICtrl.updateKM);

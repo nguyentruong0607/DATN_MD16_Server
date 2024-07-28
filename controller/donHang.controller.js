@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { title } = require("process");
 
-// Hiển thị danh sách khuyến mãi
+// Hiển thị danh sách Đơn hàng
 exports.getAllKDH = async (req, res, next) => {
   try {
     const donHang = await donHangModel.find().populate("idKH").populate("idSP");
@@ -73,5 +73,34 @@ exports.search = async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.selectTrangThai = async (req, res, next) => {
+  try {
+    const { trangThaiDonHang } = req.query;
+
+    if (typeof trangThaiDonHang === "undefined") {
+      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
+    }
+
+    const listDH = await donHangModel
+      .find({
+        trangThaiDonHang: trangThaiDonHang,
+      })
+      .find()
+      .populate("idKH")
+      .populate("idSP");
+
+    res.render("donHang/list", {
+      title: `Đơn hàng trạng thái: ${trangThaiDonHang}`,
+      listDH: listDH,
+      msg: `Lấy danh sách Đơn hàng trạng thái: ${trangThaiDonHang} thành công!`,
+    });
+  } catch (error) {
+    console.error("Error in selectTrangThai:", error);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi lấy danh sách đơn hàng theo trạng thái" });
   }
 };

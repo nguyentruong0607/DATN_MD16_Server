@@ -6,6 +6,9 @@ exports.createKhuyenMai = async (req, res, next) => {
   let ngayKetThuc = req.body.ngayKetThuc;
   let ten = req.body.ten;
   let giaKhoiDiem = req.body.giaKhoiDiem;
+  let giaToiDa = req.body.giaToiDa;
+  let phanTramGiamGia = req.body.phanTramGiamGia;
+  let giaKhuyenMaiToiDa = req.body.giaKhuyenMaiToiDa;
   let soLuong = req.body.soLuong;
   let soLanApDung = 0;
   let trangThai = true;
@@ -15,6 +18,9 @@ exports.createKhuyenMai = async (req, res, next) => {
       ten: ten,
       ngayBatDau: ngayBatDau,
       ngayKetThuc: ngayKetThuc,
+      giaToiDa: giaToiDa,
+      giaKhuyenMaiToiDa: giaKhuyenMaiToiDa,
+      phanTramGiamGia: phanTramGiamGia,
       giaKhoiDiem: giaKhoiDiem,
       soLuong: soLuong,
       soLanApDung: soLanApDung,
@@ -72,6 +78,9 @@ exports.updateKM = async (req, res, next) => {
       ngayBatDau,
       ngayKetThuc,
       ten,
+      giaToiDa,
+      giaKhuyenMaiToiDa,
+      phanTramGiamGia,
       giaKhoiDiem,
       soLuong,
       soLanApDung,
@@ -83,6 +92,9 @@ exports.updateKM = async (req, res, next) => {
       ngayKetThuc: ngayKetThuc,
       ten: ten,
       giaKhoiDiem: giaKhoiDiem,
+      giaToiDa: giaToiDa,
+      giaKhuyenMaiToiDa: giaKhuyenMaiToiDa,
+      phanTramGiamGia: phanTramGiamGia,
       soLuong: soLuong,
       soLanApDung: soLanApDung,
       trangThai: trangThai,

@@ -21,6 +21,18 @@ var khuyenMaiSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    giaToiDa: {
+      type: Number,
+      required: true,
+    },
+    giaKhuyenMaiToiDa: {
+      type: Number,
+      required: true,
+    },
+    phanTramGiamGia: {
+      type: Number,
+      required: true,
+    },
     soLanApDung: {
       type: Number,
       required: true,

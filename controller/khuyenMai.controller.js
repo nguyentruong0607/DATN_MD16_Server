@@ -24,6 +24,9 @@ exports.createKhuyenMai = async (req, res, next) => {
   let ngayKetThuc = req.body.ngayKetThuc;
   let ten = req.body.ten;
   let giaKhoiDiem = req.body.giaKhoiDiem;
+  let giaToiDa = req.body.giaToiDa;
+  let phanTramGiamGia = req.body.phanTramGiamGia;
+  let giaKhuyenMaiToiDa = req.body.giaKhuyenMaiToiDa;
   let soLuong = req.body.soLuong;
   let soLanApDung = 0;
   let trangThai = true;
@@ -34,6 +37,9 @@ exports.createKhuyenMai = async (req, res, next) => {
       ngayBatDau: ngayBatDau,
       ngayKetThuc: ngayKetThuc,
       giaKhoiDiem: giaKhoiDiem,
+      giaToiDa: giaToiDa,
+      giaKhuyenMaiToiDa: giaKhuyenMaiToiDa,
+      phanTramGiamGia: phanTramGiamGia,
       soLuong: soLuong,
       soLanApDung: soLanApDung,
       trangThai: trangThai,
@@ -52,7 +58,16 @@ exports.updateKM = async (req, res, next) => {
   let msg = "";
   try {
     const _id = req.params.id;
-    const { ngayBatDau, ngayKetThuc, ten, giaKhoiDiem, soLuong } = req.body;
+    const {
+      ngayBatDau,
+      ngayKetThuc,
+      ten,
+      giaKhoiDiem,
+      giaToiDa,
+      giaKhuyenMaiToiDa,
+      phanTramGiamGia,
+      soLuong,
+    } = req.body;
 
     const khuyenMai = await khuyenMaiModel.findById(_id);
     if (!khuyenMai) {
@@ -64,6 +79,9 @@ exports.updateKM = async (req, res, next) => {
       ngayKetThuc: ngayKetThuc,
       ten: ten,
       giaKhoiDiem: giaKhoiDiem,
+      giaToiDa: giaToiDa,
+      giaKhuyenMaiToiDa: giaKhuyenMaiToiDa,
+      phanTramGiamGia: phanTramGiamGia,
       soLuong: soLuong,
       soLanApDung: khuyenMai.soLanApDung,
       trangThai: khuyenMai.trangThai,
@@ -121,5 +139,59 @@ exports.search = async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.selectTrangThai = async (req, res, next) => {
+  try {
+    const { trangThai } = req.query;
+
+    console.log(trangThai);
+
+    if (typeof trangThai === "undefined") {
+      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
+    }
+
+    const listKM = await khuyenMaiModel.find({ trangThai: trangThai });
+
+    res.render("khuyenMai/list", {
+      title: `Khuyến mãi trạng thái: ${trangThai}`,
+      listKM: listKM,
+      msg: `Lấy danh sách khuyến mãi trạng thái: ${trangThai} thành công!`,
+    });
+  } catch (error) {
+    console.error("Error in selectTrangThai:", error);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi lấy danh sách khuyến mãi theo trạng thái" });
+  }
+};
+
+exports.updateTrangThai = async (req, res, next) => {
+  let msg = "";
+  try {
+    const _id = req.params.id;
+    const { trangThai } = req.body;
+
+    const khuyenMai = await khuyenMaiModel.findById(_id);
+    if (!khuyenMai) {
+      return res.status(404).json({ message: "Khuyến mại không tồn tại" });
+    }
+
+    const updatedFields = {
+      trangThai: trangThai,
+    };
+
+    const updatedItem = await khuyenMaiModel.findOneAndUpdate(
+      { _id: _id },
+      updatedFields,
+      { new: true }
+    );
+
+    msg = "Cập nhật thành công";
+    res.redirect("/khuyenMai");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
