@@ -7,6 +7,11 @@ var checkLogin = require("../middleware/check_login");
 router.get("/", checkLogin.request_login, donHangCtrl.getAllKDH);
 router.post("/update/:id", checkLogin.request_login, donHangCtrl.updateDonHang);
 router.get("/search", checkLogin.request_login, donHangCtrl.search);
+router.get(
+  "/selectTrangThai",
+  checkLogin.request_login,
+  donHangCtrl.selectTrangThai
+);
 
 // Xuất router
 module.exports = router;

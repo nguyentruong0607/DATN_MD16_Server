@@ -115,6 +115,9 @@
         width: 100%;
         margin: auto;
       }
+      .icon-down {
+        color: black;
+      }
     </style>
   </head>
 
@@ -251,6 +254,50 @@
                           name="giaKhoiDiem"
                         />
                       </div>
+                      <div class="modal-body">
+                        <label for="giaToiDa" class="form-label"
+                          >Giá tối đa (Mức giá tối đa của đơn hàng để áp dụng mã
+                          khuyến mại)
+                          <span class="text-danger">(*)</span></label
+                        >
+                        <input
+                          id="giaToiDa"
+                          required="true"
+                          type="number"
+                          class="form-control"
+                          placeholder="Giá tối đa"
+                          name="giaToiDa"
+                        />
+                      </div>
+                      <div class="modal-body">
+                        <label for="giaKhuyenMaiToiDa" class="form-label"
+                          >Giá khuyến mãi tối đa (Mức giá tối đa áp dụng phần
+                          trăm giảm giá của đơn hàng)
+                          <span class="text-danger">(*)</span></label
+                        >
+                        <input
+                          id="giaKhuyenMaiToiDa"
+                          required="true"
+                          type="number"
+                          class="form-control"
+                          placeholder="Giá khuyến mãi tối đa"
+                          name="giaKhuyenMaiToiDa"
+                        />
+                      </div>
+                      <div class="modal-body">
+                        <label for="phanTramGiamGia" class="form-label"
+                          >Phần trăm khuyến mãi (%)
+                          <span class="text-danger">(*)</span></label
+                        >
+                        <input
+                          id="phanTramGiamGia"
+                          required="true"
+                          type="number"
+                          class="form-control"
+                          placeholder="Phần trăm giảm giá"
+                          name="phanTramGiamGia"
+                        />
+                      </div>
                       <div class="modal-footer">
                         <a
                           type="button"
@@ -274,9 +321,21 @@
               <tr class="align-middle text-center">
                 <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
                 <th scope="col" class="col-md-2 sm-2">Tên</th>
+                <th scope="col" class="col-md-2 sm-2">Số lượng</th>
                 <th scope="col" class="col-md-1.5 sm-1.5">Ngày bắt đầu</th>
                 <th scope="col" class="col-md-3.5 sm-3.5">Ngày kết thúc</th>
-                <th scope="col" class="col-md-3.5 sm-3.5">Trạng thái</th>
+                <th scope="col" class="col-md-3.5 sm-3.5">
+                  <div class="d-flex justify-content-center align-items-center">
+                    Trạng thái
+                    <button
+                      class="btn btn-link p-0 ms-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalTrangThaiHeader"
+                    >
+                      <i class="fa fa-caret-down icon-down"></i>
+                    </button>
+                  </div>
+                </th>
                 <th scope="col" class="col-md-2 sm-2">Hành động</th>
               </tr>
             </thead>
@@ -293,6 +352,7 @@
               <tr class="align-middle text-center">
                 <th scope="row"><%= index + 1 %></th>
                 <td><%= km.ten %></td>
+                <td><%= km.soLuong %></td>
                 <td><%= dinhDangNgay(km.ngayBatDau) %></td>
                 <td><%= dinhDangNgay(km.ngayKetThuc) %></td>
                 <td>
@@ -372,6 +432,26 @@
                               <%= dinhDangNgay(km.ngayKetThuc) %>
                             </p>
                           </div>
+                          <div class="mb-3 d-flex gap-1">
+                            <strong class="form-label">Trạng thái:</strong>
+                            <% if (km.trangThai === false) { %>
+                            <p id="trangThai-<%= km._id %>" style="color: red">
+                              Hết hiệu lực
+                            </p>
+                            <% } else { %>
+                            <p id="trangThai-<%= km._id %>" style="color: blue">
+                              Còn hiệu lực
+                            </p>
+                            <% } %>
+                          </div>
+                          <div class="mb-3 d-flex gap-1">
+                            <strong class="form-label"
+                              >Phần trăm khuyến mại:</strong
+                            >
+                            <p id="phanTramGiamGia-<%= km._id %>">
+                              <%= km.phanTramGiamGia %>%
+                            </p>
+                          </div>
                         </div>
                         <div class="col-md-6">
                           <div class="mb-3 d-flex gap-1">
@@ -391,16 +471,18 @@
                             </p>
                           </div>
                           <div class="mb-3 d-flex gap-1">
-                            <strong class="form-label">Trạng thái:</strong>
-                            <% if (km.trangThai === false) { %>
-                            <p id="trangThai-<%= km._id %>" style="color: red">
-                              Hết hiệu lực
+                            <strong class="form-label">Giá tối đa:</strong>
+                            <p id="giaToiDa-<%= km._id %>">
+                              <%= dinhDangTienVND(km.giaToiDa) %>
                             </p>
-                            <% } else { %>
-                            <p id="trangThai-<%= km._id %>" style="color: blue">
-                              Còn hiệu lực
+                          </div>
+                          <div class="mb-3 d-flex gap-1">
+                            <strong class="form-label"
+                              >Giá khuyến mại tối đa:</strong
+                            >
+                            <p id="giaKhuyenMaiToiDa-<%= km._id %>">
+                              <%= dinhDangTienVND(km.giaKhuyenMaiToiDa) %>
                             </p>
-                            <% } %>
                           </div>
                         </div>
                       </div>
@@ -413,6 +495,17 @@
                       >
                         Đóng
                       </button>
+                      <% if (km.trangThai === true) { %>
+                      <form
+                        action="/khuyenMai/updateTrangThai/<%= km._id %>"
+                        method="POST"
+                      >
+                        <input type="hidden" name="trangThai" value="false" />
+                        <button type="submit" class="btn btn-primary">
+                          Kết thúc hiệu lực khuyến mại
+                        </button>
+                      </form>
+                      <% } %>
                       <button
                         type="button"
                         class="btn btn-danger"
@@ -533,6 +626,53 @@
                               name="giaKhoiDiem"
                             />
                           </div>
+                          <div class="modal-body">
+                            <label for="giaToiDa" class="form-label"
+                              >Giá tối đa (Mức giá tối đa của đơn hàng để áp
+                              dụng mã khuyến mại)
+                              <span class="text-danger">(*)</span></label
+                            >
+                            <input
+                              value="<%= km.giaToiDa %>"
+                              id="giaToiDa"
+                              required="true"
+                              type="number"
+                              class="form-control"
+                              placeholder="Giá tối đa"
+                              name="giaToiDa"
+                            />
+                          </div>
+                          <div class="modal-body">
+                            <label for="giaKhuyenMaiToiDa" class="form-label"
+                              >Giá khuyến mãi tối đa (Mức giá tối đa áp dụng
+                              phần trăm giảm giá của đơn hàng)
+                              <span class="text-danger">(*)</span></label
+                            >
+                            <input
+                              value="<%= km.giaKhuyenMaiToiDa %>"
+                              id="giaKhuyenMaiToiDa"
+                              required="true"
+                              type="number"
+                              class="form-control"
+                              placeholder="Giá khuyến mãi tối đa"
+                              name="giaKhuyenMaiToiDa"
+                            />
+                          </div>
+                          <div class="modal-body">
+                            <label for="phanTramGiamGia" class="form-label"
+                              >Phần trăm khuyến mãi (%)
+                              <span class="text-danger">(*)</span></label
+                            >
+                            <input
+                              value="<%= km.phanTramGiamGia %>"
+                              id="phanTramGiamGia"
+                              required="true"
+                              type="number"
+                              class="form-control"
+                              placeholder="Phần trăm giảm giá"
+                              name="phanTramGiamGia"
+                            />
+                          </div>
                           <div class="modal-footer">
                             <button
                               type="button"
@@ -547,6 +687,60 @@
                           </div>
                         </form>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal Trạng Thái -->
+              <div
+                class="modal fade"
+                id="modalTrangThaiHeader"
+                tabindex="-1"
+                aria-labelledby="modalTrangThaiHeaderLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body p-0">
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <form
+                            action="/khuyenMai/selectTrangThai"
+                            method="GET"
+                          >
+                            <input
+                              type="hidden"
+                              name="trangThai"
+                              value="true"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Còn hiệu lực
+                            </button>
+                          </form>
+                        </li>
+                        <li class="list-group-item">
+                          <form
+                            action="/khuyenMai/selectTrangThai"
+                            method="GET"
+                          >
+                            <input
+                              type="hidden"
+                              name="trangThai"
+                              value="false"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Hết hiệu lực
+                            </button>
+                          </form>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>

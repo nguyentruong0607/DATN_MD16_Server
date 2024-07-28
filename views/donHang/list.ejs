@@ -119,6 +119,26 @@
         color: red;
         font-weight: bold;
       }
+      .icon-down {
+        color: black;
+      }
+      .cardImg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        text-align: center;
+      }
+
+      .cardImg img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .cardImg span {
+        margin-top: 10px;
+      }
     </style>
   </head>
 
@@ -160,10 +180,21 @@
             <thead>
               <tr class="align-middle text-center">
                 <th scope="col" class="col-md-0.5 sm-0.5">STT</th>
+                <th scope="col" class="col-md-2 sm-2">Mã đơn hàng</th>
                 <th scope="col" class="col-md-2 sm-2">Khách hàng</th>
                 <th scope="col" class="col-md-1.5 sm-1.5">Sản phẩm</th>
-                <th scope="col" class="col-md-3.5 sm-3.5">Thời gian</th>
-                <th scope="col" class="col-md-3.5 sm-3.5">Trạng thái</th>
+                <th scope="col" class="col-md-3.5 sm-3.5">
+                  <div class="d-flex justify-content-center align-items-center">
+                    Trạng thái
+                    <button
+                      class="btn btn-link p-0 ms-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalTrangThaiHeader"
+                    >
+                      <i class="fa fa-caret-down icon-down"></i>
+                    </button>
+                  </div>
+                </th>
                 <th scope="col" class="col-md-2 sm-2">Tổng tiền</th>
                 <th scope="col" class="col-md-2 sm-2">Hành động</th>
               </tr>
@@ -173,16 +204,12 @@
 
               <tr class="align-middle text-center">
                 <th scope="row"><%= index + 1 %></th>
+                <td><%= dh.idKH.id %></td>
                 <td><%= dh.idKH.hoTen %></td>
                 <td>
                   <% dh.idSP.forEach(sp => { %>
                   <div><%= sp.tenDienThoai %></div>
                   <% }) %>
-                </td>
-                <td>
-                  <%= new Date(dh.ngayDatHang).toLocaleString('vi-VN', { hour:
-                  '2-digit', minute: '2-digit', day: '2-digit', month:
-                  '2-digit', year: 'numeric' }) %>
                 </td>
                 <td><%= dh.trangThaiDonHang %></td>
                 <td class="text-danger">
@@ -235,7 +262,7 @@
                         </div>
                         <div class="col-md-4">
                           <strong>Số lượng:</strong>
-                          <%= dh.soLuong %> chiếc
+                          <%= dh.soLuong %> sản phẩm
                         </div>
                         <div class="col-md-4">
                           <strong>Trạng thái thanh toán:</strong> <% if
@@ -255,10 +282,9 @@
                           '2-digit', year: 'numeric' }) %>
                         </div>
                         <div class="col-md-4">
-                          <strong>Ngày nhận hàng:</strong> <%= new
-                          Date(dh.ngayNhanHang).toLocaleString('vi-VN', { hour:
-                          '2-digit', minute: '2-digit', day: '2-digit', month:
-                          '2-digit', year: 'numeric' }) %>
+                          <strong>Ngày nhận hàng dự kiến:</strong> <%= new
+                          Date(dh.ngayNhanHang).toLocaleString('vi-VN', { day:
+                          '2-digit', month: '2-digit', year: 'numeric' }) %>
                         </div>
                       </div>
                       <div class="row mb-3">
@@ -286,24 +312,42 @@
                       <h5 class="mt-4">Thông tin sản phẩm</h5>
                       <div class="row">
                         <% dh.idSP.forEach(sp => { %>
-                        <div class="col-md-4 mb-3">
-                          <div class="card">
+                        <div class="col-md-2 mb-3">
+                          <div
+                            class="cardImg d-flex flex-column align-items-center"
+                          >
                             <img
                               src="<%= sp.hinhAnh %>"
-                              class="card-img-top img-thumbnail"
+                              class="img"
                               alt="<%= sp.tenDienThoai %>"
-                              width="100"
                             />
-                            <div class="card-body">
-                              <h5 class="card-title"><%= sp.tenDienThoai %></h5>
-                            </div>
+                            <span class="align-self-center">
+                              <%= sp.tenDienThoai %>
+                            </span>
                           </div>
                         </div>
                         <% }); %>
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <% if (dh.trangThaiDonHang === "Chờ xác nhận") { %>
+                      <% if (dh.trangThaiDonHang === "Chờ xác nhận" ||
+                      dh.trangThaiDonHang === "Đang xử lý" ) { %>
+                      <form
+                        action="/donHang/update/<%= dh._id %>"
+                        method="POST"
+                        onsubmit="return confirmCancel()"
+                      >
+                        <input
+                          type="hidden"
+                          name="trangThaiDonHang"
+                          value="Đã hủy"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          Hủy đơn hàng
+                        </button>
+                      </form>
+                      <% } %> <% if (dh.trangThaiDonHang === "Chờ xác nhận") {
+                      %>
                       <form
                         action="/donhang/update/<%= dh._id %>"
                         method="POST"
@@ -344,6 +388,99 @@
                 </div>
               </div>
 
+              <!-- Modal Trạng Thái -->
+              <div
+                class="modal fade"
+                id="modalTrangThaiHeader"
+                tabindex="-1"
+                aria-labelledby="modalTrangThaiHeaderLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body p-0">
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <form action="/donHang/selectTrangThai" method="GET">
+                            <input
+                              type="hidden"
+                              name="trangThaiDonHang"
+                              value="Chờ xác nhận"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Chờ xác nhận
+                            </button>
+                          </form>
+                        </li>
+                        <li class="list-group-item">
+                          <form action="/donHang/selectTrangThai" method="GET">
+                            <input
+                              type="hidden"
+                              name="trangThaiDonHang"
+                              value="Đang xử lý"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Đang xử lý
+                            </button>
+                          </form>
+                        </li>
+                        <li class="list-group-item">
+                          <form action="/donHang/selectTrangThai" method="GET">
+                            <input
+                              type="hidden"
+                              name="trangThaiDonHang"
+                              value="Đang giao hàng"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Đang giao hàng
+                            </button>
+                          </form>
+                        </li>
+                        <li class="list-group-item">
+                          <form action="/donHang/selectTrangThai" method="GET">
+                            <input
+                              type="hidden"
+                              name="trangThaiDonHang"
+                              value="Đã giao hàng"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Đã giao hàng
+                            </button>
+                          </form>
+                        </li>
+                        <li class="list-group-item">
+                          <form action="/donHang/selectTrangThai" method="GET">
+                            <input
+                              type="hidden"
+                              name="trangThaiDonHang"
+                              value="Đã hủy"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-link p-0 text-decoration-none text-black"
+                            >
+                              Đã hủy
+                            </button>
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <% }); %>
             </tbody>
           </table>
@@ -370,6 +507,10 @@
       </div>
     </div>
 
-    <script></script>
+    <script>
+      function confirmCancel() {
+        return confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+      }
+    </script>
   </body>
 </html>

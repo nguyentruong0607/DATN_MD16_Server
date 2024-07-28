@@ -133,6 +133,19 @@
             justify-content: center;
             gap: 10px;
         }
+        .btnButton {
+            color: black;
+        }
+
+        .btnButton:hover {
+            color: black;
+        }
+
+        .btnButton: {
+            color: black;
+        }
+
+        
     </style>
 </head>
 
@@ -236,8 +249,13 @@
                                                 </div>
                                             </div>
                                         </form>
-                                        <a href="/user/getDonHangOfUser/<%= User._id %> "
-                                            class="btn btn-primary icon-btn"> xem đơn hàng</a>
+                                        <% if (User.tenQuyen === 'User') { %>
+                                            <a href="/user/getDonHangOfUser/<%= User._id %> "
+                                                class="btn btn-primary icon-btn"> Xem đơn hàng</a>
+                                            <% } else { %>
+                                                <button class="btn btn-secondary icon-btn" disabled>Xem đơn hàng</button>
+                                                    <%} %>
+                                        
                                     </div>
                                 </td>
                             </tr>
