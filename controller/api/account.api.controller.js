@@ -92,7 +92,7 @@ exports.signIn = async (req, res) => {
     try {
         const { taiKhoan, matKhau } = req.body;
         // Check if account exists
-        const existingAccount = await accountModel.findOne({ taiKhoan, tenQuyen: 'User' });
+        const existingAccount = await accountModel.findOne({ taiKhoan,trangThai :true,tenQuyen: 'User' });
 
         if (!existingAccount) {
             return res.status(200).json({ success: false, message: 'Tài khoản không tồn tại!' });

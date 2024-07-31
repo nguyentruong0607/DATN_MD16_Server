@@ -2,20 +2,38 @@ const DienThoai = require('../model/sanPham');
 const hangSX=require('../model/hangSX');
 const hangsxModel = require('../model/hangSX');
 
-//Hiển thị
+// Hiển thị tất cả
 exports.getAll = async (req, res, next) => {
     let msg = '';
     let list = [];
-    const trangThai = req.query.trangThai || ''; // Get the trangThai from query parameters or default to an empty string
+    const trangThai = req.query.trangThai || '';
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
 
     try {
-        list = await hangSX.find();
+        const totalItems = await hangSX.countDocuments();
+        list = await hangSX.find().skip(skip).limit(perPage);
+        const totalPages = Math.ceil(totalItems / perPage);
+
         msg = 'Lấy dữ liệu thành công!';
+        res.render('hangsx/list', { 
+            listHangSX: list, 
+            msg: msg, 
+            title: 'Quản lý hãng', 
+            trangThai, 
+            currentPage: page, 
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1
+        });
     } catch (error) {
         console.log(error);
+        msg = 'Lỗi: ' + error.message;
+        res.render('hangsx/list', { msg: msg, title: 'Quản lý hãng', trangThai });
     }
-
-    res.render('hangsx/list', { listHangSX: list, msg: msg, title: 'Quản lý hãng', trangThai }); // Include trangThai in the render call
 };
 
 //Thêm
@@ -120,26 +138,44 @@ exports.search = async (req, res, next) => {
 exports.getByTrangThai = async (req, res, next) => {
     let msg = '';
     let list = [];
-    const trangThai = req.query.trangThai || ''; // Default to an empty string if undefined
-  
-    try {
-      if (trangThai === '') {
-        // If "Tất cả" is selected, retrieve all documents
-        list = await hangSX.find();
-      } else {
-        // Convert trangThai to a boolean
-        const booleanTrangThai = trangThai === 'true';
-        list = await hangSX.find({ trangThai: booleanTrangThai });
-      }
-      msg = 'Lấy dữ liệu thành công!';
-    } catch (error) {
-      console.log(error);
-      msg = 'Lỗi: ' + error.message;
-    }
-    console.log('trangThai:', trangThai);
+    const trangThai = req.query.trangThai || ''; 
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
 
-    res.render('hangsx/list', { listHangSX: list, msg: msg, title: 'Quản lý hãng', trangThai });
+    try {
+        let totalItems;
+        if (trangThai === '') {
+            totalItems = await hangSX.countDocuments();
+            list = await hangSX.find().skip(skip).limit(perPage);
+        } else {
+            const booleanTrangThai = trangThai === 'true';
+            totalItems = await hangSX.countDocuments({ trangThai: booleanTrangThai });
+            list = await hangSX.find({ trangThai: booleanTrangThai }).skip(skip).limit(perPage);
+        }
+
+        const totalPages = Math.ceil(totalItems / perPage);
+        msg = 'Lấy dữ liệu thành công!';
+
+        res.render('hangsx/list', {
+            listHangSX: list,
+            msg: msg,
+            title: 'Quản lý hãng',
+            trangThai,
+            currentPage: page,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+        });
+    } catch (error) {
+        console.log(error);
+        msg = 'Lỗi: ' + error.message;
+        res.render('hangsx/list', { msg: msg, title: 'Quản lý hãng', trangThai });
+    }
 };
+
   
 //lấy theo hãng
 exports.getSanPhamByIdHang = async (req, res) => {
