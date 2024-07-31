@@ -125,9 +125,9 @@
                                                             <!-- Giá tiền -->
                                                             <label for="giaTien" class="form-label">Giá tiền <span
                                                                     class="text-danger">(*)</span></label>
-                                                            <input disabled type="number" class="form-control"
+                                                            <input disabled type="text" class="form-control"
                                                                 id="giaTien" name="giaTien" min="0" step="any"
-                                                                value="<%= mau.giaTien %>">
+                                                                value="<%= mau.giaTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>">
                                                         </div>
                                                     </div>
                                                 </div>

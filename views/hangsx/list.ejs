@@ -103,7 +103,23 @@
           class="content col-md-10 sm-10"
           style="overflow: auto; height: 80vh"
         >
+        <% if (error) { %>
+          <div class="alert alert-danger" role="alert">
+              <%= error %>
+          </div>
+      <% } %>
           <div class="top">
+            <form id="filterForm" action="/hangsx/trangThai" method="GET" style="width: 300px;">
+              <div class="row g-3" style="margin-right: 5px;">
+                <div class="col">
+                  <select class="form-select" name="trangThai" id="trangThaiSelect">
+                    <option value="" <%= (trangThai === undefined || trangThai === '') ? 'selected' : '' %>>Tất cả</option>
+                    <option value="true" <%= trangThai === 'true' ? 'selected' : '' %>>Hiển thị</option>
+                    <option value="false" <%= trangThai === 'false' ? 'selected' : '' %>>Ẩn</option>
+                  </select>
+                </div>
+              </div>
+            </form>
             <form id="searchForm" action="/hangsx/search" method="GET">
               <div class="row g-3">
                   <div class="col" style="width: 200px;">
@@ -114,17 +130,7 @@
                   </div>
               </div>
           </form>
-          <form id="filterForm" action="/hangsx/trangThai" method="GET" style="width: 300px;">
-            <div class="row g-3" style="margin-left: 5px;">
-              <div class="col">
-                <select class="form-select" name="trangThai" id="trangThaiSelect">
-                  <option value="" <%= (trangThai === undefined || trangThai === '') ? 'selected' : '' %>>Tất cả</option>
-                  <option value="true" <%= trangThai === 'true' ? 'selected' : '' %>>Hiển thị</option>
-                  <option value="false" <%= trangThai === 'false' ? 'selected' : '' %>>Ẩn</option>
-                </select>
-              </div>
-            </div>
-          </form>
+          
             <div>
               <button
                 type="button"
@@ -144,7 +150,7 @@
               >
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                   <div class="form2 modal-content">
-                    <form id="form2" method="post" action="/hangsx/add">
+                    <form id="form2" method="post" action="/hangsx/add"  onsubmit="return validateForm()">
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
                           Thêm Hãng
@@ -158,10 +164,10 @@
                       </div>
                       <div class="modal-body">
                         <input
-                          required="true"
+                          id="tenHang"
                           type="text"
                           class="form-control"
-                          placeholder="Tên"
+                          placeholder="Tên hãng"
                           name="tenHang"
                         />
                       </div>
@@ -194,7 +200,7 @@
             <tbody class="table-group-divider">
             <% listHangSX.forEach((Hangsx, index) => { %>
             <tr class="hang">
-              <td><%= index + 1 %></td>
+              <td><%=(currentPage - 1) * perPage+ index + 1 %></td>
               <td><%= Hangsx._id %></td>
               <td><%= Hangsx.tenHang %></td>
              
@@ -302,17 +308,21 @@
           </table>
           <nav aria-label="Page navigation example">
             <ul class="pagination">
-              <% if (hasPreviousPage) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= previousPage %>">Previous</a></li>
-              <% } %>
-              <% for (let i = 1; i <= totalPages; i++) { %>
-                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                </li>
-              <% } %>
-              <% if (hasNextPage) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= nextPage %>">Next</a></li>
-              <% } %>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <% if (hasPreviousPage) { %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= previousPage %>">Previous</a></li>
+                  <% } %>
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                      <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+                  <% } %>
+                  <% if (hasNextPage) { %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= nextPage %>">Next</a></li>
+                  <% } %>
+                </ul>
+              </nav>
             </ul>
           </nav>
         </div>
@@ -323,6 +333,14 @@
       document.getElementById('trangThaiSelect').addEventListener('change', function() {
         document.getElementById('filterForm').submit();
       });
+      function validateForm() {
+        const tenHang = document.getElementById('tenHang').value.trim();
+        if (!tenHang) {
+          alert('Tên hãng không được để trống');
+          return false;
+        }
+        return true;
+      }
     </script>
 
   </body>
