@@ -49,7 +49,7 @@ exports.createsanPham = async (req, res, next) => {
 // lấy tất cả các dữ liệu
 exports.listsanPham = async (req, res, next) => {
   try {
-    const sanPham = await DienThoai.find();
+    const sanPham = await DienThoai.find({trangThai:true});
     res.json(sanPham);
   } catch (error) {
     res.status(500).json({ message: error.message });
