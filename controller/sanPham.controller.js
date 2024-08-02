@@ -23,17 +23,17 @@ exports.getAllSP = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const perPage = 6;
   const skip = (page - 1) * perPage;
-
+  
   try {
     let filter = {};
     if (trangThai !== '') {
       filter.trangThai = trangThai === 'true';
     }
-
+    
     const totalItems = await dienThoai.DienThoai.countDocuments(filter);
     const list = await dienThoai.DienThoai.find(filter).skip(skip).limit(perPage);
     const totalPages = Math.ceil(totalItems / perPage);
-
+    
     res.render("sanPham/list", {
       listSP: list,
       trangThai: trangThai,
@@ -45,14 +45,12 @@ exports.getAllSP = async (req, res, next) => {
       hasPreviousPage: page > 1,
       nextPage: page + 1,
       previousPage: page - 1,
-      perPage
     });
   } catch (error) {
     console.error("Error in getAllSP:", error);
     res.status(500).json({ message: "Lỗi khi lấy dữ liệu sản phẩm" });
   }
 };
-
 
 
 
@@ -71,8 +69,6 @@ exports.chiTiet = async (req, res, next) => {
   }
 };
 //thêm sản phẩm
-
-
 exports.add = async (req, res, next) => {
   if (req.method === "POST") {
     const {
@@ -99,27 +95,22 @@ exports.add = async (req, res, next) => {
 
     const files = req.files;
 
+    if (!files || files.length === 0) {
+      console.error("No files uploaded");
+      return res.status(400).json({ message: 'Chưa có file upload' });
+    }
+
+    let imageUrlAnhSanPham;
     try {
-      let existingProduct = await dienThoai.DienThoai.findOne({ tenDienThoai });
-
-      if (existingProduct) {
-        // Sản phẩm đã tồn tại
-        return res.render("sanPham/add", {
-          title: "Thêm sản phẩm mới",
-          listHangSx: await hangsxModel.find(),
-          user: req.session.account,
-          error: "Sản phẩm đã tồn tại",
-        });
-      }
-
-      let imageUrlAnhSanPham;
       for (const file of files) {
         if (file.fieldname === 'hinhAnh') {
+          console.log(`Uploading file: ${file.originalname}`);
           imageUrlAnhSanPham = await uploadImage(file, nameFolder);
+          console.log(`Uploaded file URL: ${imageUrlAnhSanPham}`);
         }
       }
 
-      const newSanPham = new dienThoai.DienThoai({
+      let existingProduct = await dienThoai.DienThoai.findOne({
         tenDienThoai,
         camera,
         cameraTruoc,
@@ -127,20 +118,43 @@ exports.add = async (req, res, next) => {
         cPU,
         ram,
         sim,
-        pin,
         heDieuHanh,
+        pin,
         namSanXuat,
         congNgheManHinh,
         moTaThem,
-        hinhAnh: imageUrlAnhSanPham,
         doPhanGiai,
         idHangSX,
         giamGia,
         trangThai: true,
-        mauSchema: [{ mau, soLuong, giaTien }],
       });
 
-      await newSanPham.save();
+      if (existingProduct) {
+        existingProduct.mauSchema.push({ mau, soLuong, giaTien });
+        await existingProduct.save();
+      } else {
+        const newSanPham = new dienThoai.DienThoai({
+          tenDienThoai,
+          camera,
+          cameraTruoc,
+          kichThuoc,
+          cPU,
+          ram,
+          sim,
+          pin,
+          heDieuHanh,
+          namSanXuat,
+          congNgheManHinh,
+          moTaThem,
+          hinhAnh: imageUrlAnhSanPham,
+          doPhanGiai,
+          idHangSX,
+          giamGia,
+          trangThai: true,
+          mauSchema: [{ mau, soLuong, giaTien }],
+        });
+        await newSanPham.save();
+      }
       res.redirect("/sanPham");
     } catch (error) {
       console.error("Error adding product:", error);
@@ -164,52 +178,32 @@ exports.add = async (req, res, next) => {
 
 
 
-
-
-//tìm kiếm sản phẩm
+//tìm kiếm
 exports.search = async (req, res, next) => {
-  const queryValue = req.query.query || '';
-  const trangThai = req.query.trangThai || '';
-  const page = parseInt(req.query.page) || 1;
-  const perPage = 6;
-  const skip = (page - 1) * perPage;
+  const queryValue = req.query.query;
   const user = req.session.account;
-
   try {
-    let filter = {};
-
-    if (queryValue.length > 0) {
-      filter.tenDienThoai = { $regex: queryValue, $options: "i" };
+    if (queryValue.lenght === 0) {
+      const listSanPham = await dienThoai.DienThoai.find();
+      res.render("sanPham/list", {
+        title: "Quản lý sản phẩm",
+        listSP: listSanPham,
+        user: user,
+      });
+    } else {
+      const listSanPham = await dienThoai.DienThoai.find({
+        tenDienThoai: { $regex: queryValue, $options: "i" },
+      });
+      res.render("sanPham/list", {
+        title: "Quản lý sản phẩm",
+        listSP: listSanPham,
+        user: user,
+      });
     }
-
-    if (trangThai !== '') {
-      filter.trangThai = trangThai === 'true';
-    }
-
-    const totalItems = await dienThoai.DienThoai.countDocuments(filter);
-    const listSanPham = await dienThoai.DienThoai.find(filter).skip(skip).limit(perPage);
-    const totalPages = Math.ceil(totalItems / perPage);
-
-    res.render("sanPham/list", {
-      title: "Quản lý sản phẩm",
-      listSP: listSanPham,
-      trangThai: trangThai,
-      user: user,
-      currentPage: page,
-      totalPages,
-      hasNextPage: page < totalPages,
-      hasPreviousPage: page > 1,
-      nextPage: page + 1,
-      previousPage: page - 1,
-      perPage
-    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
-
-
 
 exports.editSP = async (req, res) => {
   try {
