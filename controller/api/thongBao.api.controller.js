@@ -1,10 +1,10 @@
-const { thongBaoModel } = require("../../model/thongBao");
+const  thongBaoModel  = require("../../model/thongBao");
 
 // Thêm thong bao
 exports.createThongBao = async (req, res, next) => {
   let noiDung = req.body.noiDung;
   let thoiGian = req.body.thoiGian;
-  let idKH = req.body.idKH;
+  let idKH = req.body.idAccount;
 
   try {
     let addFields = {
@@ -26,8 +26,9 @@ exports.createThongBao = async (req, res, next) => {
 
 // lấy tất cả các dữ liệu
 exports.listThongBao = async (req, res, next) => {
+  let idAccount=req.params.idAccount;
   try {
-    const thongBao = await thongBaoModel.find().populate("idKH");
+    const thongBao = await thongBaoModel.find(idAccount);
     if (thongBao.length > 0) {
       res.json({
         status: 200,
