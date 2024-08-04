@@ -91,16 +91,16 @@ exports.SignUp = async (req, res) => {
 exports.signIn = async (req, res) => {
     try {
         const { taiKhoan, matKhau } = req.body;
-        // Check if account exists
-        const existingAccount = await accountModel.findOne({ taiKhoan,trangThai :true,tenQuyen: 'User' });
+
+        // Kiểm tra tài khoản tồn tại
+        const existingAccount = await accountModel.findOne({ taiKhoan, trangThai: true, tenQuyen: 'User' });
 
         if (!existingAccount) {
             return res.status(200).json({ success: false, message: 'Tài khoản không tồn tại!' });
         }
 
-        // Compare the provided password with the hashed one
-       // const match = await bcrypt.compare(matKhau, existingAccount.matKhau);
-        if (!matKhau) {
+        // So sánh mật khẩu được cung cấp với mật khẩu đã lưu
+        if (existingAccount.matKhau !== matKhau) {
             return res.status(200).json({ success: false, message: 'Mật khẩu không chính xác!' });
         }
 
@@ -110,6 +110,7 @@ exports.signIn = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
 // Cập nhật họ tên, số điện thoại và email của một account dựa trên ID
 exports.editAccountInfo = async (req, res) => {
     try {

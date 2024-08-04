@@ -120,10 +120,10 @@
                 </div>
               </div>
             </form>
-            <form id="searchForm" action="/hangsx/search" method="GET">
+            <form id="searchForm" action="/hangsx/search" method="GET" onsubmit="return validateSearchForm()">
               <div class="row g-3">
                   <div class="col" style="width: 200px;">
-                      <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên hãng..." />
+                      <input  type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên hãng..." />
                   </div>
                   <div class="col-auto">
                       <button type="submit" class="btn btn-primary">Tìm</button>
@@ -264,9 +264,8 @@
                                     name="tenHang"
                                   />
                                 </div>
-                                <div class="col">
-                                  <label for="trangThai">Chọn trạng
-                                      thái:</label>
+                                <div >
+                                  <label for="trangThai">Chọn trạng thái:</label>
                                   <select id="trangThai" name="trangThai"
                                       class="form-select">
                                       <% if (Hangsx.trangThai) { %>
@@ -333,10 +332,20 @@
       document.getElementById('trangThaiSelect').addEventListener('change', function() {
         document.getElementById('filterForm').submit();
       });
+
       function validateForm() {
         const tenHang = document.getElementById('tenHang').value.trim();
         if (!tenHang) {
           alert('Tên hãng không được để trống');
+          return false;
+        }
+        return true;
+      }
+
+      function validateSearchForm() {
+        const query = document.getElementById('textQuery').value.trim();
+        if (!query) {
+          alert('Vui lòng nhập tên hãng');
           return false;
         }
         return true;

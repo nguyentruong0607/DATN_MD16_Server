@@ -167,10 +167,10 @@
                             </div>
                         </div>
                     </form>
-                    <form id="searchForm" action="/user/search" method="GET">
+                    <form id="searchForm" action="/user/search" method="GET" onsubmit="return validateSearchForm()">
                         <div class="row g-3">
                             <div class="col">
-                                <input required="true" type="text" id="textQuery" name="query" class="form-control"
+                                <input  type="text" id="textQuery" name="query" class="form-control"
                                     placeholder="Nhập tài khoản...">
                             </div>
                             <div class="col-auto">
@@ -285,6 +285,14 @@
         document.getElementById('trangThaiSelect').addEventListener('change', function () {
             document.getElementById('filterForm').submit();
         });
+        function validateSearchForm() {
+        const query = document.getElementById('textQuery').value.trim();
+        if (!query) {
+          alert('Vui lòng nhập tài khoản người dùng');
+          return false;
+        }
+        return true;
+      }
     </script>
 </body>
 
