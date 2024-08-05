@@ -110,7 +110,6 @@ exports.signIn = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
-
 // Cập nhật họ tên, số điện thoại và email của một account dựa trên ID
 exports.editAccountInfo = async (req, res) => {
     try {

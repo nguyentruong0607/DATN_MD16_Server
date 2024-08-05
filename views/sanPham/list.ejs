@@ -26,10 +26,9 @@
                   <option value="false" <%= trangThai === 'false' ? 'selected' : '' %>>Ẩn</option>
                 </select>
               </div>
-              
             </div>
           </form>
-        <form id="searchForm" action="/sanPham/search" method="GET" style="width: 80%;" >
+        <form id="searchForm" action="/sanPham/search" method="GET" style="width: 80%;">
           <div class="row g-3">
             <div class="col">
               <input required="true" type="text" id="textQuery" name="query" class="form-control" placeholder="Nhập tên điên thoại...">
@@ -58,7 +57,7 @@
           <tbody class="table-group-divider">
             <% listSP.forEach((product, index)=> { %>
               <tr class="align-middle text-center">
-                <th scope="row"><%= (currentPage - 1) * perPage+index + 1 %></th>
+                <th scope="row"><%= index + 1 %></th>
                 <td><img src="<%= product.hinhAnh %>" alt="Ảnh sản phẩm" width="70"></td>
                 <td><%= product.tenDienThoai %></td>
                 <td>
@@ -87,20 +86,20 @@
           </tbody>
         </table>
         <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                      <% if (hasPreviousPage) { %>
-                        <li class="page-item"><a class="page-link" href="?page=<%= previousPage %>">Previous</a></li>
-                      <% } %>
-                      <% for (let i = 1; i <= totalPages; i++) { %>
-                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                        </li>
-                      <% } %>
-                      <% if (hasNextPage) { %>
-                        <li class="page-item"><a class="page-link" href="?page=<%= nextPage %>">Next</a></li>
-                      <% } %>
-                    </ul>
-                  </nav>
+          <ul class="pagination">
+            <% if (hasPreviousPage) { %>
+              <li class="page-item"><a class="page-link" href="?page=<%= previousPage %>">Previous</a></li>
+            <% } %>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+            <% if (hasNextPage) { %>
+              <li class="page-item"><a class="page-link" href="?page=<%= nextPage %>">Next</a></li>
+            <% } %>
+          </ul>
+        </nav>
       </div>
       <%- include('../inc/footer') %> 
     </div>
