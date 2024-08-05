@@ -86,31 +86,45 @@ exports.add = async (req, res, next) => {
       congNgheManHinh,
       moTaThem,
       doPhanGiai,
-      mau,
-      soLuong,
-      giaTien,
       giamGia,
       trangThai,
     } = req.body;
 
     const files = req.files;
 
-    if (!files || files.length === 0) {
-      console.error("No files uploaded");
-      return res.status(400).json({ message: 'Chưa có file upload' });
-    }
+    // Extract color variants from request body
+    const mau = req.body.mau instanceof Array ? req.body.mau : [req.body.mau];
+    const soLuong = req.body.soLuong instanceof Array ? req.body.soLuong : [req.body.soLuong];
+    const giaTien = req.body.giaTien instanceof Array ? req.body.giaTien : [req.body.giaTien];
 
-    let imageUrlAnhSanPham;
     try {
+      let existingProduct = await dienThoai.DienThoai.findOne({ tenDienThoai });
+
+      if (existingProduct) {
+        // Sản phẩm đã tồn tại
+        return res.render("sanPham/add", {
+          title: "Thêm sản phẩm mới",
+          listHangSx: await hangsxModel.find(),
+          user: req.session.account,
+          error: "Sản phẩm đã tồn tại",
+        });
+      }
+
+      let imageUrlAnhSanPham;
       for (const file of files) {
         if (file.fieldname === 'hinhAnh') {
-          console.log(`Uploading file: ${file.originalname}`);
           imageUrlAnhSanPham = await uploadImage(file, nameFolder);
-          console.log(`Uploaded file URL: ${imageUrlAnhSanPham}`);
         }
       }
 
-      let existingProduct = await dienThoai.DienThoai.findOne({
+      // Construct the color schema array
+      const mauSchema = mau.map((mauValue, index) => ({
+        mau: mauValue,
+        soLuong: soLuong[index],
+        giaTien: giaTien[index],
+      }));
+
+      const newSanPham = new dienThoai.DienThoai({
         tenDienThoai,
         camera,
         cameraTruoc,
@@ -118,43 +132,20 @@ exports.add = async (req, res, next) => {
         cPU,
         ram,
         sim,
-        heDieuHanh,
         pin,
+        heDieuHanh,
         namSanXuat,
         congNgheManHinh,
         moTaThem,
+        hinhAnh: imageUrlAnhSanPham,
         doPhanGiai,
         idHangSX,
         giamGia,
         trangThai: true,
+        mauSchema, // Use the constructed array
       });
 
-      if (existingProduct) {
-        existingProduct.mauSchema.push({ mau, soLuong, giaTien });
-        await existingProduct.save();
-      } else {
-        const newSanPham = new dienThoai.DienThoai({
-          tenDienThoai,
-          camera,
-          cameraTruoc,
-          kichThuoc,
-          cPU,
-          ram,
-          sim,
-          pin,
-          heDieuHanh,
-          namSanXuat,
-          congNgheManHinh,
-          moTaThem,
-          hinhAnh: imageUrlAnhSanPham,
-          doPhanGiai,
-          idHangSX,
-          giamGia,
-          trangThai: true,
-          mauSchema: [{ mau, soLuong, giaTien }],
-        });
-        await newSanPham.save();
-      }
+      await newSanPham.save();
       res.redirect("/sanPham");
     } catch (error) {
       console.error("Error adding product:", error);
@@ -175,7 +166,6 @@ exports.add = async (req, res, next) => {
     }
   }
 };
-
 
 
 //tìm kiếm

@@ -27,7 +27,7 @@ exports.createHangSX = async (req, res, next) => {
 // lấy tất cả các dữ liệu
 exports.listHangsx = async (req, res, next) => {
   try {
-    const hangsx = await hangsxModel.find();
+    const hangsx = await hangsxModel.find({trangThai:true});
     if (hangsx.length > 0) {
       res.json({ status: 200, msg: "Lấy dữ liệu hãng sản xuất thành công", data: hangsx });
     } else {

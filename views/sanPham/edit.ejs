@@ -100,68 +100,73 @@
                                                     <input type="text" class="form-control" id="tenDienThoai" name="tenDienThoai" value="<%= product.tenDienThoai %>">
                                                 </div>
                                                 <div class="col col-md-3">
+                                                    <!-- Hệ điều hành -->
+                                                    <label for="heDieuHanh" class="form-label">Hệ Điều Hành</label>
+                                                    <input type="text" class="form-control" id="heDieuHanh" name="heDieuHanh" value="<%= product.heDieuHanh %>">
+                                                </div>
+                                                <div class="col col-md-4">
                                                     <!-- Camera chính -->
-                                                    <label for="camera" class="form-label">Camera Chính</label>
+                                                    <label for="camera" class="form-label">Camera Sau</label>
                                                     <input type="text" class="form-control" id="camera" name="camera" value="<%= product.camera %>">
                                                 </div>
+                                                
+                                            </div>
+                                            <div class="row mt-2">
                                                 <div class="col col-md-2">
                                                     <!-- Camera trước -->
                                                     <label for="cameraTruoc" class="form-label">Camera Trước</label>
                                                     <input type="text" class="form-control" id="cameraTruoc" name="cameraTruoc" value="<%= product.cameraTruoc %>">
                                                 </div>
-                                                <div class="col col-md-2">
-                                                    <!-- SIM -->
-                                                    <label for="sim" class="form-label">SIM</label>
-                                                    <input type="text" class="form-control" id="sim" name="sim" value="<%= product.sim %>">
-                                                </div>
-                                            </div>
-                                            <div class="row mt-2">
-                                                <div class="col col-md-3">
-                                                    <!-- Kích thước -->
-                                                    <label for="kichThuoc" class="form-label">Kích Thước</label>
-                                                    <input type="text" class="form-control" id="kichThuoc" name="kichThuoc" value="<%= product.kichThuoc %>">
-                                                </div>
+                                               
+                                                
                                                 <div class="col col-md-3">
                                                     <!-- CPU -->
                                                     <label for="cPU" class="form-label">CPU</label>
                                                     <input type="text" class="form-control" id="cPU" name="cPU" value="<%= product.cPU %>">
                                                 </div>
-                                                <div class="col col-md-2">
+                                                <div class="col col-md-3">
                                                     <!-- RAM -->
                                                     <label for="ram" class="form-label">RAM</label>
                                                     <input type="text" class="form-control" id="ram" name="ram" value="<%= product.ram %>">
                                                 </div>
+                                                <div class="col col-md-4">
+                                                    <!-- Kích thước -->
+                                                    <label for="kichThuoc" class="form-label">Kích Thước</label>
+                                                    <input type="text" class="form-control" id="kichThuoc" name="kichThuoc" value="<%= product.kichThuoc %>">
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                            <div class="row mt-2">
                                                 <div class="col col-md-2">
+                                                    <!-- SIM -->
+                                                    <label for="sim" class="form-label">SIM</label>
+                                                    <input type="text" class="form-control" id="sim" name="sim" value="<%= product.sim %>">
+                                                </div>
+                                                <div class="col col-md-3">
                                                     <!-- Pin -->
                                                     <label for="pin" class="form-label">Pin</label>
                                                     <input type="text" class="form-control" id="pin" name="pin" value="<%= product.pin %>">
                                                 </div>
-                                                <div class="col col-md-2">
-                                                    <!-- Hệ điều hành -->
-                                                    <label for="heDieuHanh" class="form-label">Hệ Điều Hành</label>
-                                                    <input type="text" class="form-control" id="heDieuHanh" name="heDieuHanh" value="<%= product.heDieuHanh %>">
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="row mt-2">
                                                 <div class="col col-md-3">
                                                     <!-- công nghệ màn hình -->
                                                     <label for="congNgheManHinh" class="form-label">Công nghệ màn hình</label>
                                                     <input type="text" class="form-control" id="congNgheManHinh" name="congNgheManHinh" value="<%= product.congNgheManHinh %>">
                                                 </div>
-                                                <div class="col col-md-3">
+                                                <div class="col col-md-4">
                                                     <!-- độ phân giải -->
                                                     <label for="doPhanGiai" class="form-label">Độ phân giải</label>
                                                     <input type="text" class="form-control" id="doPhanGiai" name="doPhanGiai" value="<%= product.doPhanGiai %>">
                                                 </div>
                                                 
-                                                <div class="col col-md-3">
-                                                    <!-- Năm sản xuất -->
+                                                
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col col-md-2">
+                                                    <!-- Giảm giá -->
                                                     <label for="giamGia" class="form-label">Giảm giá </label>
                                                     <input type="text" class="form-control" id="giamGia" name="giamGia" value="<%= product.giamGia %>">
                                                 </div>
-                                            </div>
-                                            <div class="row mt-2">
                                                 <div class="col col-md-3">
                                                     <!-- Hình ảnh -->
                                                     <label for="hinhAnh" class="form-label">Hình Ảnh</label>
@@ -172,7 +177,7 @@
                                                     <label for="namSanXuat" class="form-label">Năm Sản Xuất</label>
                                                     <input type="text" class="form-control" id="namSanXuat" name="namSanXuat" value="<%= product.namSanXuat %>">
                                                 </div>
-                                                <div class="col col-md-6">
+                                                <div class="col col-md-4">
                                                     <!-- Mô tả thêm -->
                                                     <label for="moTaThem" class="form-label">Mô Tả Thêm</label>
                                                     <textarea class="form-control" id="moTaThem" name="moTaThem" rows="2"><%= product.moTaThem %></textarea>
