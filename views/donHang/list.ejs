@@ -204,8 +204,8 @@
 
               <tr class="align-middle text-center">
                 <th scope="row"><%= index + 1 %></th>
-                <td><%= dh.idKH.id %></td>
-                <td><%= dh.idKH.hoTen %></td>
+                <td><%= dh.idKH ? dh.idKH.id : '--' %></td>
+                <td><%= dh.idKH ? dh.idKH.hoTen : '--' %></td>
                 <td>
                   <% dh.idSP.forEach(sp => { %>
                   <div><%= sp.tenDienThoai %></div>
@@ -258,7 +258,7 @@
                       <div class="row mb-3">
                         <div class="col-md-4">
                           <strong>Khách hàng:</strong>
-                          <%= dh.idKH.hoTen %>
+                          <%= dh.idKH ? dh.idKH.hoTen : '--' %>
                         </div>
                         <div class="col-md-4">
                           <strong>Số lượng:</strong>

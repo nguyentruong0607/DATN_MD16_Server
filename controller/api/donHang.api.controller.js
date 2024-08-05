@@ -78,6 +78,35 @@ exports.listDonHang = async (req, res, next) => {
   }
 };
 
+exports.getDonHangByIDKH = async (req, res, next) => {
+  try {
+    // Lấy idKH từ params
+    const idKH = req.params.idKH;
+
+    // Tìm đơn hàng với idKH tương ứng và populate các trường liên quan
+    const donHang = await donHangModel
+      .find({ idKH })
+      .populate("idKH")
+      .populate("idSP");
+
+    if (donHang.length > 0) {
+      res.json({
+        status: 200,
+        msg: "Lấy dữ liệu đơn hàng theo ID khách hàng thành công",
+        data: donHang,
+      });
+    } else {
+      res.json({
+        status: 204,
+        msg: "Không có dữ liệu đơn hàng cho ID khách hàng này",
+        data: [],
+      });
+    }
+  } catch (err) {
+    res.json({ status: 500, msg: err.message, data: [] });
+  }
+};
+
 // Delete by ID
 exports.deleteDonHang = async (req, res, next) => {
   try {

@@ -4,6 +4,7 @@ const { model } = require("mongoose");
 var donHangApi = require("../../controller/api/donHang.api.controller");
 // lấy ds hangsx
 router.get("/", donHangApi.listDonHang);
+router.get("/:idKH", donHangApi.getDonHangByIDKH);
 // xem chi tiết 1 hangsx
 router.put("/update/:id", donHangApi.updateDonHang);
 router.post("/", donHangApi.createDonHang);
