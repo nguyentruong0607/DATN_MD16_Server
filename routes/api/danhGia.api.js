@@ -6,6 +6,6 @@ var danhGiaApi = require("../../controller/api/danhGia.api.controller");
 router.get("/", danhGiaApi.listDanhGia);
 // xem chi tiết 1 hangsx
 router.post("/", danhGiaApi.createDanhGia);
-router.delete("/id:", danhGiaApi.deleteDanhGia);
+router.delete("/:id", danhGiaApi.deleteDanhGia);
 
 module.exports = router;

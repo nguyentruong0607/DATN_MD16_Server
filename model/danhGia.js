@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 var danhGiaSchema = new mongoose.Schema(
   {
     noiDung: {
@@ -15,12 +15,12 @@ var danhGiaSchema = new mongoose.Schema(
     },
     idKH: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "khachHang",
+      ref: "Account",
       required: true,
     },
     idSP: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SanPham",
+      ref: "DienThoai",
       required: true,
     },
   },
@@ -30,4 +30,4 @@ var danhGiaSchema = new mongoose.Schema(
 );
 
 let danhGiaModel = mongoose.model("DanhGia", danhGiaSchema);
-module.exports =  danhGiaModel ;
+module.exports = danhGiaModel;

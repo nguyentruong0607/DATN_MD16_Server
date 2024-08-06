@@ -10,9 +10,12 @@ var donHangSchema = new mongoose.Schema(
     ],
     idKM: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "KhuyenMai",
+      ref: "khuyenMaiModel",
     },
-
+    idDiaChi: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "diaChiModel",
+    },
     soLuong: {
       type: Number,
       min: 1,

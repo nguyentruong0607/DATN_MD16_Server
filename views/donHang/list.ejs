@@ -375,6 +375,21 @@
                           Sẵn sàng giao hàng
                         </button>
                       </form>
+                      <% } else if (dh.trangThaiDonHang === "Đang giao hàng") {
+                      %>
+                      <form
+                        action="/donhang/update/<%= dh._id %>"
+                        method="POST"
+                      >
+                        <input
+                          type="hidden"
+                          name="trangThaiDonHang"
+                          value="Đã giao hàng"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          Đã giao hàng thành công
+                        </button>
+                      </form>
                       <% } %>
                       <button
                         type="button"
