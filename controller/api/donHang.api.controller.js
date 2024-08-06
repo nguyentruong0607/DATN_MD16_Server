@@ -7,6 +7,7 @@ exports.createDonHang = async (req, res, next) => {
   let tongTien = req.body.tongTien;
   let idKH = req.body.idKH;
   let idSP = req.body.idSP;
+  let idDiaChi = req.body.idDiaChi;
   let trangThaiThanhToan = req.body.trangThaiThanhToan;
   let ghiChu = req.body.ghiChu;
   let ngayDatHang = req.body.ngayDatHang;
@@ -34,6 +35,7 @@ exports.createDonHang = async (req, res, next) => {
       tongTien: tongTien,
       idKH: idKH,
       idSP: idSP,
+      idDiaChi: idDiaChi,
       trangThaiThanhToan: trangThaiThanhToan,
       ghiChu: ghiChu,
       ngayDatHang: ngayDatHang,
@@ -58,7 +60,11 @@ exports.createDonHang = async (req, res, next) => {
 // lấy tất cả các dữ liệu
 exports.listDonHang = async (req, res, next) => {
   try {
-    const donHang = await donHangModel.find().populate("idKH").populate("idSP");
+    const donHang = await donHangModel
+      .find()
+      .populate("idKH")
+      .populate("idSP")
+      .populate("idDiaChi");
 
     if (donHang.length > 0) {
       res.json({
