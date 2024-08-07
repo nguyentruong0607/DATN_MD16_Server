@@ -23,20 +23,20 @@ exports.getAllSP = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const perPage = 6;
   const skip = (page - 1) * perPage;
-  
+
   try {
     let filter = {};
     if (trangThai !== '') {
       filter.trangThai = trangThai === 'true';
     }
-    
+
     const totalItems = await dienThoai.DienThoai.countDocuments(filter);
     const list = await dienThoai.DienThoai.find(filter).skip(skip).limit(perPage);
     const totalPages = Math.ceil(totalItems / perPage);
-    
+
     res.render("sanPham/list", {
       listSP: list,
-      trangThai: trangThai,
+      trangThai: trangThai, // Ensure this line is present
       msg: "Lấy dữ liệu thành công!",
       title: "Quản lý sản phẩm",
       currentPage: page,
@@ -45,12 +45,14 @@ exports.getAllSP = async (req, res, next) => {
       hasPreviousPage: page > 1,
       nextPage: page + 1,
       previousPage: page - 1,
+      perPage
     });
   } catch (error) {
     console.error("Error in getAllSP:", error);
     res.status(500).json({ message: "Lỗi khi lấy dữ liệu sản phẩm" });
   }
 };
+
 
 
 
@@ -68,7 +70,7 @@ exports.chiTiet = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
-//thêm sản phẩm
+// thêm sản phẩm
 exports.add = async (req, res, next) => {
   if (req.method === "POST") {
     const {
@@ -117,6 +119,9 @@ exports.add = async (req, res, next) => {
         }
       }
 
+      // Convert giamGia to a number if it contains a percentage sign
+      let giamGiaValue = parseFloat(giamGia.replace('%', ''));
+
       // Construct the color schema array
       const mauSchema = mau.map((mauValue, index) => ({
         mau: mauValue,
@@ -140,7 +145,7 @@ exports.add = async (req, res, next) => {
         hinhAnh: imageUrlAnhSanPham,
         doPhanGiai,
         idHangSX,
-        giamGia,
+        giamGia: giamGiaValue,
         trangThai: true,
         mauSchema, // Use the constructed array
       });
@@ -168,32 +173,49 @@ exports.add = async (req, res, next) => {
 };
 
 
+
 //tìm kiếm
 exports.search = async (req, res, next) => {
-  const queryValue = req.query.query;
+  const queryValue = req.query.query || '';
+  const trangThai = req.query.trangThai || '';
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 6;  // Assuming you want the same pagination as in getAllSP
   const user = req.session.account;
+
   try {
-    if (queryValue.lenght === 0) {
-      const listSanPham = await dienThoai.DienThoai.find();
-      res.render("sanPham/list", {
-        title: "Quản lý sản phẩm",
-        listSP: listSanPham,
-        user: user,
-      });
-    } else {
-      const listSanPham = await dienThoai.DienThoai.find({
-        tenDienThoai: { $regex: queryValue, $options: "i" },
-      });
-      res.render("sanPham/list", {
-        title: "Quản lý sản phẩm",
-        listSP: listSanPham,
-        user: user,
-      });
+    let filter = {};
+
+    if (queryValue.length > 0) {
+      filter.tenDienThoai = { $regex: queryValue, $options: "i" };
     }
+
+    if (trangThai !== '') {
+      filter.trangThai = trangThai === 'true';
+    }
+
+    const totalItems = await dienThoai.DienThoai.countDocuments(filter);
+    const listSanPham = await dienThoai.DienThoai.find(filter).skip((page - 1) * perPage).limit(perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
+
+    res.render("sanPham/list", {
+      title: "Quản lý sản phẩm",
+      listSP: listSanPham,
+      user: user,
+      trangThai: trangThai,
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      perPage
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 exports.editSP = async (req, res) => {
   try {

@@ -7,12 +7,12 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.get('/',checkLogin.request_login,sanPhamCtrl.getAllSP);
-router.get('/chi-tiet/:id',sanPhamCtrl.chiTiet);
-router.get('/add',sanPhamCtrl.add);
+router.get('/chi-tiet/:id',checkLogin.request_login,sanPhamCtrl.chiTiet);
+router.get('/add',checkLogin.request_login,sanPhamCtrl.add);
 
-router.post('/add',upload.any('hinhAnh'),sanPhamCtrl.add);
-router.get('/search',sanPhamCtrl.search);
-router.get('/edit/:id',sanPhamCtrl.editSP);
+router.post('/add',checkLogin.request_login,upload.any('hinhAnh'),sanPhamCtrl.add);
+router.get('/search',checkLogin.request_login,sanPhamCtrl.search);
+router.get('/edit/:id',checkLogin.request_login,sanPhamCtrl.editSP);
 router.post('/delete/:id',sanPhamCtrl.deleteProduct);
 
 //màu
