@@ -63,7 +63,7 @@ exports.getSanPhamYTByIdAccount = async (req, res, next) => {
         const { id } = req.params;
         
         // Ensure id is treated as a string or ObjectId
-        const sanPhamYT = await sanPhamYTModel.findOne({ id_user: id });
+        const sanPhamYT = await sanPhamYTModel.find({ id_user: id });
 
         if (sanPhamYT) {
             res.json({ status: 200, msg: "Lấy dữ liệu sản phẩm yêu thích thành công", data: sanPhamYT });
