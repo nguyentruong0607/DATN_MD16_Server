@@ -1,5 +1,6 @@
 const { DienThoai } = require("../../model/sanPham");
-const HangSX = require("../../model/hangSX");
+const sanPhamYTModel= require("../../model/sanPhamYT");
+const donHangModel=require("../../model/donHang");
 const { uploadImage } = require("../../middleware/upload.image.firebase");
 const nameFolder = "SanPham";
 // thêm sản phẩm
@@ -104,17 +105,66 @@ exports.listProductBestNew = async (req, res, next) => {
 //lấy sản phẩm hot nhất
 exports.listProductHottest = async (req, res, next) => {
   try {
-    // Giả sử trường 'sales' chỉ ra độ phổ biến của sản phẩm
-    const hottestProducts = await DienThoai.find()
-      .sort({ sales: -1 }) // Sắp xếp theo trường sales giảm dần
-      .limit(6) // Giới hạn kết quả đến 6 sản phẩm hàng đầu
-      .populate("idHangSX"); // Điền thông tin của trường idHangSX
+    // Thực hiện một truy vấn phức tạp với các bước xử lý dữ liệu trong MongoDB
+    const hotProducts = await sanPhamYTModel.aggregate([
+      // Bước 1: Gom nhóm các sản phẩm theo `id_sanPham` và đếm số lần được yêu thích
+      {
+        $group: {
+          _id: "$id_sanPham", // Sử dụng `id_sanPham` để gom nhóm
+          soLuotYeuThich: { $sum: 1 } // Đếm số lần mỗi sản phẩm được yêu thích
+        }
+      },
+      // Bước 2: Sắp xếp các sản phẩm theo số lượt yêu thích từ cao đến thấp
+      { $sort: { soLuotYeuThich: -1 } }, // Sắp xếp giảm dần theo `soLuotYeuThich`
+      // Bước 3: Kết nối với collection `DienThoai` để lấy thông tin chi tiết sản phẩm
+      {
+        $lookup: {
+          from: "DienThoai", // Collection `DienThoai` trong MongoDB
+          localField: "_id", // Trường `_id` từ kết quả nhóm (chính là `id_sanPham`)
+          foreignField: "_id", // Trường `_id` trong collection `DienThoai`
+          as: "sanPhamDetails" // Kết quả sẽ lưu trong trường `sanPhamDetails`
+        }
+      },
+      // Bước 4: Giải nén mảng `sanPhamDetails` để lấy dữ liệu từng sản phẩm
+      { $unwind: "$sanPhamDetails" }, // Mỗi phần tử `sanPhamDetails` sẽ là một đối tượng riêng biệt
+      // Bước 5: Chọn các trường cần thiết để trả về cho người dùng
+      {
+        $project: {
+          _id: 0, // Không trả về trường `_id` mặc định
+          id: "$sanPhamDetails._id", // Lấy `_id` của sản phẩm từ `sanPhamDetails`
+          tenDienThoai: "$sanPhamDetails.tenDienThoai", // Tên điện thoại
+          soLuotYeuThich: 1, // Số lượt yêu thích
+          camera: "$sanPhamDetails.camera", // Thông tin camera sau
+          cameraTruoc: "$sanPhamDetails.cameraTruoc", // Thông tin camera trước
+          kichThuoc: "$sanPhamDetails.kichThuoc", // Kích thước
+          cPU: "$sanPhamDetails.cPU", // CPU
+          ram: "$sanPhamDetails.ram", // RAM
+          sim: "$sanPhamDetails.sim", // SIM
+          pin: "$sanPhamDetails.pin", // Pin
+          heDieuHanh: "$sanPhamDetails.heDieuHanh", // Hệ điều hành
+          namSanXuat: "$sanPhamDetails.namSanXuat", // Năm sản xuất
+          congNgheManHinh: "$sanPhamDetails.congNgheManHinh", // Công nghệ màn hình
+          moTaThem: "$sanPhamDetails.moTaThem", // Mô tả thêm
+          hinhAnh: "$sanPhamDetails.hinhAnh", // Hình ảnh
+          doPhanGiai: "$sanPhamDetails.doPhanGiai", // Độ phân giải
+          giamGia: "$sanPhamDetails.giamGia", // Giảm giá
+          trangThai: "$sanPhamDetails.trangThai", // Trạng thái
+          mauSchema: "$sanPhamDetails.mauSchema", // Thông tin màu sắc
+          idHangSX: "$sanPhamDetails.idHangSX" // ID hãng sản xuất
+        }
+      }
+    ]);
 
-    res.json(hottestProducts);
+    // Trả về danh sách các sản phẩm hot nhất
+    res.json(hotProducts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    // Xử lý lỗi nếu có vấn đề xảy ra
+    console.error('Error fetching hot products:', err); // In ra lỗi
+    res.status(500).json({ message: err.message }); // Trả về lỗi cho client
   }
 };
+
+
 
 // LẤY THEO ID
 exports.getsanPhamById = async (req, res, next) => {

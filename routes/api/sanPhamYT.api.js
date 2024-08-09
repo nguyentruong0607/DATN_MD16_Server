@@ -4,7 +4,7 @@ const { model } = require('mongoose');
 const sanPhamYTCtrl=require('../../controller/api/sanPhamYT.api.controller');
 
 router.get('/',sanPhamYTCtrl.listsanPhamYT);
-router.get('/:id',sanPhamYTCtrl.getSanPhamYTById);
+router.get('/:id',sanPhamYTCtrl.getSanPhamYTByIdAccount);
 // Lấy trạng thái đã yêu thích chưa để hiện thị tym đỏ hay trong suốt 
 // khi mới vào màn hình sản phẩm
 router.post('/check', sanPhamYTCtrl.checkYeuThich);
