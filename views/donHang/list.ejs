@@ -224,8 +224,7 @@
                 </td>
                 <td><%= dh.trangThaiDonHang %></td>
                 <td class="text-danger">
-                  <%= dh.tongTien.toLocaleString('vi-VN', { style: 'currency',
-                  currency: 'VND' }) %>
+                  <%= dh.tongTien %>
                 </td>
                 <td>
                   <div class="align-items-center">
@@ -315,8 +314,7 @@
                         <div class="col-md-4">
                           <strong>Tổng tiền:</strong>
                           <span class="text-danger"
-                            ><%= dh.tongTien.toLocaleString('vi-VN', { style:
-                            'currency', currency: 'VND' }) %></span
+                            ><%= dh.tongTien %></span
                           >
                         </div>
                       </div>

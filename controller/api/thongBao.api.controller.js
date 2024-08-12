@@ -1,49 +1,47 @@
-const  thongBaoModel  = require("../../model/thongBao");
+const thongBaoModel = require("../../model/thongBao");
 
-// Thêm thong bao
+// Thêm thông báo
 exports.createThongBao = async (req, res, next) => {
-  let noiDung = req.body.noiDung;
-  let thoiGian = req.body.thoiGian;
-  let idKH = req.body.idAccount;
 
   try {
-    let addFields = {
-      noiDung: noiDung,
-      thoiGian: thoiGian,
-      idKH: idKH,
-    };
+    let thongBao = new thongBaoModel();
+      thongBao.tieuDe=req.body.tieuDe,
+      thongBao.noiDung= req.body.noiDung,
+      thongBao.thoiGian= req.body.thoiGian,
+      thongBao.idAccount= req.body.idAccount
+    
 
-    let addItems = await thongBaoModel.create(addFields);
+    let new_t  = await thongBao.save();
 
     res
       .status(201)
-      .json({ message: "Thêm thông báo thành công", newItem: addItems });
+      .json({ message: "Thêm thông báo thành công", new_t:new_t });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };
 
-// lấy tất cả các dữ liệu
+// Lấy tất cả thông báo theo idAccount
 exports.listThongBao = async (req, res, next) => {
-  let idAccount=req.params.idAccount;
   try {
-    const thongBao = await thongBaoModel.find(idAccount);
+    const { id } = req.params;
+    const thongBao = await thongBaoModel.find({ idAccount: id });
     if (thongBao.length > 0) {
       res.json({
         status: 200,
-        msg: "Lấy dữ liệu thong  bao thành công",
+        msg: "Lấy dữ liệu thông báo thành công",
         data: thongBao,
       });
     } else {
-      res.json({ status: 204, msg: "Không có dữ liệu thong bao", data: [] });
+      res.json({ status: 204, msg: "Không có dữ liệu thông báo", data: [] });
     }
   } catch (err) {
     res.json({ status: 500, msg: err.message, data: [] });
   }
 };
 
-// Delete by ID
+// Xóa thông báo theo ID
 exports.deleteThongBao = async (req, res, next) => {
   try {
     await thongBaoModel.deleteOne({ _id: req.params.id });
@@ -52,3 +50,5 @@ exports.deleteThongBao = async (req, res, next) => {
     res.json({ status: 500, msg: err.message });
   }
 };
+
+

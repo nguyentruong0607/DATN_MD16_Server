@@ -10,6 +10,7 @@ const spUpload = multer({ storage: storage });
 router.get('/', sanPhamApi.listsanPham)   ;
 router.get('/new',sanPhamApi.listProductBestNew); 
 router.get('/hot',sanPhamApi.listProductHottest);
+router.get('/topBanChay',sanPhamApi.getTopSellingProducts);
 // xem chi tiết 1 sanPham
 router.get('/:id', sanPhamApi.getsanPhamById); 
 router.get('/hang/:id',sanPhamApi.getSanPhamByIdHang); 

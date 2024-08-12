@@ -324,6 +324,79 @@ exports.filterSanPham = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+//top sanpham bán chảy
+exports.getTopSellingProducts = async (req, res) => {
+  try {
+    const topSellingProducts = await donHangModel.aggregate([
+      // Bước 1: Lọc các đơn hàng có trạng thái là "đã giao hàng"
+       { $match: { trangThaiDonHang: "Đã giao hàng" } },
+      
+      // Bước 2: Giải nén mảng sản phẩm trong đơn hàng để tính toán số lượng
+      { $unwind: "$idSP" },
+      
+      // Bước 3: Nhóm các đơn hàng theo ID sản phẩm và tính tổng số lượng bán
+      {
+        $group: {
+          _id: "$idSP", // Nhóm theo ID sản phẩm
+          totalQuantitySold: { $sum: "$soLuong" }, // Tính tổng số lượng bán của từng sản phẩm
+        }
+      },
+      
+      // Bước 4: Sắp xếp các sản phẩm theo số lượng bán từ cao đến thấp
+      { $sort: { totalQuantitySold: -1 } },
+      
+      // Bước 5: Lấy ra 10 sản phẩm bán chạy nhất
+      { $limit: 10 },
+      
+      // Bước 6: Kết nối với collection `DienThoai` để lấy thông tin chi tiết sản phẩm
+      {
+        $lookup: {
+          from: "DienThoai",
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDetails"
+        }
+      },
+      
+      // Bước 7: Giải nén mảng `productDetails` để lấy dữ liệu từng sản phẩm
+      { $unwind: "$productDetails" },
+      
+      // Bước 8: Chọn các trường cần thiết để trả về cho người dùng
+      {
+        $project: {
+          _id: 0,
+          id: "$productDetails._id",
+          tenDienThoai: "$productDetails.tenDienThoai",
+          totalQuantitySold: 1,
+          camera: "$productDetails.camera",
+          cameraTruoc: "$productDetails.cameraTruoc",
+          kichThuoc: "$productDetails.kichThuoc",
+          cPU: "$productDetails.cPU",
+          ram: "$productDetails.ram",
+          sim: "$productDetails.sim",
+          pin: "$productDetails.pin",
+          heDieuHanh: "$productDetails.heDieuHanh",
+          namSanXuat: "$productDetails.namSanXuat",
+          congNgheManHinh: "$productDetails.congNgheManHinh",
+          moTaThem: "$productDetails.moTaThem",
+          hinhAnh: "$productDetails.hinhAnh",
+          doPhanGiai: "$productDetails.doPhanGiai",
+          giamGia: "$productDetails.giamGia",
+          trangThai: "$productDetails.trangThai",
+          mauSchema: "$productDetails.mauSchema",
+          idHangSX: "$productDetails.idHangSX"
+        }
+      }
+    ]);
+
+    // Trả về danh sách top 10 sản phẩm bán chạy nhất
+    res.json(topSellingProducts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 // Delete by ID
 exports.deletesanPham = async (req, res, next) => {
   try {
