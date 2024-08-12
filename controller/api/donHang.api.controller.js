@@ -6,7 +6,7 @@ exports.createDonHang = async (req, res, next) => {
   let soLuong = req.body.soLuong;
   let tongTien = req.body.tongTien;
   let idKH = req.body.idKH;
-  let idSP = req.body.idSP;
+  let sp = req.body.sp;
   let idDiaChi = req.body.idDiaChi;
   let trangThaiThanhToan = req.body.trangThaiThanhToan;
   let ghiChu = req.body.ghiChu;
@@ -34,7 +34,7 @@ exports.createDonHang = async (req, res, next) => {
       soLuong: soLuong,
       tongTien: tongTien,
       idKH: idKH,
-      idSP: idSP,
+      sp: sp,
       idDiaChi: idDiaChi,
       trangThaiThanhToan: trangThaiThanhToan,
       ghiChu: ghiChu,
@@ -63,13 +63,16 @@ exports.listDonHang = async (req, res, next) => {
     const donHang = await donHangModel
       .find()
       .populate("idKH")
-      .populate("idSP")
+      .populate({
+        path: "sp.idSP",
+        model: "DienThoai",
+      })
       .populate("idDiaChi");
 
     if (donHang.length > 0) {
       res.json({
         status: 200,
-        msg: "Lấy dữ liệu don hang thành công",
+        msg: "Lấy dữ liệu đơn hang thành công",
         data: donHang,
       });
     } else {
@@ -91,9 +94,12 @@ exports.getDonHangByIDKH = async (req, res, next) => {
 
     // Tìm đơn hàng với idKH tương ứng và populate các trường liên quan
     const donHang = await donHangModel
-      .find({ idKH })
+      .find({ idKH: idKH })
       .populate("idKH")
-      .populate("idSP")
+      .populate({
+        path: "sp.idSP",
+        model: "DienThoai",
+      })
       .populate("idDiaChi");
 
     if (donHang.length > 0) {

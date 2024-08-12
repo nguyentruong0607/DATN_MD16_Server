@@ -2,10 +2,18 @@ const mongoose = require("mongoose");
 
 var donHangSchema = new mongoose.Schema(
   {
-    idSP: [
+    sp: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "DienThoai",
+        idSP: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "DienThoai",
+          required: true,
+        },
+        soLuong: {
+          type: Number,
+          required: true,
+          min: 1,
+        },
       },
     ],
     idKM: {
