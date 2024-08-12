@@ -44,7 +44,8 @@ exports.listThongBao = async (req, res, next) => {
 // Xóa thông báo theo ID
 exports.deleteThongBao = async (req, res, next) => {
   try {
-    await thongBaoModel.deleteOne({ _id: req.params.id });
+    let id= req.params.id;
+    await thongBaoModel.findByIdAndDelete(id);
     res.json({ status: 200, msg: "Xóa thông báo thành công" });
   } catch (err) {
     res.json({ status: 500, msg: err.message });

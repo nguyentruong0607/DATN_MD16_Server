@@ -93,7 +93,8 @@ exports.getDonHangByIDKH = async (req, res, next) => {
     const donHang = await donHangModel
       .find({ idKH })
       .populate("idKH")
-      .populate("idSP");
+      .populate("idSP")
+      .populate("idDiaChi");
 
     if (donHang.length > 0) {
       res.json({
