@@ -6,7 +6,10 @@ const { title } = require("process");
 // Hiển thị danh sách Đơn hàng
 exports.getAllKDH = async (req, res, next) => {
   try {
-    const donHang = await donHangModel.find().populate("idKH").populate("idSP");
+    const donHang = await donHangModel.find().populate("idKH").populate({
+      path: "sp.idSP",
+      model: "DienThoai",
+    });
     res.render("donHang/list", {
       listDH: donHang,
       msg: "Lấy dữ liệu thành công !",
@@ -48,7 +51,10 @@ exports.search = async (req, res, next) => {
     let queryValue = req.query.query;
 
     if (!queryValue || queryValue.length === 0) {
-      let listDH = await donHangModel.find().populate("idKH").populate("idSP");
+      let listDH = await donHangModel.find().populate("idKH").populate({
+        path: "sp.idSP",
+        model: "DienThoai",
+      });
       return res.render("donHang/list", {
         title: "Đơn hàng",
         listDH: listDH,
@@ -62,7 +68,10 @@ exports.search = async (req, res, next) => {
         path: "idKH",
         match: { hoTen: { $regex: queryValue, $options: "i" } },
       })
-      .populate("idSP");
+      .populate({
+        path: "sp.idSP",
+        model: "DienThoai",
+      });
 
     listDH = listDH.filter((dh) => dh.idKH !== null);
 
@@ -90,7 +99,10 @@ exports.selectTrangThai = async (req, res, next) => {
       })
       .find()
       .populate("idKH")
-      .populate("idSP");
+      .populate({
+        path: "sp.idSP",
+        model: "DienThoai",
+      });
 
     res.render("donHang/list", {
       title: `Đơn hàng trạng thái: ${trangThaiDonHang}`,

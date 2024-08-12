@@ -218,8 +218,8 @@
                 <td><%= dh.idKH ? dh.idKH.id : '--' %></td>
                 <td><%= dh.idKH ? dh.idKH.hoTen : '--' %></td>
                 <td>
-                  <% dh.idSP.forEach(sp => { %>
-                  <div><%= sp.tenDienThoai %></div>
+                  <% dh.sp.forEach(sp => { %>
+                  <div><%= sp.idSP.tenDienThoai %></div>
                   <% }) %>
                 </td>
                 <td><%= dh.trangThaiDonHang %></td>
@@ -320,18 +320,18 @@
                       </div>
                       <h5 class="mt-4">Thông tin sản phẩm</h5>
                       <div class="row">
-                        <% dh.idSP.forEach(sp => { %>
+                        <% dh.sp.forEach(sp => { %>
                         <div class="col-md-2 mb-3">
                           <div
                             class="cardImg d-flex flex-column align-items-center"
                           >
                             <img
-                              src="<%= sp.hinhAnh %>"
+                              src="<%= sp.idSP.hinhAnh %>"
                               class="img"
-                              alt="<%= sp.tenDienThoai %>"
+                              alt="<%= sp.idSP.tenDienThoai %>"
                             />
                             <span class="align-self-center">
-                              <%= sp.tenDienThoai %>
+                              <%= sp.idSP.tenDienThoai %>
                             </span>
                           </div>
                         </div>
