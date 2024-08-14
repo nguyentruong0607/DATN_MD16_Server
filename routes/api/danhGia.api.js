@@ -4,6 +4,7 @@ const { model } = require("mongoose");
 var danhGiaApi = require("../../controller/api/danhGia.api.controller");
 // lấy ds hangsx
 router.get("/", danhGiaApi.listDanhGia);
+router.get("/:idSP", danhGiaApi.listDanhGiaBySP);
 // xem chi tiết 1 hangsx
 router.post("/", danhGiaApi.createDanhGia);
 router.delete("/:id", danhGiaApi.deleteDanhGia);
