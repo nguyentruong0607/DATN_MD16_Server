@@ -219,7 +219,7 @@
                 <td><%= dh.idKH ? dh.idKH.hoTen : '--' %></td>
                 <td>
                   <% dh.sp.forEach(sp => { %>
-                  <div><%= sp.idSP.tenDienThoai %></div>
+                  <div><%= sp.idSP ? sp.idSP.tenDienThoai : '--' %></div>
                   <% }) %>
                 </td>
                 <td><%= dh.trangThaiDonHang %></td>
@@ -328,12 +328,12 @@
                             class="cardImg d-flex flex-column align-items-center"
                           >
                             <img
-                              src="<%= sp.idSP.hinhAnh %>"
+                              src="<%= sp.idSP ? sp.idSP.hinhAnh : '--'  %>"
                               class="img"
-                              alt="<%= sp.idSP.tenDienThoai %>"
+                              alt="<%= sp.idSP ? sp.idSP.tenDienThoai : '--' %>"
                             />
                             <span class="align-self-center">
-                              <%= sp.idSP.tenDienThoai %>
+                              <%= sp.idSP ? sp.idSP.tenDienThoai : '--' %>
                             </span>
                             <span class="align-self-center">
                               Số lượng: <%= sp.soLuong %> sản phẩm
@@ -519,20 +519,28 @@
           </table>
 
           <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
+            <ul class="pagination">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <% if (hasPreviousPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= previousPage %>"
+                      >Previous</a
+                    >
+                  </li>
+                  <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li
+                    class="page-item <%= currentPage === i ? 'active' : '' %>"
+                  >
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                  <% } %> <% if (hasNextPage) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= nextPage %>">Next</a>
+                  </li>
+                  <% } %>
+                </ul>
+              </nav>
             </ul>
           </nav>
         </div>

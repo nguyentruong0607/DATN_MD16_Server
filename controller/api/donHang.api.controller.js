@@ -1,6 +1,7 @@
 const donHangModel = require("../../model/donHang");
 const khuyenMaiModel = require("../../model/khuyenMai");
 const { DienThoai } = require("../../model/sanPham");
+const thongBaoModel = require("../../model/thongBao");
 
 // thêm don hang
 exports.createDonHang = async (req, res, next) => {
@@ -75,7 +76,19 @@ exports.createDonHang = async (req, res, next) => {
       idKM: idKM,
     };
 
+    const formattedTongTien = tongTien.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+
     let addItems = await donHangModel.create(addFields);
+
+    await thongBaoModel.create({
+      idDonHang: addItems._id,
+      idAccount: idKH,
+      tieuDe: "Đặt hàng thành công!",
+      noiDung: `Đơn hàng của bạn với mã đơn hàng ${addItems._id} đã được đặt thành công với tổng tiền là ${formattedTongTien}.`,
+    });
 
     res
       .status(201)
@@ -174,6 +187,40 @@ exports.updateDonHang = async (req, res, next) => {
       },
       { new: true }
     );
+
+    let tieuDe;
+    let noiDung;
+
+    switch (trangThaiDonHang) {
+      case "Đang xử lý":
+        tieuDe = "Đơn hàng đang xử lý!";
+        noiDung = `Đơn hàng của bạn đang được xử lý. Mã đơn hàng: ${updatedDonHang._id}.`;
+        break;
+      case "Đang giao hàng":
+        tieuDe = "Đơn hàng đang được giao!";
+        noiDung = `Đơn hàng của bạn đang được giao. Mã đơn hàng: ${updatedDonHang._id}.`;
+        break;
+      case "Đã giao hàng":
+        tieuDe = "Đơn hàng đã được giao!";
+        noiDung = `Đơn hàng của bạn đã được giao thành công. Mã đơn hàng: ${updatedDonHang._id}.`;
+        break;
+      case "Đã hủy":
+        tieuDe = "Đơn hàng đã bị hủy!";
+        noiDung = `Đơn hàng của bạn đã bị hủy. Mã đơn hàng: ${updatedDonHang._id}.`;
+        break;
+      default:
+        tieuDe = "Cập nhật đơn hàng";
+        noiDung = `Đơn hàng của bạn đã được cập nhật. Mã đơn hàng: ${updatedDonHang._id}.`;
+        break;
+    }
+
+    // Tạo thông báo cho khách hàng
+    await thongBaoModel.create({
+      idDonHang: updatedDonHang._id,
+      idAccount: updatedDonHang.idKH,
+      tieuDe: tieuDe,
+      noiDung: noiDung,
+    });
 
     // Kiểm tra nếu không tìm thấy đơn hàng
     if (!updatedDonHang) {
