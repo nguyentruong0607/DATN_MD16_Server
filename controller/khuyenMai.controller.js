@@ -5,12 +5,26 @@ const { title } = require("process");
 
 // Hiển thị danh sách khuyến mãi
 exports.getAllKM = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 6;
+  const skip = (page - 1) * perPage;
   try {
-    const list = await khuyenMaiModel.find();
+    const totalItems = await khuyenMaiModel.countDocuments();
+
+    const list = await khuyenMaiModel.find().skip(skip).limit(perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
+
     res.render("khuyenMai/list", {
       listKM: list,
       msg: "Lấy dữ liệu thành công !",
       title: "Khuyến Mại",
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      perPage,
     });
   } catch (error) {
     console.error("Error in getAllKM:", error);
@@ -118,24 +132,47 @@ exports.deleteKM = async (req, res, next) => {
 exports.search = async (req, res, next) => {
   try {
     const km = req.session.KhuyenMai;
-    let queryValue = req.query.query;
-    if (queryValue.lenght === 0) {
-      let listKM = [];
-      listKM = await khuyenMaiModel.find();
+    let queryValue = req.query.query || "";
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
+    if (!queryValue || queryValue.length === 0) {
+      const totalItems = await khuyenMaiModel.countDocuments();
+      let listKM = await khuyenMaiModel.find().skip(skip).limit(perPage);
+      const totalPages = Math.ceil(totalItems / perPage);
       res.render("khuyenMai/list", {
         title: "Khuyến mãi",
         listKM: listKM,
         km: km,
+        currentPage: page,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        perPage,
       });
     }
     let listKM = [];
-    listKM = await khuyenMaiModel.find({
-      ten: { $regex: queryValue, $options: "i" },
-    });
+    let filter = {};
+    if (queryValue.length > 0) {
+      filter.ten = { $regex: queryValue, $options: "i" };
+    }
+    const totalItems = await khuyenMaiModel.countDocuments(filter);
+
+    listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
     res.render("khuyenMai/list", {
       title: "Khuyến mãi'" + queryValue + "'",
       listKM: listKM,
       km: km,
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      perPage,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -146,18 +183,30 @@ exports.selectTrangThai = async (req, res, next) => {
   try {
     const { trangThai } = req.query;
 
-    console.log(trangThai);
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 6;
+    const skip = (page - 1) * perPage;
 
-    if (typeof trangThai === "undefined") {
-      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
+    let filter = {};
+    if (trangThai !== "") {
+      filter.trangThai = trangThai === "true";
     }
+    const totalItems = await khuyenMaiModel.countDocuments(filter);
 
-    const listKM = await khuyenMaiModel.find({ trangThai: trangThai });
+    const listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
 
     res.render("khuyenMai/list", {
       title: `Khuyến mãi trạng thái: ${trangThai}`,
       listKM: listKM,
       msg: `Lấy danh sách khuyến mãi trạng thái: ${trangThai} thành công!`,
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      perPage,
     });
   } catch (error) {
     console.error("Error in selectTrangThai:", error);
