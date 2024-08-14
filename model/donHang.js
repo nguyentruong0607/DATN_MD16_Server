@@ -14,6 +14,18 @@ var donHangSchema = new mongoose.Schema(
           required: true,
           min: 1,
         },
+        idMau: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+        },
+        mau: {
+          type: String,
+          required: true,
+        },
+        giaTien: {
+          type: Number,
+          require: true,
+        },
       },
     ],
     idKM: {

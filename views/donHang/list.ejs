@@ -224,7 +224,8 @@
                 </td>
                 <td><%= dh.trangThaiDonHang %></td>
                 <td class="text-danger">
-                  <%= dh.tongTien %>
+                  <%= dh.tongTien.toLocaleString('vi-VN', { style: 'currency',
+                  currency: 'VND' }) %>
                 </td>
                 <td>
                   <div class="align-items-center">
@@ -314,7 +315,8 @@
                         <div class="col-md-4">
                           <strong>Tổng tiền:</strong>
                           <span class="text-danger"
-                            ><%= dh.tongTien %></span
+                            ><%= dh.tongTien.toLocaleString('vi-VN', { style:
+                            'currency', currency: 'VND' }) %></span
                           >
                         </div>
                       </div>
@@ -332,6 +334,13 @@
                             />
                             <span class="align-self-center">
                               <%= sp.idSP.tenDienThoai %>
+                            </span>
+                            <span class="align-self-center">
+                              Số lượng: <%= sp.soLuong %> sản phẩm
+                            </span>
+                            <span class="align-self-center">
+                              Giá tiền: <%= dh.tongTien.toLocaleString('vi-VN',
+                              { style: 'currency', currency: 'VND' }) %>
                             </span>
                           </div>
                         </div>

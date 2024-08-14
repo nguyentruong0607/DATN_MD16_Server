@@ -1,4 +1,4 @@
-const  danhGiaModel  = require("../../model/danhGia");
+const danhGiaModel = require("../../model/danhGia");
 
 // thêm danh gia
 exports.createDanhGia = async (req, res, next) => {
@@ -32,6 +32,31 @@ exports.createDanhGia = async (req, res, next) => {
 exports.listDanhGia = async (req, res, next) => {
   try {
     const danhGia = await danhGiaModel.find().populate("idKH").populate("idSP");
+    if (danhGia.length > 0) {
+      res.json({
+        status: 200,
+        msg: "Lấy dữ liệu đánh giá thành công",
+        data: danhGia,
+      });
+    } else {
+      res.json({
+        status: 204,
+        msg: "Không có dữ liệu đánh giá",
+        data: [],
+      });
+    }
+  } catch (err) {
+    res.json({ status: 500, msg: err.message, data: [] });
+  }
+};
+
+exports.listDanhGiaBySP = async (req, res, next) => {
+  try {
+    const idSP = req.params.idSP;
+    const danhGia = await danhGiaModel
+      .find({ idSP: idSP })
+      .populate("idKH")
+      .populate("idSP");
     if (danhGia.length > 0) {
       res.json({
         status: 200,

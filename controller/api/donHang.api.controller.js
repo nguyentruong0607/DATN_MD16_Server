@@ -1,5 +1,6 @@
 const donHangModel = require("../../model/donHang");
 const khuyenMaiModel = require("../../model/khuyenMai");
+const { DienThoai } = require("../../model/sanPham");
 
 // thêm don hang
 exports.createDonHang = async (req, res, next) => {
@@ -30,6 +31,34 @@ exports.createDonHang = async (req, res, next) => {
   }
 
   try {
+    for (const item of sp) {
+      // Tìm sản phẩm theo idSP
+      const dienThoai = await DienThoai.findById(item.idSP);
+
+      if (dienThoai) {
+        // Tìm đúng màu trong mauSchema
+        const selectedMau = dienThoai.mauSchema.find(
+          (mau) => mau._id.toString() === item.idMau.toString()
+        );
+
+        if (selectedMau) {
+          // Cập nhật số lượng của màu
+          selectedMau.soLuong -= item.soLuong;
+
+          // Lưu lại sản phẩm với số lượng màu đã cập nhật
+          await dienThoai.save();
+        } else {
+          return res
+            .status(400)
+            .json({ message: `Không tìm thấy màu với id ${item.idMau}` });
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ message: `Không tìm thấy sản phẩm với id ${item.idSP}` });
+      }
+    }
+
     let addFields = {
       soLuong: soLuong,
       tongTien: tongTien,
