@@ -328,27 +328,27 @@ exports.filterSanPham = async (req, res) => {
 exports.getTopSellingProducts = async (req, res) => {
   try {
     const topSellingProducts = await donHangModel.aggregate([
-      // Bước 1: Lọc các đơn hàng có trạng thái là "đã giao hàng"
-       { $match: { trangThaiDonHang: "Đã giao hàng" } },
+      // Step 1: Filter orders with status "Đã giao hàng"
+      { $match: { trangThaiDonHang: "Đã giao hàng" } },
       
-      // Bước 2: Giải nén mảng sản phẩm trong đơn hàng để tính toán số lượng
-      { $unwind: "$idSP" },
+      // Step 2: Unwind the 'sp' array to calculate quantities for each product
+      { $unwind: "$sp" },
       
-      // Bước 3: Nhóm các đơn hàng theo ID sản phẩm và tính tổng số lượng bán
+      // Step 3: Group orders by product ID and calculate the total quantity sold
       {
         $group: {
-          _id: "$idSP", // Nhóm theo ID sản phẩm
-          totalQuantitySold: { $sum: "$soLuong" }, // Tính tổng số lượng bán của từng sản phẩm
+          _id: "$sp.idSP", // Group by product ID
+          totalQuantitySold: { $sum: "$sp.soLuong" }, // Sum the quantity of each product
         }
       },
       
-      // Bước 4: Sắp xếp các sản phẩm theo số lượng bán từ cao đến thấp
+      // Step 4: Sort products by the total quantity sold in descending order
       { $sort: { totalQuantitySold: -1 } },
       
-      // Bước 5: Lấy ra 10 sản phẩm bán chạy nhất
+      // Step 5: Limit the results to the top 10 best-selling products
       { $limit: 10 },
       
-      // Bước 6: Kết nối với collection `DienThoai` để lấy thông tin chi tiết sản phẩm
+      // Step 6: Lookup details of each product from the 'DienThoai' collection
       {
         $lookup: {
           from: "DienThoai",
@@ -358,10 +358,10 @@ exports.getTopSellingProducts = async (req, res) => {
         }
       },
       
-      // Bước 7: Giải nén mảng `productDetails` để lấy dữ liệu từng sản phẩm
+      // Step 7: Unwind the 'productDetails' array to get individual product data
       { $unwind: "$productDetails" },
       
-      // Bước 8: Chọn các trường cần thiết để trả về cho người dùng
+      // Step 8: Project the necessary fields to return to the client
       {
         $project: {
           _id: 0,
@@ -389,12 +389,13 @@ exports.getTopSellingProducts = async (req, res) => {
       }
     ]);
 
-    // Trả về danh sách top 10 sản phẩm bán chạy nhất
+    // Return the top 10 best-selling products
     res.json(topSellingProducts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 // Delete by ID
