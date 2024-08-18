@@ -361,7 +361,9 @@
               } %> <% listKM.forEach((km, index) => { %>
 
               <tr class="align-middle text-center">
-                <th scope="row"><%= index + 1 %></th>
+                <th scope="row">
+                  <%= (currentPage - 1) * perPage+ index + 1 %>
+                </th>
                 <td><%= km.ten %></td>
                 <td><%= km.soLuong %></td>
                 <td><%= dinhDangNgay(km.ngayBatDau) %></td>

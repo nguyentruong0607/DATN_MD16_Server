@@ -60,6 +60,27 @@ exports.listKhuyenMai = async (req, res, next) => {
   }
 };
 
+exports.listKhuyenMaiByTrangThai = async (req, res, next) => {
+  try {
+    const khuyenMai = await khuyenMaiModel.find({ trangThai: true });
+    if (khuyenMai.length > 0) {
+      res.json({
+        status: 200,
+        msg: "Lấy dữ liệu khuyến mãi thành công",
+        data: khuyenMai,
+      });
+    } else {
+      res.json({
+        status: 204,
+        msg: "Không có dữ liệu khuyến mãi",
+        data: [],
+      });
+    }
+  } catch (err) {
+    res.json({ status: 500, msg: err.message, data: [] });
+  }
+};
+
 // Delete by ID
 exports.deleteKhuyenMai = async (req, res, next) => {
   try {
