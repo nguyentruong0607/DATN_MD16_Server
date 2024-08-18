@@ -29,7 +29,17 @@ exports.createDonHang = async (req, res, next) => {
       },
       { new: true }
     );
+
+    if (khuyenMai.soLuong === 1) {
+      const updatedKhuyenMai = await khuyenMaiModel.findOneAndUpdate(
+        { _id: khuyenMai._id },
+        { trangThai: false },
+        { new: true }
+      );
+    }
   }
+
+  let tenDienThoai = [];
 
   try {
     for (const item of sp) {
@@ -37,6 +47,8 @@ exports.createDonHang = async (req, res, next) => {
       const dienThoai = await DienThoai.findById(item.idSP);
 
       if (dienThoai) {
+        tenDienThoai.push(dienThoai.tenDienThoai);
+
         // Tìm đúng màu trong mauSchema
         const selectedMau = dienThoai.mauSchema.find(
           (mau) => mau._id.toString() === item.idMau.toString()
@@ -87,7 +99,11 @@ exports.createDonHang = async (req, res, next) => {
       idDonHang: addItems._id,
       idAccount: idKH,
       tieuDe: "Đặt hàng thành công!",
-      noiDung: `Đơn hàng của bạn với mã đơn hàng ${addItems._id} đã được đặt thành công với tổng tiền là ${formattedTongTien}.`,
+      noiDung: `Đơn hàng của bạn với mã đơn hàng ${
+        addItems._id
+      } đã được đặt thành công với tổng tiền là ${formattedTongTien}. Sản phẩm: ${tenDienThoai.join(
+        ", "
+      )}.`,
     });
 
     res
@@ -109,7 +125,8 @@ exports.listDonHang = async (req, res, next) => {
         path: "sp.idSP",
         model: "DienThoai",
       })
-      .populate("idDiaChi");
+      .populate("idDiaChi")
+      .sort({ ngayDatHang: -1 });
 
     if (donHang.length > 0) {
       res.json({
@@ -134,7 +151,7 @@ exports.getDonHangByIDKH = async (req, res, next) => {
     // Lấy idKH từ params
     const idKH = req.params.idKH;
 
-    // Tìm đơn hàng với idKH tương ứng và populate các trường liên quan
+    // Tìm đơn hàng với idKH tương ứng, populate các trường liên quan và sắp xếp theo thứ tự ngược lại
     const donHang = await donHangModel
       .find({ idKH: idKH })
       .populate("idKH")
@@ -142,7 +159,8 @@ exports.getDonHangByIDKH = async (req, res, next) => {
         path: "sp.idSP",
         model: "DienThoai",
       })
-      .populate("idDiaChi");
+      .populate("idDiaChi")
+      .sort({ ngayDatHang: -1 });
 
     if (donHang.length > 0) {
       res.json({
@@ -178,7 +196,19 @@ exports.updateDonHang = async (req, res, next) => {
     let trangThaiDonHang = req.body.trangThaiDonHang;
     let trangThaiThanhToan = req.body.trangThaiThanhToan;
 
-    // Cập nhật trạng thái đơn hàng dựa trên ID của đơn hàng
+    // Lấy thông tin đơn hàng hiện tại trước khi cập nhật
+    const donHang = await donHangModel
+      .findById(req.params.id)
+      .populate("sp.idSP");
+
+    if (!donHang) {
+      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    // Lấy tên điện thoại từ mảng sản phẩm trong đơn hàng
+    const tenDienThoai = donHang.sp.map((item) => item.idSP.tenDienThoai);
+
+    // Cập nhật trạng thái đơn hàng
     let updatedDonHang = await donHangModel.findByIdAndUpdate(
       req.params.id,
       {
@@ -194,23 +224,33 @@ exports.updateDonHang = async (req, res, next) => {
     switch (trangThaiDonHang) {
       case "Đang xử lý":
         tieuDe = "Đơn hàng đang xử lý!";
-        noiDung = `Đơn hàng của bạn đang được xử lý. Mã đơn hàng: ${updatedDonHang._id}.`;
+        noiDung = `Đơn hàng của bạn đang được xử lý. Mã đơn hàng: ${
+          updatedDonHang._id
+        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
         break;
       case "Đang giao hàng":
         tieuDe = "Đơn hàng đang được giao!";
-        noiDung = `Đơn hàng của bạn đang được giao. Mã đơn hàng: ${updatedDonHang._id}.`;
+        noiDung = `Đơn hàng của bạn đang được giao. Mã đơn hàng: ${
+          updatedDonHang._id
+        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
         break;
       case "Đã giao hàng":
         tieuDe = "Đơn hàng đã được giao!";
-        noiDung = `Đơn hàng của bạn đã được giao thành công. Mã đơn hàng: ${updatedDonHang._id}.`;
+        noiDung = `Đơn hàng của bạn đã được giao thành công. Mã đơn hàng: ${
+          updatedDonHang._id
+        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
         break;
       case "Đã hủy":
         tieuDe = "Đơn hàng đã bị hủy!";
-        noiDung = `Đơn hàng của bạn đã bị hủy. Mã đơn hàng: ${updatedDonHang._id}.`;
+        noiDung = `Đơn hàng của bạn đã bị hủy. Mã đơn hàng: ${
+          updatedDonHang._id
+        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
         break;
       default:
         tieuDe = "Cập nhật đơn hàng";
-        noiDung = `Đơn hàng của bạn đã được cập nhật. Mã đơn hàng: ${updatedDonHang._id}.`;
+        noiDung = `Đơn hàng của bạn đã được cập nhật. Mã đơn hàng: ${
+          updatedDonHang._id
+        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
         break;
     }
 
@@ -221,11 +261,6 @@ exports.updateDonHang = async (req, res, next) => {
       tieuDe: tieuDe,
       noiDung: noiDung,
     });
-
-    // Kiểm tra nếu không tìm thấy đơn hàng
-    if (!updatedDonHang) {
-      return res.status(404).json({ message: "Đơn hàng không tồn tại" });
-    }
 
     res.json({
       status: 200,
