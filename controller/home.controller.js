@@ -1,19 +1,22 @@
-const donHangModel = require('../model/donHang');
-const accountModel = require('../model/account');
+const donHangModel = require("../model/donHang");
+const accountModel = require("../model/account");
 
 exports.home = async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
 
     const doanhThu = await this.tongDoanhThu(startDate, endDate);
-    const nguoiDung = await this.tongNguoiDung();
+    const nguoiDung = await this.tongNguoiDung(startDate, endDate);
     const donHang = await this.tongDonHang(startDate, endDate);
     const donHuy = await this.donHangDaHuy(startDate, endDate);
     const soLuongSP = await this.soLuongSPBanRa(startDate, endDate);
     const topSPDoanhThuCao = await this.topSPDoanhThuCao(startDate, endDate);
     const topSPBanChay = await this.topSPBanChay(startDate, endDate);
-    const topNguoiDungMuaNhieuNhat = await this.topNguoiDungMuaNhieuNhat(startDate, endDate);
-    
+    const topNguoiDungMuaNhieuNhat = await this.topNguoiDungMuaNhieuNhat(
+      startDate,
+      endDate
+    );
+
     account = req.session.account;
     res.render("home/home", {
       title: "Home",
@@ -25,7 +28,7 @@ exports.home = async (req, res, next) => {
       soLuongSP,
       topSPDoanhThuCao,
       topSPBanChay,
-      topNguoiDungMuaNhieuNhat
+      topNguoiDungMuaNhieuNhat,
     });
   } catch (err) {
     console.error(err);
@@ -33,82 +36,137 @@ exports.home = async (req, res, next) => {
   }
 };
 
-exports.tongDoanhThu = async () => {
+exports.tongDoanhThu = async (startDate, endDate) => {
+  const query = { trangThaiDonHang: "Đã giao hàng" };
+
+  if (startDate && endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
+  }
+
   const doanhThu = await donHangModel.aggregate([
-    { $match: { trangThaiDonHang: "Đã giao hàng" } },
-    { $group: { _id: null, total: { $sum: "$tongTien" } } }
+    { $match: query },
+    { $group: { _id: null, total: { $sum: "$tongTien" } } },
   ]);
+
   return doanhThu[0]?.total || 0;
 };
 
-exports.tongNguoiDung = async () => {
-  const soNguoiDung = await accountModel.countDocuments();
-  return soNguoiDung;
+exports.tongNguoiDung = async (startDate, endDate) => {
+  const query = { trangThaiDonHang: "Đã giao hàng" };
+
+  if (startDate && endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
+  }
+
+  const uniqueUsers = await donHangModel.distinct("idKH", query);
+  return uniqueUsers.length;
 };
 
-exports.tongDonHang = async () => {
-  const soDonHang = await donHangModel.countDocuments();
+exports.tongDonHang = async (startDate, endDate) => {
+  const query = { trangThaiDonHang: "Đã giao hàng" };
+
+  if (startDate && endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
+  }
+
+  const soDonHang = await donHangModel.countDocuments(query);
   return soDonHang;
 };
 
-exports.donHangDaHuy = async () => {
-  const soDonHuy = await donHangModel.countDocuments({ trangThaiDonHang: ["Chờ xác nhận","Đang xử lý"] });
+exports.donHangDaHuy = async (startDate, endDate) => {
+  const query = { trangThaiDonHang: ["Chờ xác nhận", "Đang xử lý"] };
+
+  if (startDate && endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
+  }
+
+  const soDonHuy = await donHangModel.countDocuments(query);
   return soDonHuy;
 };
 
-exports.soLuongSPBanRa = async () => {
+exports.soLuongSPBanRa = async (startDate, endDate) => {
+  const query = { trangThaiDonHang: "Đã giao hàng" };
+
+  if (startDate && endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
+  }
+
   const sanPhamDaBan = await donHangModel.aggregate([
-    { $match: { trangThaiDonHang: "Đã giao hàng" } },
+    { $match: query },
     { $unwind: "$sp" },
-    { $group: { _id: null, totalSold: { $sum: "$sp.soLuong" } } }
+    { $group: { _id: null, totalSold: { $sum: "$sp.soLuong" } } },
   ]);
+
   return sanPhamDaBan[0]?.totalSold || 0;
 };
 
-
-
-
-
 exports.topSPBanChay = async (startDate, endDate) => {
   const query = { trangThaiDonHang: "Đã giao hàng" };
-  
+
   if (startDate && endDate) {
-    query.ngayGiaoHang = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
   }
 
   const topSellingProducts = await donHangModel.aggregate([
     { $match: query },
     { $unwind: "$sp" },
-    { 
+    {
       $lookup: {
-        from: "DienThoai", 
+        from: "DienThoai",
         localField: "sp.idSP",
         foreignField: "_id",
-        as: "productDetails"
-      }
+        as: "productDetails",
+      },
     },
     { $unwind: "$productDetails" },
-    { 
-      $group: { 
-        _id: "$sp.idSP", 
-        tenSP: { $first: "$productDetails.tenDienThoai" }, 
-        hinhAnh: { $first: "$productDetails.hinhAnh" }, 
-        soLuongBan: { $sum: "$sp.soLuong" } 
-      }
+    {
+      $group: {
+        _id: "$sp.idSP",
+        tenSP: { $first: "$productDetails.tenDienThoai" },
+        hinhAnh: { $first: "$productDetails.hinhAnh" },
+        soLuongBan: { $sum: "$sp.soLuong" },
+      },
     },
     { $sort: { soLuongBan: -1 } },
-    { $limit: 5 }
+    { $limit: 5 },
   ]);
 
   return topSellingProducts;
 };
 
-
 exports.topSPDoanhThuCao = async (startDate, endDate) => {
   const query = { trangThaiDonHang: "Đã giao hàng" };
-  
+
   if (startDate && endDate) {
-    query.ngayGiaoHang = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
   }
 
   const result = await donHangModel.aggregate([
@@ -122,7 +180,7 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
     },
     {
       $lookup: {
-        from: "DienThoai", 
+        from: "DienThoai",
         localField: "_id",
         foreignField: "_id",
         as: "productDetails",
@@ -137,68 +195,71 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
         doanhThu: {
           $multiply: [
             "$totalQuantity",
-            { $arrayElemAt: ["$productDetails.mauSchema.giaTien", 0] }
-          ]
-        }
-      }
+            { $arrayElemAt: ["$productDetails.mauSchema.giaTien", 0] },
+          ],
+        },
+      },
     },
     { $sort: { doanhThu: -1 } },
-    { $limit: 10 }
+    { $limit: 10 },
   ]);
 
   return result;
 };
 
-
-
 exports.topNguoiDungMuaNhieuNhat = async (startDate, endDate) => {
   const query = { trangThaiDonHang: "Đã giao hàng" };
-  
+
   if (startDate && endDate) {
-    query.ngayGiaoHang = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    query.ngayNhanHang = { $gte: start, $lte: end };
   }
 
   const topUsers = await donHangModel.aggregate([
     { $match: query },
     { $unwind: "$sp" },
-    { 
+    {
       $group: {
         _id: { userId: "$idKH", productId: "$sp.idSP" },
-        soLuong: { $sum: "$sp.soLuong" }, 
-        tongTien: { $sum: "$tongTien" }
-      }
+        soLuong: { $sum: "$sp.soLuong" },
+        tongTien: { $sum: "$tongTien" },
+      },
     },
-    { 
+    {
       $lookup: {
-        from: "Account", 
+        from: "Account",
         localField: "_id.userId",
         foreignField: "_id",
-        as: "userDetails"
-      }
+        as: "userDetails",
+      },
     },
     { $unwind: "$userDetails" },
-    { 
+    {
       $lookup: {
-        from: "DienThoai", 
+        from: "DienThoai",
         localField: "_id.productId",
         foreignField: "_id",
-        as: "productDetails"
-      }
+        as: "productDetails",
+      },
     },
     { $unwind: "$productDetails" },
-    { 
+    {
       $group: {
         _id: "$_id.userId",
         tenNguoi: { $first: "$userDetails.taiKhoan" },
         soLuong: { $sum: "$soLuong" },
         tongTien: { $sum: "$tongTien" },
-        sanPham: { $push: { tenSP: "$productDetails.tenDienThoai", soLuong: "$soLuong" } }
-      }
+        sanPham: {
+          $push: { tenSP: "$productDetails.tenDienThoai", soLuong: "$soLuong" },
+        },
+      },
     },
     { $sort: { tongTien: -1 } },
-    { $limit: 5 }
+    { $limit: 5 },
   ]);
 
   return topUsers;
 };
-
