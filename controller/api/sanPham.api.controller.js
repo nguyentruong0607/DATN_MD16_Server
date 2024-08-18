@@ -107,16 +107,16 @@ exports.listProductHottest = async (req, res, next) => {
   try {
     // Thực hiện một truy vấn phức tạp với các bước xử lý dữ liệu trong MongoDB
     const hotProducts = await sanPhamYTModel.aggregate([
-      // Bước 1: Gom nhóm các sản phẩm theo `id_sanPham` và đếm số lần được yêu thích
+      //  Gom nhóm các sản phẩm theo `id_sanPham` và đếm số lần được yêu thích
       {
         $group: {
           _id: "$id_sanPham", // Sử dụng `id_sanPham` để gom nhóm
           soLuotYeuThich: { $sum: 1 } // Đếm số lần mỗi sản phẩm được yêu thích
         }
       },
-      // Bước 2: Sắp xếp các sản phẩm theo số lượt yêu thích từ cao đến thấp
+      //  Sắp xếp các sản phẩm theo số lượt yêu thích từ cao đến thấp
       { $sort: { soLuotYeuThich: -1 } }, // Sắp xếp giảm dần theo `soLuotYeuThich`
-      // Bước 3: Kết nối với collection `DienThoai` để lấy thông tin chi tiết sản phẩm
+      //  Kết nối với collection `DienThoai` để lấy thông tin chi tiết sản phẩm
       {
         $lookup: {
           from: "DienThoai", // Collection `DienThoai` trong MongoDB
@@ -125,13 +125,13 @@ exports.listProductHottest = async (req, res, next) => {
           as: "sanPhamDetails" // Kết quả sẽ lưu trong trường `sanPhamDetails`
         }
       },
-      // Bước 4: Giải nén mảng `sanPhamDetails` để lấy dữ liệu từng sản phẩm
+      //  Giải nén mảng `sanPhamDetails` để lấy dữ liệu từng sản phẩm
       { $unwind: "$sanPhamDetails" }, // Mỗi phần tử `sanPhamDetails` sẽ là một đối tượng riêng biệt
-      // Bước 5: Chọn các trường cần thiết để trả về cho người dùng
+      //Chọn các trường cần thiết để trả về cho người dùng
       {
         $project: {
           _id: 0, // Không trả về trường `_id` mặc định
-          id: "$sanPhamDetails._id", // Lấy `_id` của sản phẩm từ `sanPhamDetails`
+          _id: "$sanPhamDetails._id", // Lấy `_id` của sản phẩm từ `sanPhamDetails`
           tenDienThoai: "$sanPhamDetails.tenDienThoai", // Tên điện thoại
           soLuotYeuThich: 1, // Số lượt yêu thích
           camera: "$sanPhamDetails.camera", // Thông tin camera sau
@@ -365,7 +365,7 @@ exports.getTopSellingProducts = async (req, res) => {
       {
         $project: {
           _id: 0,
-          id: "$productDetails._id",
+          _id: "$productDetails._id",
           tenDienThoai: "$productDetails.tenDienThoai",
           totalQuantitySold: 1,
           camera: "$productDetails.camera",
