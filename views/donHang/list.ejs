@@ -368,7 +368,7 @@
                       </form>
                       <% } %> <% if (dh.trangThaiDonHang === "Chờ xác nhận") {
                       %>
-                      <form
+                      <!-- <form
                         action="/donhang/update/<%= dh._id %>"
                         method="POST"
                       >
@@ -380,7 +380,22 @@
                         <button type="submit" class="btn btn-primary">
                           Xác nhận đơn hàng
                         </button>
-                      </form>
+                      </form> -->
+                      <!-- <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalXacNhanDonHang-<%= dh._id %>" -->
+
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalXacNhanDonHang-<%= dh._id %>"
+                      >
+                        Xác nhận đơn hàng
+                      </button>
+
                       <% } else if (dh.trangThaiDonHang === "Đang xử lý") { %>
                       <form
                         action="/donhang/update/<%= dh._id %>"
@@ -511,6 +526,65 @@
                           </form>
                         </li>
                       </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal Xác Nhận Đơn Hàng -->
+              <div
+                class="modal fade"
+                id="modalXacNhanDonHang-<%= dh._id %>"
+                tabindex="-1"
+                aria-labelledby="modalXacNhanDonHangLabel-<%= dh._id %>"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <!-- Header với title và nút close -->
+                    <div class="modal-header">
+                      <h5 id="modalXacNhanDonHangLabel-<%= dh._id %>">
+                        Chọn ngày giao hàng
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+
+                    <!-- Body chứa input date -->
+                    <div class="modal-body pe-2 ps-2">
+                      <form
+                        id="modalXacNhanDonHang"
+                        action="/donhang/update/<%= dh._id %>"
+                        method="POST"
+                      >
+                        <input
+                          type="hidden"
+                          name="trangThaiDonHang"
+                          value="Đang xử lý"
+                        />
+                        <div class="mb-3">
+                          <label for="ngayNhanHang" class="form-label"
+                            >Ngày giao hàng</label
+                          >
+                          <input
+                            type="date"
+                            id="ngayNhanHang"
+                            name="ngayNhanHang"
+                            class="form-control"
+                            required
+                          />
+                        </div>
+                        <!-- Button xác nhận đơn hàng -->
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">
+                            Xác nhận đơn hàng
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
