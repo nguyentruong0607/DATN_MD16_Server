@@ -45,26 +45,31 @@ exports.getAllKDH = async (req, res, next) => {
 // Cập nhật trạng thái đơn hàng
 exports.updateDonHang = async (req, res, next) => {
   try {
-    const trangThaiDonHang = req.body.trangThaiDonHang;
+    const { trangThaiDonHang, ngayNhanHang } = req.body;
 
-    // Cập nhật trạng thái đơn hàng dựa trên ID của đơn hàng
+    const updateData = { trangThaiDonHang };
+    if (ngayNhanHang) {
+      updateData.ngayNhanHang = ngayNhanHang;
+    }
+
     const updatedDonHang = await donHangModel.findByIdAndUpdate(
       req.params.id,
-      { trangThaiDonHang: trangThaiDonHang },
+      updateData,
       { new: true }
     );
-
-    if (trangThaiDonHang === "Đã giao hàng") {
-      const updatedDonHang = await donHangModel.findByIdAndUpdate(
-        req.params.id,
-        { trangThaiThanhToan: true },
-        { new: true }
-      );
-    }
 
     // Kiểm tra nếu không tìm thấy đơn hàng
     if (!updatedDonHang) {
       return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+    }
+
+    // Nếu trạng thái đơn hàng là 'Đã giao hàng', cập nhật trạng thái thanh toán
+    if (trangThaiDonHang === "Đã giao hàng") {
+      await donHangModel.findByIdAndUpdate(
+        req.params.id,
+        { trangThaiThanhToan: true },
+        { new: true }
+      );
     }
 
     let tieuDe;
@@ -76,12 +81,24 @@ exports.updateDonHang = async (req, res, next) => {
 
     const tenDienThoai = donHang.sp.map((item) => item.idSP.tenDienThoai);
 
+    const formatDate = (date) => {
+      const d = new Date(date);
+      const day = ("0" + d.getDate()).slice(-2);
+      const month = ("0" + (d.getMonth() + 1)).slice(-2);
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
     switch (trangThaiDonHang) {
       case "Đang xử lý":
-        tieuDe = "Đơn hàng đang xử lý!";
-        noiDung = `Đơn hàng của bạn đang được xử lý. Mã đơn hàng: ${
-          updatedDonHang._id
-        }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
+        tieuDe = "Đơn hàng đã được xác nhận và đang xử lý!";
+        noiDung = `Đơn hàng của bạn đã được xác nhận và đang trong thời gian xử lý. Ngày nhận hàng dự kiến là ${
+          ngayNhanHang
+            ? formatDate(updatedDonHang.ngayNhanHang)
+            : "không xác định"
+        }. Mã đơn hàng: ${updatedDonHang._id}. Sản phẩm: ${tenDienThoai.join(
+          ", "
+        )}.`;
         break;
       case "Đang giao hàng":
         tieuDe = "Đơn hàng đang được giao!";
