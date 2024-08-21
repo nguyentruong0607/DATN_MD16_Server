@@ -217,7 +217,7 @@
                 <th scope="row">
                   <%= (currentPage - 1) * perPage+ index + 1 %>
                 </th>
-                <td><%= dh.idKH ? dh.idKH.id : '--' %></td>
+                <td><%= dh._id ? dh._id : '--' %></td>
                 <td><%= dh.idKH ? dh.idKH.hoTen : '--' %></td>
                 <td>
                   <% dh.sp.forEach(sp => { %>
@@ -301,9 +301,9 @@
                         </div>
                       </div>
                       <div class="row mb-3">
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                           <strong>Ghi chú:</strong> <%= dh.ghiChu %>
-                        </div>
+                        </div> -->
                         <div class="col-md-4">
                           <strong>Trạng thái đơn hàng:</strong>
                           <%= dh.trangThaiDonHang %>
@@ -341,8 +341,8 @@
                               Số lượng: <%= sp.soLuong %> sản phẩm
                             </span>
                             <span class="align-self-center">
-                              Giá tiền: <%= dh.tongTien.toLocaleString('vi-VN',
-                              { style: 'currency', currency: 'VND' }) %>
+                              Giá tiền: <%= sp.giaTien.toLocaleString('vi-VN', {
+                              style: 'currency', currency: 'VND' }) %>
                             </span>
                           </div>
                         </div>
@@ -544,7 +544,7 @@
                     <!-- Header với title và nút close -->
                     <div class="modal-header">
                       <h5 id="modalXacNhanDonHangLabel-<%= dh._id %>">
-                        Chọn ngày giao hàng
+                        Chọn ngày nhận hàng
                       </h5>
                       <button
                         type="button"
@@ -568,7 +568,7 @@
                         />
                         <div class="mb-3">
                           <label for="ngayNhanHang" class="form-label"
-                            >Ngày giao hàng</label
+                            >Ngày nhận hàng</label
                           >
                           <input
                             type="date"

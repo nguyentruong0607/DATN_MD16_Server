@@ -67,7 +67,7 @@ exports.updateDonHang = async (req, res, next) => {
     if (trangThaiDonHang === "Đã giao hàng") {
       await donHangModel.findByIdAndUpdate(
         req.params.id,
-        { trangThaiThanhToan: true },
+        { trangThaiThanhToan: true, ngayNhanHang: new Date() },
         { new: true }
       );
     }
