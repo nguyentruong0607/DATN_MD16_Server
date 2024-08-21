@@ -152,24 +152,36 @@
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <form id="addVariantForm" method="POST" action="/sanPham/add-mau/<%= dienthoai._id %>" enctype="multipart/form-data">
+                                                            <form id="addVariantForm" method="POST"
+                                                                action="/sanPham/add-mau/<%= dienthoai._id %>"
+                                                                enctype="multipart/form-data">
                                                                 <div class="modal-body">
                                                                     <div class="col">
-                                                                        <label for="mau" class="form-label">Màu <span class="text-danger">(*)</span></label>
-                                                                        <input type="text" class="form-control" id="mau" name="mau" required>
+                                                                        <label for="mau" class="form-label">Màu <span
+                                                                                class="text-danger">(*)</span></label>
+                                                                        <input type="text" class="form-control" id="mau"
+                                                                            name="mau" required>
                                                                     </div>
                                                                     <div class="col">
-                                                                        <label for="soLuong" class="form-label">Số lượng <span class="text-danger">(*)</span></label>
-                                                                        <input type="number" class="form-control" id="soLuong" name="soLuong" min="1" required>
+                                                                        <label for="soLuong" class="form-label">Số lượng
+                                                                            <span class="text-danger">(*)</span></label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="soLuong" name="soLuong" min="1"
+                                                                            required>
                                                                     </div>
                                                                     <div class="col">
-                                                                        <label for="giaTien" class="form-label">Giá tiền <span class="text-danger">(*)</span></label>
-                                                                        <input type="number" class="form-control" id="giaTien" name="giaTien" min="0" step="any" required>
+                                                                        <label for="giaTien" class="form-label">Giá tiền
+                                                                            <span class="text-danger">(*)</span></label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="giaTien" name="giaTien" min="0"
+                                                                            step="any" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Hủy</button>
+                                                                    <button type="submit" class="btn btn-primary">Xác
+                                                                        nhận</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -182,74 +194,45 @@
                             <%= dienthoai.moTaThem %>
                         </p>
                         <h3>Thông số kỹ thuật:</h3>
-                        <table class="table">
-                            <tr>
-                                <td><strong>Bộ xử lý</strong></td>
-                                <td><strong>Màn hình</strong></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ul>
-                                        <li><strong>CPU:</strong>
-                                            <%= dienthoai.cPU %>
-                                        </li>
+                        <td>
+                            <strong>Độ phân giải:</strong>
+                            <%= dienthoai.doPhanGiai %><br>
+                                <strong>Công nghệ màn hình:</strong>
+                                <%= dienthoai.congNgheManHinh %>
 
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li><strong>Độ phân giải:</strong>
-                                            <%= dienthoai.doPhanGiai %>
-                                        </li>
-                                        <li><strong>Công nghệ màn hình:</strong>
-                                            <%= dienthoai.congNgheManHinh %>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Bộ nhớ Ram - Ổ cứng</strong>
-                                    <ul>
-                                        <li><strong>Ram:</strong>
-                                            <%= dienthoai.ram %>
-                                        </li>
+                        </td><br>
+                        <td><strong>Camera</strong>
+                            <strong>camera trước:</strong>
+                            <%= dienthoai.cameraTruoc %><br>
+                                <strong>Camera sau:</strong>
+                                <%= dienthoai.camera %>
 
-                                    </ul>
-                                </td>
-                                <td><strong>Camera</strong>
-                                    <ul>
-                                        <li><strong>camera trước:</strong>
-                                            <%= dienthoai.cameraTruoc %>
-                                        </li>
-                                        <li><strong>Camera sau:</strong>
-                                            <%= dienthoai.camera %>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ul>
-                                        <li><strong>Sim:</strong>
-                                            <%= dienthoai.sim %>
-                                        </li>
-                                        <li><strong>Pin:</strong>
-                                            <%= dienthoai.pin %>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <li><strong>Số lượng CPU:</strong>
-                                    <%= dienthoai.namSanXuat %>
-                                </li>
-                            </tr>
-                            <!-- <tr>
-                        <td><strong>Cổng kết nối và tính năng mở rộng</strong></td>
-                        <td><strong>Kích thước và khối lượng</strong></td>
-                    </tr> -->
-                            <!-- Add other specifications here -->
-                        </table>
+                        </td><br>
+                        <td>
+                            <strong>CPU:</strong>
+                            <%= dienthoai.cPU %>
+
+                        </td><br>
+
+
+                        <td>
+                            <strong>Ram:</strong>
+                            <%= dienthoai.ram %>
+
+                        </td><br>
+
+
+                        <td>
+                            <strong>Sim:</strong>
+                            <%= dienthoai.sim %><br>
+                                <strong>Pin:</strong>
+                                <%= dienthoai.pin %>
+
+                        </td><br>
+                        <strong>Năm sản xu:</strong>
+                        <%= dienthoai.namSanXuat %>
+
+
                     </div>
                     <%- include('../inc/footer') %>
             </div>
@@ -281,37 +264,37 @@
     <!-- Thêm biến thể -->
     <script>
         document.getElementById('addVariantForm').addEventListener('submit', async function (event) {
-          event.preventDefault();
-      
-          const formData = new FormData(event.target);
-          const variantData = {};
-          for (const [key, value] of formData.entries()) {
-            variantData[key] = value;
-          }
-      
-          try {
-            const response = await fetch(event.target.action, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify(variantData)
-            });
-      
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const variantData = {};
+            for (const [key, value] of formData.entries()) {
+                variantData[key] = value;
             }
-      
-            alert('Thêm biến thể thành công!');
-            window.location.reload();
-          } catch (error) {
-            console.error('Error:', error);
-            alert('màu này đã tồn tại');
-          }
+
+            try {
+                const response = await fetch(event.target.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(variantData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                alert('Thêm biến thể thành công!');
+                window.location.reload();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('màu này đã tồn tại');
+            }
         });
-      </script>
-      
+    </script>
+
 </body>
 
 </html>

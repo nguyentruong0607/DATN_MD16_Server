@@ -16,7 +16,7 @@
         "
       />
       <a
-        href="#"
+        href="/"
         style="
           text-align: center;
           color: #fff;
@@ -30,7 +30,7 @@
     <div></div>
     <ul class="sidebar-nav">
       <li class="sidebar-header">Admin Elements</li>
-      <li class="sidebar-item">
+      <li class="sidebar-item ">
         <a href="/" class="sidebar-link">
           Home
         </a>
@@ -91,11 +91,37 @@
           </li>
         </ul>
       </li> -->
-      <li class="sidebar-item">
+      <!-- <li class="sidebar-item">
         <a href="/thong-bao" class="sidebar-link">
           Thông Báo
         </a>
-      </li>
+      </li> -->
     </ul>
   </div>
 </aside>
+<style>
+  /* Hiệu ứng khi hover vào mục */
+.sidebar-link {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s; /* Thêm hiệu ứng chuyển đổi màu */
+}
+
+
+
+/* Hiệu ứng khi mục được chọn */
+.sidebar-item.active .sidebar-link {
+    color: #fb0606; /* Màu chữ khi mục được chọn */
+}
+
+</style>
+<script>
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    if (link.href === window.location.href) {
+        link.parentElement.classList.add('active');
+    }
+});
+
+</script>
