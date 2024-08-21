@@ -8,9 +8,40 @@ exports.getAllKM = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const perPage = 6;
   const skip = (page - 1) * perPage;
-  try {
-    const totalItems = await khuyenMaiModel.countDocuments();
+  const currentDate = new Date();
 
+  try {
+    // Cập nhật trạng thái của các khuyến mại có ngày kết thúc sau ngày hiện tại
+    await khuyenMaiModel.updateMany(
+      {
+        $or: [
+          {
+            // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày hiện tại
+            $expr: {
+              $lt: [
+                {
+                  $dateFromString: {
+                    dateString: "$ngayKetThuc",
+                    format: "%Y-%m-%d",
+                  },
+                },
+                new Date(),
+              ],
+            },
+          },
+          {
+            // Hoặc nếu số lượng bằng 0
+            soLuong: 0,
+          },
+        ],
+        trangThai: true, // Chỉ cập nhật những item có trạng thái hiện tại là true
+      },
+      {
+        trangThai: false, // Cập nhật trạng thái thành false cho những item này
+      }
+    );
+
+    const totalItems = await khuyenMaiModel.countDocuments();
     const list = await khuyenMaiModel.find().skip(skip).limit(perPage);
     const totalPages = Math.ceil(totalItems / perPage);
 
@@ -88,6 +119,18 @@ exports.updateKM = async (req, res, next) => {
       return res.status(404).json({ message: "Khuyến mại không tồn tại" });
     }
 
+    let trangThai = khuyenMai.trangThai;
+
+    const currentDate = new Date();
+
+    if (new Date(ngayKetThuc) < currentDate) {
+      trangThai = false;
+    } else if (new Date(ngayKetThuc) > currentDate && soLuong > 0) {
+      trangThai = true;
+    } else if (new Date(ngayKetThuc) > currentDate && soLuong === 0) {
+      trangThai = false;
+    }
+
     const updatedFields = {
       ngayBatDau: ngayBatDau,
       ngayKetThuc: ngayKetThuc,
@@ -98,7 +141,7 @@ exports.updateKM = async (req, res, next) => {
       phanTramGiamGia: phanTramGiamGia,
       soLuong: soLuong,
       soLanApDung: khuyenMai.soLanApDung,
-      trangThai: khuyenMai.trangThai,
+      trangThai: trangThai,
     };
 
     const updatedItem = await khuyenMaiModel.findOneAndUpdate(
