@@ -328,27 +328,27 @@ exports.filterSanPham = async (req, res) => {
 exports.getTopSellingProducts = async (req, res) => {
   try {
     const topSellingProducts = await donHangModel.aggregate([
-      // Step 1: Filter orders with status "Đã giao hàng"
+      //  Lọc các đơn hàng có trạng thái "Đã giao hàng"
       { $match: { trangThaiDonHang: "Đã giao hàng" } },
       
-      // Step 2: Unwind the 'sp' array to calculate quantities for each product
+      //  Tách mảng 'sp' để tính số lượng bán cho từng sản phẩm
       { $unwind: "$sp" },
       
-      // Step 3: Group orders by product ID and calculate the total quantity sold
+      //  Nhóm các đơn hàng theo mã sản phẩm và tính tổng số lượng đã bán
       {
         $group: {
-          _id: "$sp.idSP", // Group by product ID
-          totalQuantitySold: { $sum: "$sp.soLuong" }, // Sum the quantity of each product
+          _id: "$sp.idSP", // Nhóm theo mã sản phẩm
+          totalQuantitySold: { $sum: "$sp.soLuong" }, // Tổng số lượng của từng sản phẩm
         }
       },
       
-      // Step 4: Sort products by the total quantity sold in descending order
+      //  Sắp xếp sản phẩm theo tổng số lượng đã bán giảm dần
       { $sort: { totalQuantitySold: -1 } },
       
-      // Step 5: Limit the results to the top 10 best-selling products
+      //  Giới hạn kết quả chỉ lấy 10 sản phẩm bán chạy nhất
       { $limit: 10 },
       
-      // Step 6: Lookup details of each product from the 'DienThoai' collection
+      //  Tìm chi tiết của từng sản phẩm từ collection 'DienThoai'
       {
         $lookup: {
           from: "DienThoai",
@@ -358,10 +358,10 @@ exports.getTopSellingProducts = async (req, res) => {
         }
       },
       
-      // Step 7: Unwind the 'productDetails' array to get individual product data
+      // Tách mảng 'productDetails' để lấy dữ liệu từng sản phẩm
       { $unwind: "$productDetails" },
       
-      // Step 8: Project the necessary fields to return to the client
+      //  Chỉ lấy các trường cần thiết để trả về cho client
       {
         $project: {
           _id: 0,
@@ -389,12 +389,13 @@ exports.getTopSellingProducts = async (req, res) => {
       }
     ]);
 
-    // Return the top 10 best-selling products
+    // Trả về danh sách 10 sản phẩm bán chạy nhất
     res.json(topSellingProducts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 

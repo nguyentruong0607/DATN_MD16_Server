@@ -176,6 +176,7 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
       $group: {
         _id: "$sp.idSP",
         totalQuantity: { $sum: "$sp.soLuong" },
+        totalRevenue: { $sum: { $multiply: ["$sp.soLuong", "$sp.giaTien"] } },
       },
     },
     {
@@ -192,12 +193,7 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
         _id: 1,
         tenSP: "$productDetails.tenDienThoai",
         hinhAnh: "$productDetails.hinhAnh",
-        doanhThu: {
-          $multiply: [
-            "$totalQuantity",
-            { $arrayElemAt: ["$productDetails.mauSchema.giaTien", 0] },
-          ],
-        },
+        doanhThu: "$totalRevenue",
       },
     },
     { $sort: { doanhThu: -1 } },
@@ -206,6 +202,7 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
 
   return result;
 };
+
 
 exports.topNguoiDungMuaNhieuNhat = async (startDate, endDate) => {
   const query = { trangThaiDonHang: "Đã giao hàng" };
@@ -225,9 +222,10 @@ exports.topNguoiDungMuaNhieuNhat = async (startDate, endDate) => {
       $group: {
         _id: { userId: "$idKH", productId: "$sp.idSP" },
         soLuong: { $sum: "$sp.soLuong" },
-        tongTien: { $sum: "$tongTien" },
+        tongTien: { $sum: { $multiply: ["$sp.soLuong", "$sp.giaTien"] } }, // Tính tổng tiền dựa trên số lượng và giá của từng sản phẩm
       },
-    },
+    }
+    ,
     {
       $lookup: {
         from: "Account",
