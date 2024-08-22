@@ -42,7 +42,7 @@ exports.getDiaChiById = async (req, res, next) => {
 
     const DiaChi = await diaChiModel
       .findById({ _id: _id })
-      .populate("idAccount");
+      .select("-idAccount");
     if (DiaChi) {
       res.json({ status: 200, msg: "Lấy dữ liệu  thành công", data: DiaChi });
     } else {
@@ -62,7 +62,7 @@ exports.getDiaChiByIdAccount = async (req, res, next) => {
 
     const DiaChi = await diaChiModel
       .find({ idAccount: idAccount })
-      .populate("idAccount");
+      .select("-idAccount");
     if (DiaChi) {
       res.json({ status: 200, msg: "Lấy dữ liệu thành công", data: DiaChi });
     } else {
