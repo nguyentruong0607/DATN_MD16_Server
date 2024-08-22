@@ -21,6 +21,8 @@ exports.home = async (req, res, next) => {
     res.render("home/home", {
       title: "Home",
       account: account,
+      startDate, // Pass startDate to the view
+      endDate, 
       doanhThu,
       nguoiDung,
       donHang,
