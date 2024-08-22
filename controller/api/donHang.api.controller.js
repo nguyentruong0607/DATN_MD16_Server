@@ -245,6 +245,30 @@ exports.updateDonHang = async (req, res, next) => {
         noiDung = `Đơn hàng của bạn đã bị hủy. Mã đơn hàng: ${
           updatedDonHang._id
         }. Sản phẩm: ${tenDienThoai.join(", ")}.`;
+
+        for (const item of updatedDonHang.sp) {
+          const dienThoai = await DienThoai.findById(item.idSP);
+
+          if (dienThoai) {
+            const selectedMau = dienThoai.mauSchema.find(
+              (mau) => mau._id.toString() === item.idMau.toString()
+            );
+
+            if (selectedMau) {
+              selectedMau.soLuong += item.soLuong;
+              await dienThoai.save();
+            } else {
+              return res
+                .status(400)
+                .json({ message: `Không tìm thấy màu với id ${item.idMau}` });
+            }
+          } else {
+            return res
+              .status(400)
+              .json({ message: `Không tìm thấy sản phẩm với id ${item.idSP}` });
+          }
+        }
+
         break;
       default:
         tieuDe = "Cập nhật đơn hàng";
