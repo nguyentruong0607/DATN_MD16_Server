@@ -5,7 +5,7 @@ var khuyenMaiAPICtrl = require("../controller/api/khuyenMai.api.controller");
 var checkLogin = require("../middleware/check_login");
 
 // Web
-router.get("/", checkLogin.request_login, khuyenMaiCtrl.getAllKM);
+router.get("/", checkLogin.request_login, khuyenMaiCtrl.getAllKM); // Nếu không login thì out
 router.post("/add", checkLogin.request_login, khuyenMaiCtrl.createKhuyenMai);
 router.post("/update/:id", checkLogin.request_login, khuyenMaiCtrl.updateKM);
 router.get("/delete/:id", checkLogin.request_login, khuyenMaiCtrl.deleteKM);

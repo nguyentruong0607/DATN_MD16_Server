@@ -10,8 +10,8 @@ exports.createKhuyenMai = async (req, res, next) => {
   let phanTramGiamGia = req.body.phanTramGiamGia;
   let giaKhuyenMaiToiDa = req.body.giaKhuyenMaiToiDa;
   let soLuong = req.body.soLuong;
-  let soLanApDung = 0;
-  let trangThai = true;
+  let soLanApDung = 0; // Khi tạo mới đơn hàng thì số lần áp dụng mặc định là 0
+  let trangThai = true; // Khi tạo mới đơn hàng thì trạng thái mặc định là true: còn hiệu lực
 
   try {
     let addFields = {
@@ -41,8 +41,11 @@ exports.createKhuyenMai = async (req, res, next) => {
 // lấy tất cả các dữ liệu
 exports.listKhuyenMai = async (req, res, next) => {
   try {
-    const khuyenMai = await khuyenMaiModel.find();
+    const khuyenMai = await khuyenMaiModel.find(); // .find() là để lấy tất cả dữ liệu khuyến mãi
+    // khuyenMai = [1,2,3,4,5,6,7,8,9,10] => Độ dài của mảng = 10
+    // khuyenMai = [] => Độ dài của mảng = 0
     if (khuyenMai.length > 0) {
+      // Nếu độ dài của mảng khuyến mãi lớn hơn 0
       res.json({
         status: 200,
         msg: "Lấy dữ liệu khuyến mãi thành công",
@@ -62,7 +65,7 @@ exports.listKhuyenMai = async (req, res, next) => {
 
 exports.listKhuyenMaiByTrangThai = async (req, res, next) => {
   try {
-    const khuyenMai = await khuyenMaiModel.find({ trangThai: true });
+    const khuyenMai = await khuyenMaiModel.find({ trangThai: true }); // Lấy ra tất cả khuyen mai còn hiệu lực
     if (khuyenMai.length > 0) {
       res.json({
         status: 200,
@@ -84,7 +87,7 @@ exports.listKhuyenMaiByTrangThai = async (req, res, next) => {
 // Delete by ID
 exports.deleteKhuyenMai = async (req, res, next) => {
   try {
-    await khuyenMaiModel.deleteOne({ _id: req.params.id });
+    await khuyenMaiModel.deleteOne({ _id: req.params.id }); // Xóa khuyến mãi theo id
     res.json({ status: 200, msg: "Xóa khuyến mãi thành công" });
   } catch (err) {
     res.json({ status: 500, msg: err.message });
@@ -125,7 +128,7 @@ exports.updateKM = async (req, res, next) => {
       { _id: _id },
       updatedFields,
       { new: true }
-    );
+    ); // Tìm 1 thằng duy nhất có id và update nó
     if (!updatedItem) {
       return res.status(404).json({ message: "Item not found" });
     }
