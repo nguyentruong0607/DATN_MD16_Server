@@ -61,16 +61,6 @@ exports.tongNguoiDung = async (startDate, endDate) => {
   try {
     const query = { tenQuyen: "User" };
 
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      start.setHours(0, 0, 0, 0); // Đặt thời gian bắt đầu của ngày
-      const end = new Date(endDate);
-      end.setHours(23, 59, 59, 999); // Đặt thời gian kết thúc của ngày
-
-      // Thêm điều kiện lọc theo thời gian
-      query.createdAt = { $gte: start, $lte: end };
-    }
-
     // Đếm tất cả các tài khoản thỏa mãn điều kiện trong accountModel
     const soNguoiDung = await accountModel.countDocuments(query);
     return soNguoiDung;

@@ -30,7 +30,6 @@ var accountSchema = new mongoose.Schema(
   },
   {
     collection: "Account",
-    timestamps: { createdAt: true, updatedAt: true },
   }
 );
 let accountModel = mongoose.model("Account", accountSchema);
