@@ -8,7 +8,6 @@ exports.getAllKM = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const perPage = 6;
   const skip = (page - 1) * perPage;
-  const currentDate = new Date();
 
   try {
     // Cập nhật trạng thái của các khuyến mại có ngày kết thúc sau ngày hiện tại
@@ -21,11 +20,11 @@ exports.getAllKM = async (req, res, next) => {
               $lt: [
                 {
                   $dateFromString: {
-                    dateString: "$ngayKetThuc",
+                    dateString: "$ngayKetThuc", // Ngày kết thúc
                     format: "%Y-%m-%d",
                   },
                 },
-                new Date(),
+                new Date(), // Ngày hiện tại
               ],
             },
           },
@@ -41,8 +40,8 @@ exports.getAllKM = async (req, res, next) => {
       }
     );
 
-    const totalItems = await khuyenMaiModel.countDocuments();
-    const list = await khuyenMaiModel.find().skip(skip).limit(perPage);
+    const totalItems = await khuyenMaiModel.countDocuments(); // Lấy tổng số lượng khuyến mãi
+    const list = await khuyenMaiModel.find().skip(skip).limit(perPage); // Find là để lấy hết dữ liệu
     const totalPages = Math.ceil(totalItems / perPage);
 
     res.render("khuyenMai/list", {
@@ -92,7 +91,7 @@ exports.createKhuyenMai = async (req, res, next) => {
 
     let addItems = await khuyenMaiModel.create(addFields);
     msg = "Thêm thành công";
-    res.redirect("/khuyenMai");
+    res.redirect("/khuyenMai"); // Khi update xong thì load lại trang để thấy được khuyến mãi vừa thêm
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
@@ -121,13 +120,18 @@ exports.updateKM = async (req, res, next) => {
 
     let trangThai = khuyenMai.trangThai;
 
-    const currentDate = new Date();
+    const currentDate = new Date(); // Lấy ngày hiện tại
 
     if (new Date(ngayKetThuc) < currentDate) {
-      trangThai = false;
+      // Khi ngày kết thúc nhỏ hơn ngày hiện tại
+      trangThai = false; // Vô hiệu hóa khuyến mãi
     } else if (new Date(ngayKetThuc) > currentDate && soLuong > 0) {
+      // Nếu ngày kết thúc mà lớn hơn ngày hiện tại
+      // nhưng số lượng lớn 0 thì khuyến mại vẫn còn hiệu lực
       trangThai = true;
     } else if (new Date(ngayKetThuc) > currentDate && soLuong === 0) {
+      // Nếu ngày kết thúc mà lớn hơn ngày hiện tại
+      // nhưng số lượng === 0 thì khuyến mại hết hiệu lực
       trangThai = false;
     }
 
@@ -170,18 +174,19 @@ exports.deleteKM = async (req, res, next) => {
     msg = error.message;
     res.render("khuyenMai/list", { msg: msg });
   }
-};
+}; // Không dùng
 
 exports.search = async (req, res, next) => {
   try {
     const km = req.session.KhuyenMai;
-    let queryValue = req.query.query || "";
+    let queryValue = req.query.query || ""; // Cái text truyền vào khi search
     const page = parseInt(req.query.page) || 1;
     const perPage = 6;
     const skip = (page - 1) * perPage;
     if (!queryValue || queryValue.length === 0) {
-      const totalItems = await khuyenMaiModel.countDocuments();
-      let listKM = await khuyenMaiModel.find().skip(skip).limit(perPage);
+      // Nếu text truyền vào là null hoặc không có  gì truyền vào
+      const totalItems = await khuyenMaiModel.countDocuments(); // Lấy tất cả số lượng khuyến mãi
+      let listKM = await khuyenMaiModel.find().skip(skip).limit(perPage); // Thì sẽ lấy ra tất cả các khuyến mãi có trong bảng
       const totalPages = Math.ceil(totalItems / perPage);
       res.render("khuyenMai/list", {
         title: "Khuyến mãi",
@@ -199,11 +204,11 @@ exports.search = async (req, res, next) => {
     let listKM = [];
     let filter = {};
     if (queryValue.length > 0) {
-      filter.ten = { $regex: queryValue, $options: "i" };
+      filter.ten = { $regex: queryValue, $options: "i" }; // Tìm trong bảng khuyến mãi tên có từ trong từ nhập vào
     }
     const totalItems = await khuyenMaiModel.countDocuments(filter);
 
-    listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage);
+    listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage); // Lấy ra danh sách sau khi tìm kiếm
     const totalPages = Math.ceil(totalItems / perPage);
     res.render("khuyenMai/list", {
       title: "Khuyến mãi'" + queryValue + "'",
@@ -224,7 +229,7 @@ exports.search = async (req, res, next) => {
 
 exports.selectTrangThai = async (req, res, next) => {
   try {
-    const { trangThai } = req.query;
+    const { trangThai } = req.query; // Trạng thái truyền vào khi lọc theo trạng thái
 
     const page = parseInt(req.query.page) || 1;
     const perPage = 6;
@@ -236,7 +241,7 @@ exports.selectTrangThai = async (req, res, next) => {
     }
     const totalItems = await khuyenMaiModel.countDocuments(filter);
 
-    const listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage);
+    const listKM = await khuyenMaiModel.find(filter).skip(skip).limit(perPage); // Lấy trạng thái được truyền vào để lấy được danh sách khuyến mại the trạng thái truyền vào
     const totalPages = Math.ceil(totalItems / perPage);
 
     res.render("khuyenMai/list", {
@@ -263,7 +268,7 @@ exports.updateTrangThai = async (req, res, next) => {
   let msg = "";
   try {
     const _id = req.params.id;
-    const { trangThai } = req.body;
+    const { trangThai } = req.body; // Thực hiện update trạng thái theo id và trạng thái được được truyền vào
 
     const khuyenMai = await khuyenMaiModel.findById(_id);
     if (!khuyenMai) {
