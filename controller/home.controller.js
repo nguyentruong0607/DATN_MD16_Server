@@ -58,19 +58,28 @@ exports.tongDoanhThu = async (startDate, endDate) => {
 };
 
 exports.tongNguoiDung = async (startDate, endDate) => {
-  const query = { trangThaiDonHang: "Đã giao hàng" };
+  try {
+    const query = { tenQuyen: "User" };
 
-  if (startDate && endDate) {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999);
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0); // Đặt thời gian bắt đầu của ngày
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Đặt thời gian kết thúc của ngày
 
-    query.ngayNhanHang = { $gte: start, $lte: end };
+      // Thêm điều kiện lọc theo thời gian
+      query.createdAt = { $gte: start, $lte: end };
+    }
+
+    // Đếm tất cả các tài khoản thỏa mãn điều kiện trong accountModel
+    const soNguoiDung = await accountModel.countDocuments(query);
+    return soNguoiDung;
+  } catch (err) {
+    console.error(err);
+    throw new Error("Không thể lấy tổng số lượng người dùng.");
   }
-
-  const uniqueUsers = await donHangModel.distinct("idKH", query);
-  return uniqueUsers.length;
 };
+
 
 exports.tongDonHang = async (startDate, endDate) => {
   const query = { trangThaiDonHang: "Đã giao hàng" };
@@ -199,7 +208,7 @@ exports.topSPDoanhThuCao = async (startDate, endDate) => {
       },
     },
     { $sort: { doanhThu: -1 } },
-    { $limit: 10 },
+    { $limit: 5 },
   ]);
 
   return result;
